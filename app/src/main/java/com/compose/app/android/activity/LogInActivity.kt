@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -145,7 +146,9 @@ class LogInActivity : ComponentActivity() {
                             hostState = scaffoldState.snackbarHostState,
                             modifier = Modifier.align(
                                 Alignment.BottomCenter
-                            )
+                            ),
+                            icon = Icons.Rounded.Warning,
+                            contentDescription = stringResource(id = R.string.warning_icon_content_desc)
                         )
                     }
                 }

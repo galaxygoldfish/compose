@@ -21,6 +21,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountTree
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Camera
 import androidx.compose.material.icons.rounded.Email
@@ -28,14 +29,17 @@ import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -47,6 +51,7 @@ import androidx.lifecycle.Observer
 import com.compose.app.android.R
 import com.compose.app.android.account.FirebaseAccount
 import com.compose.app.android.theme.ComposeTheme
+import com.compose.app.android.utilities.rawStringResource
 import com.compose.app.android.view.BasicSnackbar
 import com.compose.app.android.view.IconOnlyButton
 import com.compose.app.android.view.LargeTextInputField
@@ -82,6 +87,8 @@ class CreateAccountActivity : ComponentActivity() {
         val lastNameState = remember { mutableStateOf(TextFieldValue()) }
 
         val scaffoldState = rememberScaffoldState()
+        val snackbarIconState = remember { mutableStateOf(Icons.Rounded.Warning) }
+        val snackbarIconDescription = remember { mutableStateOf(rawStringResource(R.string.warning_icon_content_desc)) }
         val avatarImageState = remember { mutableStateOf(BitmapFactory.decodeResource(resources, R.drawable.default_avatar_image)) }
 
         val avatarImageUpdater = Observer<Bitmap> { avatar ->
@@ -229,7 +236,9 @@ class CreateAccountActivity : ComponentActivity() {
                             Box {
                                 BasicSnackbar(
                                     hostState = scaffoldState.snackbarHostState,
-                                    modifier = Modifier.align(Alignment.BottomCenter)
+                                    modifier = Modifier.align(Alignment.BottomCenter),
+                                    icon = snackbarIconState.value,
+                                    contentDescription = snackbarIconDescription.value
                                 )
                             }
                             Row(
@@ -254,7 +263,9 @@ class CreateAccountActivity : ComponentActivity() {
                                             passwordState = passwordState.value.text,
                                             nameState = firstNameState.value.text,
                                             lastNameState = lastNameState.value.text,
-                                            snackbarState = scaffoldState.snackbarHostState
+                                            snackbarState = scaffoldState.snackbarHostState,
+                                            iconState = snackbarIconState,
+                                            descriptionState = snackbarIconDescription
                                         )
                                     }
                                 )
@@ -266,21 +277,25 @@ class CreateAccountActivity : ComponentActivity() {
         }
     }
 
-
-    private fun attemptCreateNewUser(emailState: String, passwordState: String, nameState: String,
-                                     lastNameState: String, snackbarState: SnackbarHostState) {
+    private fun attemptCreateNewUser(emailState: String, passwordState: String, nameState: String, lastNameState: String, snackbarState: SnackbarHostState,
+                                     iconState: MutableState<ImageVector>, descriptionState: MutableState<String>) {
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
         asyncScope.launch {
-            val avatar = if (avatarImageLive.value == null) {
+            iconState.value = Icons.Rounded.AccountTree
+            descriptionState.value = rawStringResource(R.string.account_tree_icon_content_desc)
+            snackbarState.showSnackbar(rawStringResource(R.string.create_account_queue_text))
+            val avatar: Bitmap = if (avatarImageLive.value == null) {
                 BitmapFactory.decodeResource(resources, R.drawable.default_avatar_image)
             } else {
-                avatarImageLive.value
+                avatarImageLive.value!!
             }
             val accountResult = FirebaseAccount().createNewAccount(emailState, passwordState, nameState,
-                lastNameState, avatar!!, this@CreateAccountActivity)
+                lastNameState, avatar, this@CreateAccountActivity)
             if (accountResult == "true") {
                 startActivity(Intent(this@CreateAccountActivity, ProductivityActivity::class.java))
             } else {
+                iconState.value = Icons.Rounded.Warning
+                descriptionState.value = rawStringResource(R.string.warning_icon_content_desc)
                 snackbarState.showSnackbar(accountResult)
             }
         }

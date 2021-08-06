@@ -11,6 +11,8 @@
     <string name="warning_icon_content_desc">Warning sign</string>
     <string name="camera_icon_content_desc">Camera shutter</string>
     <string name="file_folder_content_desc">File folder</string>
+    <string name="loading_icon_content_desc">Progress bar</string>
+    <string name="account_tree_icon_content_desc">Account tree</string>
 
     <string name="welcome_activity_title">Welcome to Compose</string>
     <string name="welcome_activity_preview_text">Organize your life by saving all your notes and to-do lists in Compose, all backed by cloud save.</string>
@@ -40,10 +42,11 @@
     <string name="create_account_choose_profile_header">Choose a profile image</string>
     <string name="create_account_choose_profile_button_text">VIEW AVATARS</string>
     <string name="create_account_continue_button">CREATE ACCOUNT</string>
-    <string name="create_account_cancel_button">CANCEL</string>
+    <string name="create_account_cancel_button" tools:ignore="ButtonCase">CANCEL</string>
     <string name="create_account_failure_generic">Something went wrong. Make sure that you have an active internet connection, and that you haven\'t used this e-mail address before with Compose.</string>
     <string name="create_account_failure_email">Oops! Make sure that you have entered a valid email address.</string>
     <string name="create_account_failure_password">Oops! Please make sure that your password is longer than 3 characters.</string>
     <string name="create_account_failure_name">To continue, please enter a first and last name.</string>
+    <string name="create_account_queue_text">Creating account…</string>
 
 </resources>
