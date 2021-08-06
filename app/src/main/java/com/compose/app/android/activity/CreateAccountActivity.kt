@@ -283,14 +283,14 @@ class CreateAccountActivity : ComponentActivity() {
         asyncScope.launch {
             iconState.value = Icons.Rounded.AccountTree
             descriptionState.value = rawStringResource(R.string.account_tree_icon_content_desc)
-            snackbarState.showSnackbar(rawStringResource(R.string.create_account_queue_text))
+            snackbarState.showSnackbar(message = rawStringResource(R.string.create_account_queue_text))
             val avatar: Bitmap = if (avatarImageLive.value == null) {
                 BitmapFactory.decodeResource(resources, R.drawable.default_avatar_image)
             } else {
                 avatarImageLive.value!!
             }
             val accountResult = FirebaseAccount().createNewAccount(emailState, passwordState, nameState,
-                lastNameState, avatar, this@CreateAccountActivity)
+            lastNameState, avatar, this@CreateAccountActivity)
             if (accountResult == "true") {
                 startActivity(Intent(this@CreateAccountActivity, ProductivityActivity::class.java))
             } else {

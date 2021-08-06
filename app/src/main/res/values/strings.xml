@@ -47,6 +47,6 @@
     <string name="create_account_failure_email">Oops! Make sure that you have entered a valid email address.</string>
     <string name="create_account_failure_password">Oops! Please make sure that your password is longer than 3 characters.</string>
     <string name="create_account_failure_name">To continue, please enter a first and last name.</string>
-    <string name="create_account_queue_text">Creating account…</string>
+    <string name="create_account_queue_text">Creating account. Please wait…</string>
 
 </resources>

@@ -27,6 +27,10 @@ class FirebaseAccount {
     private val firebaseFirestore: FirebaseFirestore = Firebase.firestore
     private val firebaseStorage: FirebaseStorage = Firebase.storage
 
+    fun determineIfUserExists() : Boolean {
+        return firebaseAuth.currentUser != null
+    }
+
     suspend fun authenticateWithEmail(email: String, password: String) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         if (email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && password.isNotEmpty()) {

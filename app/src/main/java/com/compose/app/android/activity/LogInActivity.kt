@@ -161,7 +161,7 @@ class LogInActivity : ComponentActivity() {
         val synchronousScope = CoroutineScope(Dispatchers.Main + Job())
         asyncScope.launch {
             if (FirebaseAccount().authenticateWithEmail(emailState.text, passwordState.text)) {
-                startActivity(Intent(this@LogInActivity, CreateAccountActivity::class.java))
+                startActivity(Intent(this@LogInActivity, ProductivityActivity::class.java))
             } else {
                 synchronousScope.launch {
                     scaffoldState.snackbarHostState.showSnackbar(rawStringResource(R.string.log_in_failure_message))
