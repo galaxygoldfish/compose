@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Compose" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/deep_sea</item>
+        <item name="colorPrimaryVariant">@color/deep_sea</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color -->
+        <item name="colorSecondary">@color/deep_sea</item>
+        <item name="colorSecondaryVariant">@color/deep_sea</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status and background attributes -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/background_color</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowBackground">@color/background_color</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="bottomSheetBackgroundColor">@color/dialog_background_color</item>
+    </style>
+</resources>

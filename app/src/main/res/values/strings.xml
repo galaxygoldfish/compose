@@ -1,0 +1,49 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="app_name">Compose</string>
+
+    <string name="back_button_content_desc">Back button</string>
+    <string name="email_icon_content_desc">E-mail icon</string>
+    <string name="lock_icon_content_desc">Closed lock</string>
+    <string name="person_icon_content_desc">Person</string>
+    <string name="group_icon_content_desc">Group</string>
+    <string name="avatar_icon_content_desc">Avatar</string>
+    <string name="warning_icon_content_desc">Warning sign</string>
+    <string name="camera_icon_content_desc">Camera shutter</string>
+    <string name="file_folder_content_desc">File folder</string>
+
+    <string name="welcome_activity_title">Welcome to Compose</string>
+    <string name="welcome_activity_preview_text">Organize your life by saving all your notes and to-do lists in Compose, all backed by cloud save.</string>
+    <string name="welcome_button_log_in">LOG IN</string>
+    <string name="welcome_log_in_button_content_desc">Log in button</string>
+    <string name="welcome_button_create_account">CREATE ACCOUNT</string>
+    <string name="welcome_create_account_button_content_desc">New account button</string>
+    <string name="welcome_graphic_content_desc">Notepad with coffee mug and pencil</string>
+
+    <string name="log_in_activity_title">Log in to your account</string>
+    <string name="log_in_activity_subtitle">Welcome back to Compose. To continue, enter your account details below:</string>
+    <string name="log_in_field_header_title">SIGN-IN</string>
+    <string name="log_in_activity_email_hint">Email address</string>
+    <string name="log_in_activity_password_hint">Password</string>
+    <string name="log_in_activity_action_cancel" tools:ignore="ButtonCase">CANCEL</string>
+    <string name="log_in_activity_action_proceed">CONTINUE</string>
+    <string name="log_in_failure_message">Failed to sign in. Double check to make sure that your email &amp; password are correct.</string>
+
+    <string name="create_account_activity_title">Create a new account</string>
+    <string name="create_account_activity_subtitle">To continue, you\'ll need to create an account which will allow you to sync your notes and tasks to the cloud</string>
+    <string name="create_account_account_header">ACCOUNT</string>
+    <string name="create_account_email_address_hint">Email address</string>
+    <string name="create_account_password_hint">Secure password</string>
+    <string name="create_account_profile_header">PROFILE</string>
+    <string name="create_account_first_name_hint">First name</string>
+    <string name="create_account_last_name_hint">Last name</string>
+    <string name="create_account_choose_profile_header">Choose a profile image</string>
+    <string name="create_account_choose_profile_button_text">VIEW AVATARS</string>
+    <string name="create_account_continue_button">CREATE ACCOUNT</string>
+    <string name="create_account_cancel_button">CANCEL</string>
+    <string name="create_account_failure_generic">Something went wrong. Make sure that you have an active internet connection, and that you haven\'t used this e-mail address before with Compose.</string>
+    <string name="create_account_failure_email">Oops! Make sure that you have entered a valid email address.</string>
+    <string name="create_account_failure_password">Oops! Please make sure that your password is longer than 3 characters.</string>
+    <string name="create_account_failure_name">To continue, please enter a first and last name.</string>
+
+</resources>
