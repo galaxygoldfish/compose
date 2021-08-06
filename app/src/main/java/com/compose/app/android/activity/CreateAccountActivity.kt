@@ -229,9 +229,7 @@ class CreateAccountActivity : ComponentActivity() {
                             Box {
                                 BasicSnackbar(
                                     hostState = scaffoldState.snackbarHostState,
-                                    modifier = Modifier.align(
-                                        Alignment.BottomCenter
-                                    )
+                                    modifier = Modifier.align(Alignment.BottomCenter)
                                 )
                             }
                             Row(
