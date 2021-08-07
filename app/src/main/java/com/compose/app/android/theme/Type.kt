@@ -24,6 +24,12 @@ val Typography = Typography(
         fontSize = 40.sp
     ),
 
+    h4 = TextStyle(
+        fontFamily = InterTypeface,
+        fontSize = 33.sp,
+        fontWeight = FontWeight.Bold
+    ),
+
     body1 = TextStyle(
         fontFamily = InterTypeface,
         fontWeight = FontWeight.Normal,

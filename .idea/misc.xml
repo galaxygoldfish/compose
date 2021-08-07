@@ -16,8 +16,17 @@
         <entry key="../../../../../layout/compose-model-1628135078748.xml" value="0.3851851851851852" />
         <entry key="app/src/main/res/drawable/ic_welcome_screen_graphic.xml" value="0.1695" />
         <entry key="app/src/main/res/drawable/provider_sheet_background_corners.xml" value="0.34974358974358977" />
+        <entry key="app/src/main/res/drawable/shape_tab_item_selected.xml" value="0.34974358974358977" />
+        <entry key="app/src/main/res/layout/activity_productivity.xml" value="0.33384615384615385" />
+        <entry key="app/src/main/res/layout/productivity_activity.xml" value="0.3390625" />
+        <entry key="app/src/main/res/layout/productivity_tab_pager_view.xml" value="0.33384615384615385" />
       </map>
     </option>
+  </component>
+  <component name="EntryPointsManager">
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="androidx.compose.runtime.Composable" />
+    </list>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />

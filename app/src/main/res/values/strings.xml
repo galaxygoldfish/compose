@@ -13,6 +13,8 @@
     <string name="file_folder_content_desc">File folder</string>
     <string name="loading_icon_content_desc">Progress bar</string>
     <string name="account_tree_icon_content_desc">Account tree</string>
+    <string name="edit_icon_content_desc">Pencil icon</string>
+    <string name="add_button_content_desc">New item</string>
 
     <string name="welcome_activity_title">Welcome to Compose</string>
     <string name="welcome_activity_preview_text">Organize your life by saving all your notes and to-do lists in Compose, all backed by cloud save.</string>
@@ -48,5 +50,10 @@
     <string name="create_account_failure_password">Oops! Please make sure that your password is longer than 3 characters.</string>
     <string name="create_account_failure_name">To continue, please enter a first and last name.</string>
     <string name="create_account_queue_text">Creating account. Please wait…</string>
+
+    <string name="productivity_tab_item_notes">Notes</string>
+    <string name="productivity_tab_item_tasks">Tasks</string>
+    <string name="productivity_welcome_message">Welcome,</string>
+
 
 </resources>

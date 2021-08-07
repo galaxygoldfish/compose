@@ -160,7 +160,7 @@ class LogInActivity : ComponentActivity() {
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
         val synchronousScope = CoroutineScope(Dispatchers.Main + Job())
         asyncScope.launch {
-            if (FirebaseAccount().authenticateWithEmail(emailState.text, passwordState.text)) {
+            if (FirebaseAccount().authenticateWithEmail(emailState.text, passwordState.text, this@LogInActivity)) {
                 startActivity(Intent(this@LogInActivity, ProductivityActivity::class.java))
             } else {
                 synchronousScope.launch {
