@@ -64,6 +64,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.w3c.dom.Text
 
 class ProductivityActivity : ComponentActivity() {
 
@@ -136,21 +137,27 @@ class ProductivityActivity : ComponentActivity() {
                                 ) {
                                     Column(
                                         modifier = Modifier
-                                        .padding(start = 20.dp)
-                                        .align(Alignment.CenterVertically)
+                                            .padding(start = 20.dp)
+                                            .align(Alignment.CenterVertically)
                                     ) {
                                         Text(
                                             text = """${stringResource(id = R.string.productivity_welcome_message)} ${
-                                                preferences.getString("IDENTITY_USER_NAME_FIRST", "Error")}""".trimMargin(),
+                                                preferences.getString(
+                                                    "IDENTITY_USER_NAME_FIRST",
+                                                    "Error"
+                                                )
+                                            }""".trimMargin(),
                                             style = MaterialTheme.typography.h4,
                                         )
                                         Text(
-                                            text = "Every day is a new day..",
+                                            text = resources.getStringArray(R.array.inspirational_quotes_default)
+                                                .random(),
                                             style = MaterialTheme.typography.body1
                                         )
                                     }
                                     Image(
-                                        bitmap = BitmapFactory.decodeFile("$filesDir/avatar.png").asImageBitmap(),
+                                        bitmap = BitmapFactory.decodeFile("$filesDir/avatar.png")
+                                            .asImageBitmap(),
                                         contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
                                         modifier = Modifier
                                             .size(60.dp)
@@ -290,7 +297,7 @@ class ProductivityActivity : ComponentActivity() {
     }
 
     @Composable
-    fun getIconColor(state: MutableState<Boolean>) : Color {
+    fun getIconColor(state: MutableState<Boolean>) : androidx.compose.ui.graphics.Color {
         return if (state.value) {
             colorResource(id = R.color.text_color_enabled)
         } else {
