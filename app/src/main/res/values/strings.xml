@@ -15,6 +15,8 @@
     <string name="account_tree_icon_content_desc">Account tree</string>
     <string name="edit_icon_content_desc">Pencil icon</string>
     <string name="add_button_content_desc">New item</string>
+    <string name="search_icon_content_desc">Search button</string>
+    <string name="keyboard_voice_icon_content_desc">Voice search</string>
 
     <string name="welcome_activity_title">Welcome to Compose</string>
     <string name="welcome_activity_preview_text">Organize your life by saving all your notes and to-do lists in Compose, all backed by cloud save.</string>

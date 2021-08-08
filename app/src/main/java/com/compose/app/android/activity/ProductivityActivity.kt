@@ -1,16 +1,20 @@
 package com.compose.app.android.activity
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -22,10 +26,14 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.KeyboardVoice
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -36,8 +44,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.compose.app.android.R
@@ -50,6 +60,9 @@ import com.compose.app.android.utilities.getDefaultPreferences
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class ProductivityActivity : ComponentActivity() {
@@ -59,9 +72,17 @@ class ProductivityActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         if (!FirebaseAccount().determineIfUserExists()) {
             startActivity(Intent(this, WelcomeActivity::class.java))
-        }
-        setContent {
-            MainContent()
+        } else {
+            val asyncScope = CoroutineScope(Dispatchers.IO + Job())
+            val synchronousScope = CoroutineScope(Dispatchers.Main + Job())
+            asyncScope.launch {
+                FirebaseAccount().sendProfileImageToFile(this@ProductivityActivity)
+                synchronousScope.launch {
+                    setContent {
+                        MainContent()
+                    }
+                }
+            }
         }
     }
 
@@ -80,6 +101,8 @@ class ProductivityActivity : ComponentActivity() {
 
         val taskSelectedState = remember { mutableStateOf(false) }
         val noteSelectedState = remember { mutableStateOf(true) }
+
+        val searchFieldValue = remember { mutableStateOf(TextFieldValue()) }
 
         val preferences = this.getDefaultPreferences()
 
@@ -102,18 +125,100 @@ class ProductivityActivity : ComponentActivity() {
                         Column(
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            Box(
+                            Column(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(
-                                    text = """${stringResource(id = R.string.productivity_welcome_message)} ${preferences.getString("IDENTITY_USER_NAME_FIRST", "Error")}"""
-                                        .trimMargin(),
-                                    style = MaterialTheme.typography.h4,
-                                    modifier = Modifier.padding(top = 15.dp, start = 20.dp)
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 15.dp, bottom = 5.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column(
+                                        modifier = Modifier
+                                        .padding(start = 20.dp)
+                                        .align(Alignment.CenterVertically)
+                                    ) {
+                                        Text(
+                                            text = """${stringResource(id = R.string.productivity_welcome_message)} ${
+                                                preferences.getString("IDENTITY_USER_NAME_FIRST", "Error")}""".trimMargin(),
+                                            style = MaterialTheme.typography.h4,
+                                        )
+                                        Text(
+                                            text = "Every day is a new day..",
+                                            style = MaterialTheme.typography.body1
+                                        )
+                                    }
+                                    Image(
+                                        bitmap = BitmapFactory.decodeFile("$filesDir/avatar.png").asImageBitmap(),
+                                        contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
+                                        modifier = Modifier
+                                            .size(60.dp)
+                                            .align(Alignment.CenterVertically)
+                                            .padding(end = 21.dp)
+                                            .clickable {
+
+                                            }
+                                    )
+                                }
+                                TextField(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = 18.dp, end = 20.dp, top = 10.dp)
+                                        .height(55.dp),
+                                    value = searchFieldValue.value,
+                                    placeholder = @Composable {
+                                        Text(
+                                            text = "Search notes & tasks",
+                                            style = MaterialTheme.typography.body1,
+                                        )
+                                    },
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        backgroundColor = colorResource(id = R.color.button_neutral_background_color),
+                                        cursorColor = Color.Black,
+                                        disabledLabelColor = colorResource(id = R.color.button_neutral_background_color),
+                                        focusedIndicatorColor = Color.Transparent,
+                                        unfocusedIndicatorColor = Color.Transparent
+                                    ),
+                                    onValueChange = {
+                                        searchFieldValue.value = it
+                                    },
+                                    shape = RoundedCornerShape(8.dp),
+                                    singleLine = true,
+                                    leadingIcon = @Composable {
+                                        Icon(
+                                            imageVector = Icons.Rounded.Search,
+                                            contentDescription = stringResource(id = R.string.search_icon_content_desc),
+                                            tint = MaterialTheme.colors.onBackground
+                                        )
+                                    },
+                                    trailingIcon = @Composable {
+                                        IconButton(
+                                            onClick = {
+
+                                            }
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Rounded.KeyboardVoice,
+                                                contentDescription = stringResource(id = R.string.keyboard_voice_icon_content_desc),
+                                                tint = MaterialTheme.colors.onBackground
+                                            )
+                                        }
+                                    }
                                 )
                             }
                             HorizontalPager(state = viewPagerState) {
                                 tabLayoutItems[this.currentPage].tabContent()
+                                when (this.currentPage) {
+                                    0 -> {
+                                        noteSelectedState.value = true
+                                        taskSelectedState.value = false
+                                    }
+                                    1 -> {
+                                        taskSelectedState.value = true
+                                        noteSelectedState.value = false
+                                    }
+                                }
                             }
                         }
                         Row(
@@ -130,7 +235,11 @@ class ProductivityActivity : ComponentActivity() {
                                 onClick = {
                                     changeCurrentPageState(notePage = true, taskPage = false)
                                 },
-                                modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, end = 20.dp)
+                                modifier = Modifier.padding(
+                                    top = 10.dp,
+                                    bottom = 10.dp,
+                                    end = 20.dp
+                                )
                             ) {
                                 Icon(
                                     imageVector = Icons.Rounded.Edit,
@@ -141,7 +250,7 @@ class ProductivityActivity : ComponentActivity() {
                             }
                             FloatingActionButton(
                                 onClick = {
-                                        // TODO
+                                    // TODO
                                 },
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
@@ -160,7 +269,11 @@ class ProductivityActivity : ComponentActivity() {
                                 onClick = {
                                     changeCurrentPageState(notePage = false, taskPage = true)
                                 },
-                                modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 20.dp)
+                                modifier = Modifier.padding(
+                                    top = 10.dp,
+                                    bottom = 10.dp,
+                                    start = 20.dp
+                                )
                             ) {
                                 Icon(
                                     imageVector = Icons.Rounded.CheckCircle,

@@ -40,12 +40,16 @@ class FirebaseAccount {
             firebaseAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
                 asyncScope.launch {
                     getUserMetadata().let {
-                        sharedPreferences.edit().apply {
-                            putString("IDENTITY_USER_NAME_FIRST", it["firstName"] as String?)
-                            putString("IDENTITY_USER_NAME_LAST", it["lastName"] as String)
-                        }.apply()
+                        if (sendProfileImageToFile(context)) {
+                            sharedPreferences.edit().apply {
+                                putString("IDENTITY_USER_NAME_FIRST", it["firstName"] as String?)
+                                putString("IDENTITY_USER_NAME_LAST", it["lastName"] as String)
+                            }.apply()
+                            completableToken.complete(true)
+                        } else {
+                            completableToken.complete(false)
+                        }
                     }
-                    completableToken.complete(true)
                 }
             }.addOnFailureListener {
                 completableToken.complete(false)
@@ -126,6 +130,18 @@ class FirebaseAccount {
         }.addOnFailureListener {
             val errorMap = hashMapOf("firstName" to "Error", "lastName" to "Error")
             completableToken.complete(errorMap)
+        }
+        return completableToken.await()
+    }
+
+    suspend fun sendProfileImageToFile(context: Context) : Boolean {
+        val completableToken = CompletableDeferred<Boolean>()
+        val avatarImagePath = firebaseStorage.reference.child("metadata/avatars/${firebaseAuth.currentUser!!.uid}")
+        val localImagePath = File("${context.filesDir}/avatar.png")
+        avatarImagePath.getFile(localImagePath).addOnSuccessListener {
+            completableToken.complete(true)
+        }.addOnFailureListener {
+            completableToken.complete(false)
         }
         return completableToken.await()
     }
