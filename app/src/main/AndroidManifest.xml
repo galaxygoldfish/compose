@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Compose">
         <activity
-            android:name=".activity.ProductivityActivity"
+            android:name=".presentation.ProductivityActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Compose">
@@ -19,9 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LogInActivity" />
-        <activity android:name=".activity.CreateAccountActivity" />
-        <activity android:name=".activity.WelcomeActivity" />
+        <activity android:name=".presentation.LogInActivity" />
+        <activity android:name=".presentation.CreateAccountActivity" />
+        <activity android:name=".presentation.WelcomeActivity" />
     </application>
 
 </manifest>

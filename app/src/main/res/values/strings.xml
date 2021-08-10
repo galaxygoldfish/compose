@@ -17,6 +17,11 @@
     <string name="add_button_content_desc">New item</string>
     <string name="search_icon_content_desc">Search button</string>
     <string name="keyboard_voice_icon_content_desc">Voice search</string>
+    <string name="nothing_here_content_desc">Nothing here</string>
+
+    <string name="firebase_error_fetching_title">There was an error.</string>
+    <string name="firebase_error_fetching_content">Unfortunately there was an error retrieving the requested content. Please try again</string>
+    <string name="firebase_error_fetching_other">Error</string>
 
     <string name="welcome_activity_title">Welcome to Compose</string>
     <string name="welcome_activity_preview_text">Organize your life by saving all your notes and to-do lists in Compose, all backed by cloud save.</string>
@@ -34,6 +39,7 @@
     <string name="log_in_activity_action_cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="log_in_activity_action_proceed">CONTINUE</string>
     <string name="log_in_failure_message">Failed to sign in. Double check to make sure that your email &amp; password are correct.</string>
+    <string name="log_in_progress_message">Attempting sign-in…</string>
 
     <string name="create_account_activity_title">Create a new account</string>
     <string name="create_account_activity_subtitle">To continue, you\'ll need to create an account which will allow you to sync your notes and tasks to the cloud</string>

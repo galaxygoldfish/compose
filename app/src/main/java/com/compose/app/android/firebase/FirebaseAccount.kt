@@ -1,4 +1,4 @@
-package com.compose.app.android.account
+package com.compose.app.android.firebase
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -22,16 +22,37 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+/**
+ * Class used to store Firebase authentication and user metadata
+ * modification related methods
+ */
 class FirebaseAccount {
 
     private val firebaseAuth: FirebaseAuth = Firebase.auth
     private val firebaseFirestore: FirebaseFirestore = Firebase.firestore
     private val firebaseStorage: FirebaseStorage = Firebase.storage
 
+    /**
+     * Check whether there is currently an authenticated user signed-in.
+     * @return A boolean value indicating true if a user is logged in, and
+     * false if there are no users logged in.
+     */
     fun determineIfUserExists() : Boolean {
         return firebaseAuth.currentUser != null
     }
 
+    /**
+     * Sign-in an existing user and download corresponding user metadata,
+     * including profile image & name.
+     * @param email - User-provided email address that is linked to their
+     * account
+     * @param password - User-provided password string that they have set
+     * for their account
+     * @param context - Activity or lifecycle owner needed to access
+     * SharedPreferences -> TODO Migration to DataStore
+     * @return A boolean value indicating whether the authentication attempt
+     * was successful or not.
+     */
     suspend fun authenticateWithEmail(email: String, password: String, context: Context) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
@@ -40,7 +61,7 @@ class FirebaseAccount {
             firebaseAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
                 asyncScope.launch {
                     getUserMetadata().let {
-                        if (sendProfileImageToFile(context)) {
+                        if (sendProfileImageToFile(context.filesDir.path)) {
                             sharedPreferences.edit().apply {
                                 putString("IDENTITY_USER_NAME_FIRST", it["firstName"] as String?)
                                 putString("IDENTITY_USER_NAME_LAST", it["lastName"] as String)
@@ -60,6 +81,22 @@ class FirebaseAccount {
         return completableToken.await()
     }
 
+    /**
+     * Create a new user with e-mail and password and associate related data like
+     * avatar image and name with the account.
+     * @param email - User-provided email address that is to be linked to the new
+     * account
+     * @param password - User-provided password string that exceeds 3 characters in
+     * length and is used to re-authenticate the user.
+     * @param firstName - The user's first name
+     * @param lastName - The user's last name
+     * @param profileImage - User-chosen avatar image in bitmap format to be uploaded
+     * to Firebase storage
+     * @param context - Activity or lifecycle owner needed to access string resources
+     * and SharedPreferences -> TODO Migration to DataStore
+     * @return A boolean value indicating that the user's account was created, the
+     * avatar was uploaded, and all metadata was successfully inserted into Firebase.
+     */
     suspend fun createNewAccount(email: String, password: String, firstName: String, lastName: String,
                                  profileImage: Bitmap, context: Context) : String {
         val completableToken = CompletableDeferred<String>()
@@ -90,6 +127,14 @@ class FirebaseAccount {
         return completableToken.await()
     }
 
+    /**
+     * Insert updated user metadata to Firebase, including the user's
+     * first and last name.
+     * @param mapData - A map containing two key-value pairs: firstName
+     * and lastName, each corresponding with the user's first or last name
+     * @return A boolean value indicating whether the user metadata has
+     * been updated/inserted without a failure or exception.
+     */
     suspend fun uploadNewUserMetadata(mapData: Map<String, String>) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val userMetadataPath = firebaseFirestore.collection("metadata").document(firebaseAuth.currentUser!!.uid)
@@ -101,6 +146,16 @@ class FirebaseAccount {
         return completableToken.await()
     }
 
+    /**
+     * Upload a new avatar image for the user, replacing the old one
+     * automatically if it exists.
+     * @param avatarImage - The new profile image to be uploaded and
+     * set, in bitmap format.
+     * @param context - Activity or lifecycle owner needed to access
+     * app-specific filesystems.
+     * @return A boolean value indicating whether the avatar has been
+     * uploaded to Firebase without any error.
+     */
     suspend fun uploadNewProfileImage(avatarImage: Bitmap, context: Context) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
@@ -122,6 +177,12 @@ class FirebaseAccount {
         return completableToken.await()
     }
 
+    /**
+     * Fetch associated user metadata, including first and last name,
+     * from firebase.
+     * @return A map containing two key-value pairs, including firstName
+     * and lastName, as strings.
+     */
     suspend fun getUserMetadata() : Map<*, *> {
         val completableToken = CompletableDeferred<Map<*, *>>()
         val userMetadataPath = firebaseFirestore.collection("metadata").document(firebaseAuth.currentUser!!.uid)
@@ -134,10 +195,21 @@ class FirebaseAccount {
         return completableToken.await()
     }
 
-    suspend fun sendProfileImageToFile(context: Context) : Boolean {
+    /**
+     * Send the most updated avatar image to the recognized file "avatar.png".
+     * This can be used to ensure that avatars are synced across all logged-in
+     * devices, and also so that other parts of the app can access the most
+     * recent version of the user's avatar.
+     * @param filesDirPath - App-specific files directory where the avatar image
+     * is to be stored (usually context.filesDir, but by providing the raw path, no context
+     * is needed)
+     * @return A boolean value indicating whether the avatar was sent to the
+     * file successfully.
+     */
+    suspend fun sendProfileImageToFile(filesDirPath: String) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val avatarImagePath = firebaseStorage.reference.child("metadata/avatars/${firebaseAuth.currentUser!!.uid}")
-        val localImagePath = File("${context.filesDir}/avatar.png")
+        val localImagePath = File("${filesDirPath}/avatar.png")
         avatarImagePath.getFile(localImagePath).addOnSuccessListener {
             completableToken.complete(true)
         }.addOnFailureListener {

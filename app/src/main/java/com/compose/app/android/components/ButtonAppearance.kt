@@ -20,6 +20,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.compose.app.android.R
 
+/**
+ *
+ */
 @Composable
 fun FullWidthButton(text: String, icon: ImageVector, contentDescription: String,
                     color: Color, onClick: () -> Unit) {
