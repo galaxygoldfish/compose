@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import com.compose.app.android.R
 import com.compose.app.android.model.NoteDocument
+import com.compose.app.android.model.TaskDocument
 import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.viewmodel.ProductivityViewModel
@@ -68,17 +69,21 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
 
-    viewModel.updateNoteList()
+    viewModel.apply {
+        updateNoteList()
+        updateTaskList()
+    }
 
     val asyncScope = rememberCoroutineScope()
     val preferences = context.getDefaultPreferences()
 
-    val swipeRefreshState = viewModel.isUpdatingNoteList
+    val noteRefreshState = viewModel.isUpdatingNoteList
+    val taskRefreshState = viewModel.isUpdatingTaskList
 
     val tabLayoutItems = listOf<@Composable () -> Unit>(
         {
             SwipeRefresh(
-                state = swipeRefreshState,
+                state = noteRefreshState,
                 onRefresh = {
                     viewModel.updateNoteList()
                 },
@@ -95,12 +100,27 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
             )
         },
         {
+            SwipeRefresh(
+                state = taskRefreshState,
+                onRefresh = {
+                    viewModel.updateTaskList()
+                },
+                modifier = Modifier.fillMaxSize(),
+                content = @Composable {
+                    TaskListView(
+                        context = context,
+                        taskList = viewModel.taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
+                        onItemClick = {
 
+                        }
+                    )
+                }
+            )
         }
     )
 
     val scaffoldState = rememberScaffoldState()
-    val viewPagerState = rememberPagerState(pageCount = 2, initialOffscreenLimit = 2)
+    val viewPagerState = rememberPagerState(pageCount = 2, initialPage = 0, initialOffscreenLimit = 2, infiniteLoop = false)
 
     val taskSelectedState = remember { mutableStateOf(false) }
     val noteSelectedState = remember { mutableStateOf(true) }
@@ -216,11 +236,10 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                         }
                         HorizontalPager(
                             state = viewPagerState,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            dragEnabled = true
                         ) {
-                            Box(modifier = Modifier.fillMaxSize()) {
-                                tabLayoutItems[this@HorizontalPager.currentPage].invoke()
-                            }
+                            tabLayoutItems[this@HorizontalPager.currentPage].invoke()
                         }
                     }
                     Row(

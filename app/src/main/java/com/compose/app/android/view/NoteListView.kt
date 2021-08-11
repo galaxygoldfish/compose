@@ -30,8 +30,11 @@ import com.compose.app.android.model.NoteDocument
 @Composable
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
-fun NoteListView(noteItemList: MutableLiveData<MutableList<NoteDocument>>,
-                 context: Context, onItemClick: () -> Unit) {
+fun NoteListView(
+    noteItemList: MutableLiveData<MutableList<NoteDocument>>,
+    context: Context,
+    onItemClick: () -> Unit
+) {
     val gridCellValue = remember { mutableStateOf(GridCells.Fixed(2)) }
     val listItems = noteItemList.observeAsState().value!!
     LazyVerticalGrid(
@@ -44,65 +47,79 @@ fun NoteListView(noteItemList: MutableLiveData<MutableList<NoteDocument>>,
                 count = listItems.size,
                 itemContent = @Composable { index ->
                     val currentNote = listItems[index]
-                    val isCardEven = index % 2 == 0
-                    val paddingStart = if (!isCardEven) 6.dp else 0.dp
-                    val paddingEnd = if (!isCardEven) 0.dp else 6.dp
-                    Card(
-                        onClick = onItemClick,
-                        shape = RoundedCornerShape(7.dp),
-                        backgroundColor = colorResource(id = currentNote.color),
-                        elevation = 0.dp,
-                        modifier = Modifier.padding(
-                            top = 10.dp,
-                            bottom = 5.dp,
-                            start = paddingStart,
-                            end = paddingEnd
-                        ),
-                        content = @Composable {
-                            Column(
-                                modifier = Modifier.wrapContentHeight()
-                            ) {
-                                Text(
-                                    text = currentNote.title,
-                                    style = MaterialTheme.typography.h6,
-                                    modifier = Modifier.padding(
-                                        top = 7.dp,
-                                        end = 10.dp,
-                                        start = 10.dp
-                                    )
-                                )
-                                Text(
-                                    text = currentNote.content,
-                                    style = MaterialTheme.typography.body1,
-                                    maxLines = 8,
-                                    modifier = Modifier.padding(
-                                        top = 2.dp,
-                                        end = 10.dp,
-                                        start = 10.dp
-                                    )
-                                )
-                                Row(
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 10.dp, vertical = 5.dp)
-                                ) {
-                                    Text(
-                                        text = currentNote.date,
-                                        style = MaterialTheme.typography.body2,
-                                        color = colorResource(id = R.color.text_color_disabled_on_color)
-                                    )
-                                    Text(
-                                        text = currentNote.time,
-                                        style = MaterialTheme.typography.body2,
-                                        color = colorResource(id = R.color.text_color_disabled_on_color)
-                                    )
-                                }
-                            }
-                        }
+                    NoteListCard(
+                        index = index,
+                        currentNote = currentNote,
+                        onItemClick = onItemClick
                     )
                 }
             )
+        }
+    )
+}
+
+@Composable
+@ExperimentalMaterialApi
+fun NoteListCard(
+    index: Int,
+    currentNote: NoteDocument,
+    onItemClick: () -> Unit
+) {
+    val isCardEven = index % 2 == 0
+    val paddingStart = if (!isCardEven) 6.dp else 0.dp
+    val paddingEnd = if (!isCardEven) 0.dp else 6.dp
+    Card(
+        onClick = onItemClick,
+        shape = RoundedCornerShape(7.dp),
+        backgroundColor = colorResource(id = currentNote.color),
+        elevation = 0.dp,
+        modifier = Modifier.padding(
+            top = 10.dp,
+            bottom = 5.dp,
+            start = paddingStart,
+            end = paddingEnd
+        ),
+        content = @Composable {
+            Column(
+                modifier = Modifier.wrapContentHeight()
+            ) {
+                Text(
+                    text = currentNote.title,
+                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier.padding(
+                        top = 7.dp,
+                        end = 10.dp,
+                        start = 10.dp
+                    )
+                )
+                Text(
+                    text = currentNote.content,
+                    style = MaterialTheme.typography.body1,
+                    maxLines = 8,
+                    modifier = Modifier.padding(
+                        top = 2.dp,
+                        end = 10.dp,
+                        start = 10.dp
+                    )
+                )
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp, vertical = 5.dp)
+                ) {
+                    Text(
+                        text = currentNote.date,
+                        style = MaterialTheme.typography.body2,
+                        color = colorResource(id = R.color.text_color_disabled_on_color)
+                    )
+                    Text(
+                        text = currentNote.time,
+                        style = MaterialTheme.typography.body2,
+                        color = colorResource(id = R.color.text_color_disabled_on_color)
+                    )
+                }
+            }
         }
     )
 }

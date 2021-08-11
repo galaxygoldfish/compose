@@ -11,6 +11,7 @@ import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.NoteDocument
+import com.compose.app.android.model.TaskDocument
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,11 +20,14 @@ import kotlinx.coroutines.launch
 
 class ProductivityViewModel : ViewModel() {
 
-    val asyncScope = CoroutineScope(Dispatchers.IO + Job())
+    private val asyncScope = CoroutineScope(Dispatchers.IO + Job())
     val synchronousScope = CoroutineScope(Dispatchers.Main + Job())
 
     val noteLiveList: LiveData<MutableList<NoteDocument>> = MutableLiveData(mutableListOf<NoteDocument>())
     val isUpdatingNoteList = SwipeRefreshState(false)
+
+    val taskLiveList: LiveData<MutableList<TaskDocument>> = MutableLiveData(mutableListOf<TaskDocument>())
+    val isUpdatingTaskList = SwipeRefreshState(false)
 
     /**
      * Fetch the latest version of the user's avatar image from
@@ -56,6 +60,13 @@ class ProductivityViewModel : ViewModel() {
         FirebaseDocument().getAllNotes(
             noteLiveList as MutableLiveData<MutableList<NoteDocument>>,
             isUpdatingNoteList
+        )
+    }
+
+    fun updateTaskList() {
+        FirebaseDocument().getAllTasks(
+            taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
+            isUpdatingTaskList
         )
     }
 
