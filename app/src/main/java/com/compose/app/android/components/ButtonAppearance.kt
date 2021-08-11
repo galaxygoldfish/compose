@@ -24,8 +24,13 @@ import com.compose.app.android.R
  *
  */
 @Composable
-fun FullWidthButton(text: String, icon: ImageVector, contentDescription: String,
-                    color: Color, onClick: () -> Unit) {
+fun FullWidthButton(
+    text: String,
+    icon: ImageVector,
+    contentDescription: String,
+    color: Color,
+    onClick: () -> Unit
+) {
     Button(
         modifier = Modifier
             .size(width = 1000.dp, height = 60.dp)
@@ -58,7 +63,11 @@ fun FullWidthButton(text: String, icon: ImageVector, contentDescription: String,
 }
 
 @Composable
-fun TextOnlyButton(text: String, color: Color, onClick: () -> Unit) {
+fun TextOnlyButton(
+    text: String,
+    color: Color,
+    onClick: () -> Unit
+) {
     Button(
         modifier = Modifier
             .padding(top = 10.dp, bottom = 10.dp)
@@ -81,7 +90,11 @@ fun TextOnlyButton(text: String, color: Color, onClick: () -> Unit) {
 }
 
 @Composable
-fun IconOnlyButton(icon: ImageVector, onClick: () -> Unit, contentDescription: String) {
+fun IconOnlyButton(
+    icon: ImageVector,
+    onClick: () -> Unit,
+    contentDescription: String
+) {
     Button(
         modifier = Modifier
             .padding(top = 10.dp, bottom = 10.dp, end = 15.dp)

@@ -29,8 +29,14 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LargeTextInputField(text: TextFieldValue, hint: String, valueCallback: (TextFieldValue) -> Unit,
-                        icon: ImageVector, contentDescription: String, passwordType: Boolean = false) {
+fun LargeTextInputField(
+    text: TextFieldValue,
+    hint: String,
+    valueCallback: (TextFieldValue) -> Unit,
+    icon: ImageVector,
+    contentDescription: String,
+    passwordType: Boolean = false
+) {
     var passwordVisibility by remember { mutableStateOf(true) }
     val keyboardType = if (passwordType) {
         KeyboardOptions(keyboardType = KeyboardType.Password)

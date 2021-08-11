@@ -2,10 +2,12 @@ package com.compose.app.android.view
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.FloatingActionButtonDefaults
 import androidx.compose.material.Icon
@@ -22,6 +25,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -31,9 +35,11 @@ import androidx.compose.material.icons.rounded.KeyboardVoice
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,33 +49,64 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import com.compose.app.android.R
+import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.viewmodel.ProductivityViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-@ExperimentalPagerApi
 @Composable
+@ExperimentalMaterialApi
+@ExperimentalFoundationApi
+@ExperimentalPagerApi
 fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
+
+    viewModel.updateNoteList()
 
     val asyncScope = rememberCoroutineScope()
     val preferences = context.getDefaultPreferences()
-    val tabLayoutItems = listOf<@Composable () -> Unit>({}, {})
+
+    val swipeRefreshState = viewModel.isUpdatingNoteList
+
+    val tabLayoutItems = listOf<@Composable () -> Unit>(
+        {
+            SwipeRefresh(
+                state = swipeRefreshState,
+                onRefresh = {
+                    viewModel.updateNoteList()
+                },
+                modifier = Modifier.fillMaxSize(),
+                content = @Composable {
+                    NoteListView(
+                        noteItemList = viewModel.noteLiveList as MutableLiveData<MutableList<NoteDocument>>,
+                        context = context,
+                        onItemClick = {
+
+                        }
+                    )
+                }
+            )
+        },
+        {
+
+        }
+    )
 
     val scaffoldState = rememberScaffoldState()
-    val viewPagerState = rememberPagerState(pageCount = 2)
+    val viewPagerState = rememberPagerState(pageCount = 2, initialOffscreenLimit = 2)
 
     val taskSelectedState = remember { mutableStateOf(false) }
     val noteSelectedState = remember { mutableStateOf(true) }
     val searchFieldValue = remember { mutableStateOf(TextFieldValue()) }
 
-    fun changeCurrentPageState(notePage: Boolean, taskPage: Boolean) {
-        noteSelectedState.value = notePage
-        taskSelectedState.value = taskPage
+    fun changeCurrentPageState(notePage: Boolean) {
         asyncScope.launch {
             viewPagerState.animateScrollToPage(if (notePage) 0 else 1)
         }
@@ -80,7 +117,7 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
             scaffoldState = scaffoldState,
             modifier = Modifier.fillMaxSize(),
             content = @Composable {
-                androidx.compose.foundation.layout.Box(
+                Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Column(
@@ -117,20 +154,21 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                                         style = MaterialTheme.typography.body1
                                     )
                                 }
-                                Image(
-                                    bitmap = BitmapFactory.decodeFile("${context.filesDir}/avatar.png")
-                                        .asImageBitmap(),
-                                    contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
-                                    modifier = Modifier
-                                        .size(60.dp)
-                                        .align(Alignment.CenterVertically)
-                                        .padding(end = 16.dp)
-                                        .clickable {
-                                            // TODO - Show account context menu dialog
-                                        }
-                                )
+                                BitmapFactory.decodeFile("${context.filesDir}/avatar.png")?.let {
+                                        Image(
+                                            bitmap = it.asImageBitmap(),
+                                            contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
+                                            modifier = Modifier
+                                                .size(60.dp)
+                                                .align(Alignment.CenterVertically)
+                                                .padding(end = 16.dp)
+                                                .clickable {
+                                                    // TODO - Show account context menu dialog
+                                                }
+                                        )
+                                    }
                             }
-                            androidx.compose.material.TextField(
+                            TextField(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(start = 14.dp, end = 15.dp, top = 10.dp)
@@ -176,17 +214,12 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                                 }
                             )
                         }
-                        HorizontalPager(state = viewPagerState) {
-                            tabLayoutItems[this.currentPage].invoke()
-                            when (this.currentPage) {
-                                0 -> {
-                                    noteSelectedState.value = true
-                                    taskSelectedState.value = false
-                                }
-                                1 -> {
-                                    taskSelectedState.value = true
-                                    noteSelectedState.value = false
-                                }
+                        HorizontalPager(
+                            state = viewPagerState,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                tabLayoutItems[this@HorizontalPager.currentPage].invoke()
                             }
                         }
                     }
@@ -202,7 +235,7 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                     ) {
                         IconButton(
                             onClick = {
-                                changeCurrentPageState(notePage = true, taskPage = false)
+                                changeCurrentPageState(notePage = true)
                             },
                             modifier = Modifier.padding(
                                 top = 10.dp,
@@ -236,7 +269,7 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                         }
                         IconButton(
                             onClick = {
-                                changeCurrentPageState(notePage = false, taskPage = true)
+                                changeCurrentPageState(notePage = false)
                             },
                             modifier = Modifier.padding(
                                 top = 10.dp,
@@ -250,6 +283,12 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                                 modifier = Modifier.size(30.dp),
                                 tint = viewModel.getIconColor(state = taskSelectedState)
                             )
+                        }
+                        LaunchedEffect(viewPagerState) {
+                            snapshotFlow { viewPagerState.currentPage }.collect {
+                                taskSelectedState.value = it != 0
+                                noteSelectedState.value = it == 0
+                            }
                         }
                     }
                 }

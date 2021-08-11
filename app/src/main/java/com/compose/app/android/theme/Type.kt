@@ -13,7 +13,7 @@ val InterTypeface = FontFamily(
     Font(R.font.inter_medium, FontWeight.Medium),
     Font(R.font.inter_bold, FontWeight.Bold),
     Font(R.font.inter_extrabold, FontWeight.ExtraBold),
-    Font(R.font.inter_semibold, FontWeight.W600)
+    Font(R.font.inter_semibold, FontWeight.SemiBold)
 )
 
 val Typography = Typography(
@@ -30,6 +30,12 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold
     ),
 
+    h6 = TextStyle(
+        fontFamily = InterTypeface,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 19.sp
+    ),
+
     body1 = TextStyle(
         fontFamily = InterTypeface,
         fontWeight = FontWeight.Normal,
@@ -38,7 +44,7 @@ val Typography = Typography(
 
     body2 = TextStyle(
         fontFamily = InterTypeface,
-        fontWeight = FontWeight.W600,
+        fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     ),
 

@@ -4,9 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseAccount
+import com.compose.app.android.firebase.FirebaseDocument
+import com.compose.app.android.model.NoteDocument
+import com.google.accompanist.swiperefresh.SwipeRefreshState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,6 +21,9 @@ class ProductivityViewModel : ViewModel() {
 
     val asyncScope = CoroutineScope(Dispatchers.IO + Job())
     val synchronousScope = CoroutineScope(Dispatchers.Main + Job())
+
+    val noteLiveList: LiveData<MutableList<NoteDocument>> = MutableLiveData(mutableListOf<NoteDocument>())
+    val isUpdatingNoteList = SwipeRefreshState(false)
 
     /**
      * Fetch the latest version of the user's avatar image from
@@ -42,6 +50,13 @@ class ProductivityViewModel : ViewModel() {
         } else {
             colorResource(id = R.color.text_color_disabled)
         }
+    }
+
+    fun updateNoteList() {
+        FirebaseDocument().getAllNotes(
+            noteLiveList as MutableLiveData<MutableList<NoteDocument>>,
+            isUpdatingNoteList
+        )
     }
 
 }

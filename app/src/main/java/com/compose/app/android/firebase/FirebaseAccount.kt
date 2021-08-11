@@ -22,10 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-/**
- * Class used to store Firebase authentication and user metadata
- * modification related methods
- */
 class FirebaseAccount {
 
     private val firebaseAuth: FirebaseAuth = Firebase.auth
@@ -53,7 +49,11 @@ class FirebaseAccount {
      * @return A boolean value indicating whether the authentication attempt
      * was successful or not.
      */
-    suspend fun authenticateWithEmail(email: String, password: String, context: Context) : Boolean {
+    suspend fun authenticateWithEmail(
+        email: String,
+        password: String,
+        context: Context
+    ) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
         val sharedPreferences = context.getDefaultPreferences()
@@ -68,6 +68,7 @@ class FirebaseAccount {
                             }.apply()
                             completableToken.complete(true)
                         } else {
+                            firebaseAuth
                             completableToken.complete(false)
                         }
                     }
@@ -97,8 +98,14 @@ class FirebaseAccount {
      * @return A boolean value indicating that the user's account was created, the
      * avatar was uploaded, and all metadata was successfully inserted into Firebase.
      */
-    suspend fun createNewAccount(email: String, password: String, firstName: String, lastName: String,
-                                 profileImage: Bitmap, context: Context) : String {
+    suspend fun createNewAccount(
+        email: String,
+        password: String,
+        firstName: String,
+        lastName: String,
+        profileImage: Bitmap,
+        context: Context
+    ) : String {
         val completableToken = CompletableDeferred<String>()
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
         val sharedPreferences = context.getDefaultPreferences()
@@ -135,7 +142,9 @@ class FirebaseAccount {
      * @return A boolean value indicating whether the user metadata has
      * been updated/inserted without a failure or exception.
      */
-    suspend fun uploadNewUserMetadata(mapData: Map<String, String>) : Boolean {
+    suspend fun uploadNewUserMetadata(
+        mapData: Map<String, String>
+    ) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val userMetadataPath = firebaseFirestore.collection("metadata").document(firebaseAuth.currentUser!!.uid)
         userMetadataPath.set(mapData).addOnSuccessListener {
@@ -156,7 +165,10 @@ class FirebaseAccount {
      * @return A boolean value indicating whether the avatar has been
      * uploaded to Firebase without any error.
      */
-    suspend fun uploadNewProfileImage(avatarImage: Bitmap, context: Context) : Boolean {
+    suspend fun uploadNewProfileImage(
+        avatarImage: Bitmap,
+        context: Context
+    ) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
         val avatarImagePath = firebaseStorage.reference.child("metadata/avatars/${firebaseAuth.currentUser!!.uid}")
@@ -206,7 +218,9 @@ class FirebaseAccount {
      * @return A boolean value indicating whether the avatar was sent to the
      * file successfully.
      */
-    suspend fun sendProfileImageToFile(filesDirPath: String) : Boolean {
+    suspend fun sendProfileImageToFile(
+        filesDirPath: String
+    ) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val avatarImagePath = firebaseStorage.reference.child("metadata/avatars/${firebaseAuth.currentUser!!.uid}")
         val localImagePath = File("${filesDirPath}/avatar.png")

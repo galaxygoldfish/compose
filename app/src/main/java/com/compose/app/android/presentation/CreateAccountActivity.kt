@@ -53,9 +53,15 @@ class CreateAccountActivity : ComponentActivity() {
      * @param descriptionState - The snackbar's contentDescription state to be used
      * when switching between snackbar icons.
      */
-    fun attemptCreateNewUser(emailState: String, passwordState: String, nameState: String,
-        lastNameState: String, snackbarState: SnackbarHostState, iconState: MutableState<ImageVector>,
-        descriptionState: MutableState<String>) {
+    fun attemptCreateNewUser(
+        emailState: String,
+        passwordState: String,
+        nameState: String,
+        lastNameState: String,
+        snackbarState: SnackbarHostState,
+        iconState: MutableState<ImageVector>,
+        descriptionState: MutableState<String>
+    ) {
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
         asyncScope.launch {
             iconState.value = Icons.Rounded.AccountTree
@@ -98,7 +104,7 @@ class CreateAccountActivity : ComponentActivity() {
         val pictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(pictureIntent, CreateAccountViewModel.CODE_INTENT_CAMERA)
     }
-    
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {

@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.view.ProductivityView
 import com.compose.app.android.viewmodel.ProductivityViewModel
@@ -15,6 +17,8 @@ class ProductivityActivity : ComponentActivity() {
 
     private val viewModel: ProductivityViewModel by viewModels()
 
+    @ExperimentalFoundationApi
+    @ExperimentalMaterialApi
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

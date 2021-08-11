@@ -17,7 +17,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun BasicSnackbar(hostState: SnackbarHostState, modifier: Modifier, icon: ImageVector, contentDescription: String) {
+fun BasicSnackbar(
+    hostState: SnackbarHostState,
+    modifier: Modifier,
+    icon: ImageVector,
+    contentDescription: String
+) {
     SnackbarHost(
         modifier = modifier,
         hostState = hostState,
