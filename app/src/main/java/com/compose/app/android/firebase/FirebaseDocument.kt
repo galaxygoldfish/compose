@@ -5,6 +5,7 @@ import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -62,6 +63,20 @@ class FirebaseDocument {
                     isUpdating.isRefreshing = false
                 }
             }
+        }
+    }
+
+    fun updateTaskCompletion(
+        newValue: Boolean,
+        taskID: String
+    ) {
+        val taskItemPath = userdataBasePath.collection("task-data").document(taskID)
+        taskItemPath.get().addOnSuccessListener { document ->
+            val documentTemp = document.data!!
+            documentTemp.let {
+                it["complete"] = newValue
+            }
+            taskItemPath.set(documentTemp, SetOptions.merge())
         }
     }
 

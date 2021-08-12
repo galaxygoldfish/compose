@@ -24,6 +24,8 @@ import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import com.compose.app.android.R
+import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.TaskDocument
 
 @Composable
@@ -44,9 +47,8 @@ fun TaskListView(
     val taskListState = rememberLazyListState()
     val taskItemState = taskList.observeAsState().value!!
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 10.dp, start = 14.dp, end = 15.dp),
+        modifier = Modifier.fillMaxSize()
+            .padding(top = 15.dp, start = 14.dp, end = 15.dp),
         state = taskListState,
         content = {
             items(
@@ -71,11 +73,12 @@ fun TaskListCard(
     taskList: MutableList<TaskDocument>
 ) {
     val currentTask = taskList[index]
+    val taskCheckboxState = remember { mutableStateOf(currentTask.isComplete) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(bottom = 5.dp),
+            .padding(bottom = 10.dp),
         shape = RoundedCornerShape(7.dp),
         backgroundColor = colorResource(id = R.color.button_neutral_background_color),
         elevation = 0.dp,
@@ -85,9 +88,10 @@ fun TaskListCard(
             modifier = Modifier.padding(start = 15.dp)
         ) {
             Checkbox(
-                checked = currentTask.isComplete,
+                checked = taskCheckboxState.value,
                 onCheckedChange = { checked ->
-                    currentTask.isComplete = checked
+                    taskCheckboxState.value = checked
+                    FirebaseDocument().updateTaskCompletion(checked, currentTask.taskID)
                 },
                 modifier = Modifier
                     .padding(end = 10.dp)
@@ -101,16 +105,18 @@ fun TaskListCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
+                        maxLines = 2,
                         text = currentTask.taskTitle,
                         style = MaterialTheme.typography.h6,
+                        fontSize = 17.sp,
                         modifier = Modifier
                             .wrapContentWidth()
                             .padding(top = 6.dp, end = 15.dp, start = 10.dp),
-                        maxLines = 2
                     )
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(top = 2.dp, bottom = 7.dp, start = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
