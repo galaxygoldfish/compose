@@ -21,6 +21,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
@@ -86,6 +87,7 @@ fun NoteListCard(
                 Text(
                     text = currentNote.title,
                     style = MaterialTheme.typography.h6,
+                    color = Color.Black,
                     modifier = Modifier.padding(
                         top = 7.dp,
                         end = 10.dp,
@@ -95,6 +97,7 @@ fun NoteListCard(
                 Text(
                     text = currentNote.content,
                     style = MaterialTheme.typography.body1,
+                    color = Color.Black,
                     maxLines = 8,
                     modifier = Modifier.padding(
                         top = 2.dp,

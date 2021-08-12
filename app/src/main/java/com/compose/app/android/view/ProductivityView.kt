@@ -1,6 +1,7 @@
 package com.compose.app.android.view
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,8 +20,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.FloatingActionButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -29,6 +29,7 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.CheckBox
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.KeyboardVoice
@@ -51,8 +52,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import com.compose.app.android.R
+import com.compose.app.android.components.AddNoteTaskMenuFAB
+import com.compose.app.android.model.ExpandableFABItem
+import com.compose.app.android.model.ExpandableFABState
 import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
+import com.compose.app.android.presentation.NoteEditorActivity
 import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.viewmodel.ProductivityViewModel
@@ -60,6 +65,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import java.util.UUID
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -120,8 +126,13 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
     )
 
     val scaffoldState = rememberScaffoldState()
-    val viewPagerState = rememberPagerState(pageCount = 2, initialPage = 0, initialOffscreenLimit = 2, infiniteLoop = false)
-
+    val viewPagerState = rememberPagerState(
+        pageCount = 2,
+        initialPage = 0,
+        initialOffscreenLimit = 2,
+        infiniteLoop = false
+    )
+    val floatingActionState = remember { mutableStateOf(ExpandableFABState.COLLAPSED) }
     val taskSelectedState = remember { mutableStateOf(false) }
     val noteSelectedState = remember { mutableStateOf(true) }
     val searchFieldValue = remember { mutableStateOf(TextFieldValue()) }
@@ -175,18 +186,18 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                                     )
                                 }
                                 BitmapFactory.decodeFile("${context.filesDir}/avatar.png")?.let {
-                                        Image(
-                                            bitmap = it.asImageBitmap(),
-                                            contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
-                                            modifier = Modifier
-                                                .size(60.dp)
-                                                .align(Alignment.CenterVertically)
-                                                .padding(end = 16.dp)
-                                                .clickable {
-                                                    // TODO - Show account context menu dialog
-                                                }
-                                        )
-                                    }
+                                    Image(
+                                        bitmap = it.asImageBitmap(),
+                                        contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
+                                        modifier = Modifier
+                                            .size(60.dp)
+                                            .align(Alignment.CenterVertically)
+                                            .padding(end = 16.dp)
+                                            .clickable {
+                                                // TODO - Show account context menu dialog
+                                            }
+                                    )
+                                }
                             }
                             TextField(
                                 modifier = Modifier
@@ -269,23 +280,7 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                                 tint = viewModel.getIconColor(state = noteSelectedState)
                             )
                         }
-                        FloatingActionButton(
-                            onClick = {
-
-                            },
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .size(50.dp),
-                            elevation = FloatingActionButtonDefaults.elevation(
-                                defaultElevation = 0.dp,
-                                pressedElevation = 0.dp
-                            )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Add,
-                                contentDescription = stringResource(id = R.string.add_button_content_desc)
-                            )
-                        }
+                        Spacer(modifier = Modifier.size(50.dp))
                         IconButton(
                             onClick = {
                                 changeCurrentPageState(notePage = false)
@@ -309,6 +304,43 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                                 noteSelectedState.value = it == 0
                             }
                         }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth()
+                            .padding(bottom = 20.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        AddNoteTaskMenuFAB(
+                            icon = Icons.Rounded.Add,
+                            contentDescription = stringResource(id = R.string.add_button_content_desc),
+                            expandedState = floatingActionState.value,
+                            modifier = Modifier.size(50.dp),
+                            onExpansion = { state ->
+                                floatingActionState.value = state
+                            },
+                            menuItems = listOf(
+                                ExpandableFABItem(
+                                    icon = Icons.Rounded.Edit,
+                                    contentDescription = stringResource(id = R.string.edit_icon_content_desc),
+                                    label = stringResource(id = R.string.productivity_menu_notes),
+                                    onClick = {
+                                        val intent = Intent(context, NoteEditorActivity::class.java)
+                                        intent.putExtra("documentID", UUID.randomUUID().toString())
+                                        context.startActivity(intent)
+                                    }
+                                ),
+                                ExpandableFABItem(
+                                    icon = Icons.Rounded.CheckBox,
+                                    contentDescription = stringResource(id = R.string.edit_icon_content_desc),
+                                    label = stringResource(id = R.string.productivity_menu_task),
+                                    onClick = {
+
+                                    }
+                                ),
+                            )
+                        )
                     }
                 }
             }

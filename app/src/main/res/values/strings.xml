@@ -67,6 +67,7 @@
     <string name="productivity_tab_item_notes">Notes</string>
     <string name="productivity_tab_item_tasks">Tasks</string>
     <string name="productivity_welcome_message">Welcome,</string>
-
+    <string name="productivity_menu_notes">NEW NOTE</string>
+    <string name="productivity_menu_task">NEW TASK</string>
 
 </resources>

@@ -22,6 +22,7 @@
         <activity android:name=".presentation.LogInActivity" />
         <activity android:name=".presentation.CreateAccountActivity" />
         <activity android:name=".presentation.WelcomeActivity" />
+        <activity android:name=".presentation.NoteEditorActivity" />
     </application>
 
 </manifest>

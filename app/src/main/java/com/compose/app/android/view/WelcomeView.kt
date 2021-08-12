@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.compose.app.android.R
+import com.compose.app.android.components.FullWidthButton
 import com.compose.app.android.presentation.CreateAccountActivity
 import com.compose.app.android.presentation.LogInActivity
 import com.compose.app.android.theme.ComposeTheme

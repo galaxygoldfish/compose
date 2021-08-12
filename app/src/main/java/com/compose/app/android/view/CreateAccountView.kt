@@ -47,6 +47,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
 import com.compose.app.android.R
+import com.compose.app.android.components.IconOnlyButton
+import com.compose.app.android.components.TextOnlyButton
 import com.compose.app.android.presentation.CreateAccountActivity
 import com.compose.app.android.presentation.WelcomeActivity
 import com.compose.app.android.theme.ComposeTheme
