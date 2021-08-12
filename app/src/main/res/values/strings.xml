@@ -20,6 +20,9 @@
     <string name="nothing_here_content_desc">Nothing here</string>
     <string name="calendar_icon_content_desc">Calendar</string>
     <string name="notification_bell_content_desc">Notification bell</string>
+    <string name="save_button_content_desc">Save item</string>
+    <string name="palette_icon_content_desc">Note color</string>
+    <string name="delete_icon_content_desc">Delete item</string>
 
     <string name="firebase_error_fetching_title">There was an error.</string>
     <string name="firebase_error_fetching_content">Unfortunately there was an error retrieving the requested content. Please try again</string>

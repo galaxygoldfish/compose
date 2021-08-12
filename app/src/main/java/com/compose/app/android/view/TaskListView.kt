@@ -78,7 +78,7 @@ fun TaskListCard(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(bottom = 10.dp),
+            .padding(bottom = 9.dp),
         shape = RoundedCornerShape(7.dp),
         backgroundColor = colorResource(id = R.color.button_neutral_background_color),
         elevation = 0.dp,

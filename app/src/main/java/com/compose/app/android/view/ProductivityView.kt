@@ -271,7 +271,7 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                         }
                         FloatingActionButton(
                             onClick = {
-                                // TODO
+
                             },
                             modifier = Modifier
                                 .align(Alignment.CenterVertically)

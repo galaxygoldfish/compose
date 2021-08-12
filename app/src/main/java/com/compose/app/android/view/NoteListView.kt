@@ -41,7 +41,7 @@ fun NoteListView(
         cells = gridCellValue.value,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 5.dp, start = 14.dp, end = 15.dp),
+            .padding(top = 10.dp, start = 14.dp, end = 15.dp),
         content = {
             items(
                 count = listItems.size,
@@ -66,7 +66,7 @@ fun NoteListCard(
     onItemClick: () -> Unit
 ) {
     val isCardEven = index % 2 == 0
-    val paddingStart = if (!isCardEven) 6.dp else 0.dp
+    val paddingStart = if (!isCardEven) 3.dp else 0.dp
     val paddingEnd = if (!isCardEven) 0.dp else 6.dp
     Card(
         onClick = onItemClick,
@@ -74,7 +74,7 @@ fun NoteListCard(
         backgroundColor = colorResource(id = currentNote.color),
         elevation = 0.dp,
         modifier = Modifier.padding(
-            top = 10.dp,
+            top = 5.dp,
             bottom = 5.dp,
             start = paddingStart,
             end = paddingEnd
