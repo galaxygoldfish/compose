@@ -19,9 +19,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.CalendarToday
-import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,6 +34,8 @@ import androidx.lifecycle.MutableLiveData
 import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.TaskDocument
+import com.compose.app.android.theme.IconCalendar
+import com.compose.app.android.theme.IconNotification
 
 @Composable
 @ExperimentalMaterialApi
@@ -47,7 +47,8 @@ fun TaskListView(
     val taskListState = rememberLazyListState()
     val taskItemState = taskList.observeAsState().value!!
     LazyColumn(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(top = 15.dp, start = 14.dp, end = 15.dp),
         state = taskListState,
         content = {
@@ -121,7 +122,7 @@ fun TaskListCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.CalendarToday,
+                        painter = painterResource(id = IconCalendar),
                         contentDescription = stringResource(id = R.string.calendar_icon_content_desc),
                         modifier = Modifier.size(16.dp),
                         tint = colorResource(id = R.color.text_color_disabled)
@@ -134,7 +135,7 @@ fun TaskListCard(
                         modifier = Modifier.padding(start = 5.dp, end = 15.dp)
                     )
                     Icon(
-                        imageVector = Icons.Rounded.Notifications,
+                        painter = painterResource(id = IconNotification),
                         contentDescription = stringResource(id = R.string.notification_bell_content_desc),
                         modifier = Modifier.size(16.dp),
                         tint = colorResource(id = R.color.text_color_disabled)

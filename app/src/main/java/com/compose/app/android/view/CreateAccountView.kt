@@ -25,13 +25,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Camera
-import androidx.compose.material.icons.rounded.Email
-import androidx.compose.material.icons.rounded.Folder
-import androidx.compose.material.icons.rounded.Group
-import androidx.compose.material.icons.rounded.Lock
-import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -43,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -56,6 +50,13 @@ import com.compose.app.android.components.TextOnlyButton
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
+import com.compose.app.android.theme.IconBackArrow
+import com.compose.app.android.theme.IconCamera
+import com.compose.app.android.theme.IconEmail
+import com.compose.app.android.theme.IconGallery
+import com.compose.app.android.theme.IconPassword
+import com.compose.app.android.theme.IconPersonGroup
+import com.compose.app.android.theme.IconPersonSingle
 import com.compose.app.android.utilities.rawStringResource
 import com.compose.app.android.viewmodel.CreateAccountViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -108,7 +109,7 @@ fun CreateAccountView(
                             },
                             content = @Composable {
                                 Icon(
-                                    imageVector = Icons.Rounded.ArrowBack,
+                                    painter = painterResource(id = IconBackArrow),
                                     contentDescription = stringResource(id = R.string.back_button_content_desc),
                                     modifier = Modifier.padding(top = 20.dp, start = 10.dp),
                                 )
@@ -136,7 +137,7 @@ fun CreateAccountView(
                             text = emailState.value,
                             hint = stringResource(id = R.string.create_account_email_address_hint),
                             valueCallback = { emailState.value = it },
-                            icon = Icons.Rounded.Email,
+                            icon = painterResource(id = IconEmail),
                             contentDescription = stringResource(id = R.string.email_icon_content_desc),
                             passwordType = false
                         )
@@ -144,7 +145,7 @@ fun CreateAccountView(
                             text = passwordState.value,
                             hint = stringResource(id = R.string.create_account_password_hint),
                             valueCallback = { passwordState.value = it },
-                            icon = Icons.Rounded.Lock,
+                            icon = painterResource(id = IconPassword),
                             contentDescription = stringResource(id = R.string.lock_icon_content_desc),
                             passwordType = true
                         )
@@ -160,7 +161,7 @@ fun CreateAccountView(
                             text = firstNameState.value,
                             hint = stringResource(id = R.string.create_account_first_name_hint),
                             valueCallback = { firstNameState.value = it },
-                            icon = Icons.Rounded.Person,
+                            icon = painterResource(id = IconPersonSingle),
                             contentDescription = stringResource(id = R.string.person_icon_content_desc),
                             passwordType = false
                         )
@@ -168,7 +169,7 @@ fun CreateAccountView(
                             text = lastNameState.value,
                             hint = stringResource(id = R.string.create_account_last_name_hint),
                             valueCallback = { lastNameState.value = it },
-                            icon = Icons.Rounded.Group,
+                            icon = painterResource(id = IconPersonGroup),
                             contentDescription = stringResource(id = R.string.group_icon_content_desc),
                             passwordType = false
                         )
@@ -186,14 +187,14 @@ fun CreateAccountView(
                                     modifier = Modifier.padding(start = 20.dp, top = 5.dp)
                                 ) {
                                     IconOnlyButton(
-                                        icon = Icons.Rounded.Camera,
+                                        icon = painterResource(id = IconCamera),
                                         contentDescription = stringResource(id = R.string.file_folder_content_desc),
                                         onClick = {
                                             viewModel.openCameraForResult(context)
                                         },
                                     )
                                     IconOnlyButton(
-                                        icon = Icons.Rounded.Folder,
+                                        icon = painterResource(id = IconGallery),
                                         contentDescription = stringResource(id = R.string.camera_icon_content_desc),
                                         onClick = {
                                             viewModel.openGalleryForResult(context)

@@ -10,9 +10,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,21 +17,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.compose.app.android.theme.IconEyeClosed
+import com.compose.app.android.theme.IconEyeOpen
 
 @Composable
 fun LargeTextInputField(
     text: TextFieldValue,
     hint: String,
     valueCallback: (TextFieldValue) -> Unit,
-    icon: ImageVector,
+    icon: Painter,
     contentDescription: String,
     passwordType: Boolean = false
 ) {
@@ -67,7 +67,7 @@ fun LargeTextInputField(
         singleLine = true,
         leadingIcon = @Composable {
             Icon(
-                imageVector = icon,
+                painter = icon,
                 contentDescription = contentDescription,
                 tint = MaterialTheme.colors.onBackground
             )
@@ -75,16 +75,19 @@ fun LargeTextInputField(
         trailingIcon = @Composable {
             if (passwordType) {
                 val image = if (passwordVisibility) {
-                    Icons.Filled.Visibility
+                    IconEyeOpen
                 } else {
-                    Icons.Filled.VisibilityOff
+                    IconEyeClosed
                 }
                 IconButton(
                     onClick = {
                         passwordVisibility = !passwordVisibility
                     },
                     content = {
-                        Icon(imageVector = image, "")
+                        Icon(
+                            painter = painterResource(id = image),
+                            "TODO"
+                        )
                     }
                 )
             }

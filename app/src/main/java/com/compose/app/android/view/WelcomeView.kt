@@ -25,6 +25,8 @@ import com.compose.app.android.R
 import com.compose.app.android.components.FullWidthButton
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
+import com.compose.app.android.theme.IconCreateAccount
+import com.compose.app.android.theme.IconLogIn
 
 @Composable
 fun WelcomeView(context: Context, navController: NavController) {
@@ -64,7 +66,7 @@ fun WelcomeView(context: Context, navController: NavController) {
             ) {
                 FullWidthButton(
                     text = stringResource(id = R.string.welcome_button_log_in),
-                    icon = Icons.Rounded.Person,
+                    icon = painterResource(id = IconLogIn),
                     contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
                     color = colorResource(id = R.color.deep_sea),
                     onClick = {
@@ -73,7 +75,7 @@ fun WelcomeView(context: Context, navController: NavController) {
                 )
                 FullWidthButton(
                     text = stringResource(id = R.string.welcome_button_create_account),
-                    icon = Icons.Rounded.AddCircle,
+                    icon = painterResource(id = IconCreateAccount),
                     contentDescription = stringResource(id = R.string.welcome_create_account_button_content_desc),
                     color = colorResource(id = R.color.button_neutral_background_color),
                     onClick = {

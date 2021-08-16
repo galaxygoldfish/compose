@@ -15,9 +15,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountTree
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Email
-import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -26,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -36,6 +34,9 @@ import com.compose.app.android.components.LargeTextInputField
 import com.compose.app.android.components.TextOnlyButton
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
+import com.compose.app.android.theme.IconBackArrow
+import com.compose.app.android.theme.IconEmail
+import com.compose.app.android.theme.IconPassword
 import com.compose.app.android.utilities.rawStringResource
 import com.compose.app.android.viewmodel.LogInViewModel
 import kotlinx.coroutines.launch
@@ -81,7 +82,7 @@ fun LogInView(
                             },
                             content = @Composable {
                                 Icon(
-                                    imageVector = Icons.Rounded.ArrowBack,
+                                    painter = painterResource(id = IconBackArrow),
                                     contentDescription = stringResource(id = R.string.back_button_content_desc),
                                     modifier = Modifier.padding(top = 20.dp, start = 10.dp),
                                 )
@@ -109,7 +110,7 @@ fun LogInView(
                             text = emailValue.value,
                             hint = stringResource(id = R.string.log_in_activity_email_hint),
                             valueCallback = { emailValue.value = it },
-                            icon = Icons.Rounded.Email,
+                            icon = painterResource(id = IconEmail),
                             contentDescription = stringResource(id = R.string.email_icon_content_desc),
                             passwordType = false
                         )
@@ -117,7 +118,7 @@ fun LogInView(
                             text = passwordValue.value,
                             hint = stringResource(id = R.string.log_in_activity_password_hint),
                             valueCallback = { passwordValue.value = it },
-                            icon = Icons.Rounded.Lock,
+                            icon = painterResource(id = IconPassword),
                             contentDescription = stringResource(id = R.string.lock_icon_content_desc),
                             passwordType = true
                         )

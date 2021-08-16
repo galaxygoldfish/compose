@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ButtonDefaults.elevation
@@ -22,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -34,7 +35,7 @@ import com.compose.app.android.model.ExpandableFABState
 @Composable
 fun FullWidthButton(
     text: String,
-    icon: ImageVector,
+    icon: Painter,
     contentDescription: String,
     color: Color,
     onClick: () -> Unit
@@ -55,7 +56,7 @@ fun FullWidthButton(
             modifier = Modifier.fillMaxWidth(),
         ) {
             Icon(
-                imageVector = icon,
+                painter = icon,
                 contentDescription = contentDescription,
                 tint = Color.Black
             )
@@ -101,7 +102,7 @@ fun TextOnlyButton(
 
 @Composable
 fun IconOnlyButton(
-    icon: ImageVector,
+    icon: Painter,
     onClick: () -> Unit,
     contentDescription: String
 ) {
@@ -120,7 +121,7 @@ fun IconOnlyButton(
     ) {
         Box {
             Icon(
-                imageVector = icon,
+                painter = icon,
                 contentDescription = contentDescription,
             )
         }
@@ -129,7 +130,7 @@ fun IconOnlyButton(
 
 @Composable
 fun AddNoteTaskMenuFAB(
-    icon: ImageVector,
+    icon: Painter,
     contentDescription: String,
     onExpansion: (state: ExpandableFABState) -> Unit,
     expandedState: ExpandableFABState,
@@ -138,10 +139,13 @@ fun AddNoteTaskMenuFAB(
 ) {
     val transitionUpdate = updateTransition(targetState = expandedState, label = "Rotating FAB")
     val iconRotation: Float by transitionUpdate.animateFloat(label = "Icon rotation") { state ->
-        if (state == ExpandableFABState.EXPANDED) 225F else 0F
+        if (state == ExpandableFABState.EXPANDED) 90F else 0F
+    }
+    val actionRotation by transitionUpdate.animateFloat(label = "FAB roation") { state ->
+        if (state == ExpandableFABState.EXPANDED) 45F else 0F
     }
     val scaleTransition = transitionUpdate.animateFloat(label = "Menu item scale") { state ->
-        if (state == ExpandableFABState.EXPANDED) 50F else 0F
+        if (state == ExpandableFABState.EXPANDED) 47F else 0F
     }
     val colorTransition by transitionUpdate.animateColor(label = "Base FAB color") { state ->
         if (state == ExpandableFABState.EXPANDED) colorResource(id = R.color.text_color_enabled)
@@ -159,16 +163,16 @@ fun AddNoteTaskMenuFAB(
                 onClick = item.onClick,
                 content = {
                     Icon(
-                        imageVector = item.icon,
+                        painter = item.icon,
                         contentDescription = item.contentDescription,
                         tint = colorResource(id = R.color.text_color_reverse)
                     )
                 },
-                modifier = Modifier
-                    .padding(bottom = if (index % 2 == 0) 12.dp else 20.dp)
+                modifier = Modifier.padding(bottom = if (index % 2 == 0) 12.dp else 20.dp)
                     .size(scaleTransition.value.dp),
                 backgroundColor = colorResource(id = R.color.text_color_enabled),
-                elevation = FloatingActionButtonDefaults.elevation(1.dp)
+                elevation = FloatingActionButtonDefaults.elevation(1.dp),
+                shape = RoundedCornerShape(10.dp)
             )
         }
         FloatingActionButton(
@@ -181,15 +185,16 @@ fun AddNoteTaskMenuFAB(
                     }
                 )
             },
-            modifier = modifier,
+            modifier = modifier.rotate(actionRotation),
             elevation = FloatingActionButtonDefaults.elevation(
                 defaultElevation = 0.dp,
                 pressedElevation = 0.dp
             ),
-            backgroundColor = colorTransition
+            backgroundColor = colorTransition,
+            shape = RoundedCornerShape(10.dp)
         ) {
             Icon(
-                imageVector = icon,
+                painter = icon,
                 contentDescription = contentDescription,
                 modifier = Modifier.rotate(iconRotation),
                 tint = iconColorTransition

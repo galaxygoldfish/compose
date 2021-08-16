@@ -12,14 +12,10 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.ColorLens
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.Save
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -27,6 +23,10 @@ import com.compose.app.android.R
 import com.compose.app.android.components.TextOnlyTextInput
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
+import com.compose.app.android.theme.IconBackArrow
+import com.compose.app.android.theme.IconSaveContent
+import com.compose.app.android.theme.IconThemeColor
+import com.compose.app.android.theme.IconTrashItem
 import com.compose.app.android.viewmodel.NoteEditorViewModel
 
 @Composable
@@ -63,7 +63,7 @@ fun NoteEditorView(
                         },
                         content = @Composable {
                             Icon(
-                                imageVector = Icons.Rounded.ArrowBack,
+                                painter = painterResource(id = IconBackArrow),
                                 contentDescription = stringResource(id = R.string.back_button_content_desc)
                             )
                         }
@@ -81,7 +81,7 @@ fun NoteEditorView(
                             },
                             content = @Composable {
                                 Icon(
-                                    imageVector = Icons.Rounded.Save,
+                                    painter = painterResource(id = IconSaveContent),
                                     contentDescription = stringResource(id = R.string.save_button_content_desc)
                                 )
                             }
@@ -95,7 +95,7 @@ fun NoteEditorView(
                             },
                             content = @Composable {
                                 Icon(
-                                    imageVector = Icons.Rounded.ColorLens,
+                                    painter = painterResource(id = IconThemeColor),
                                     contentDescription = stringResource(id = R.string.palette_icon_content_desc)
                                 )
                             }
@@ -109,7 +109,7 @@ fun NoteEditorView(
                             },
                             content = @Composable {
                                 Icon(
-                                    imageVector = Icons.Rounded.Delete,
+                                    painter = painterResource(id = IconTrashItem),
                                     contentDescription = stringResource(id = R.string.delete_icon_content_desc)
                                 )
                             }

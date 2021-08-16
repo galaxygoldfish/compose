@@ -14,6 +14,28 @@
         <entry key="../../../../../layout/compose-model-1628122695500.xml" value="0.1" />
         <entry key="../../../../../layout/compose-model-1628124286057.xml" value="0.3712962962962963" />
         <entry key="../../../../../layout/compose-model-1628135078748.xml" value="0.3851851851851852" />
+        <entry key="app/src/main/res/drawable/ic_duotone_account_circle.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_back_arrow.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_calendar_empty.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_check_circle.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_create_account.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_edit_1.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_eye_closed.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_eye_open.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_image_gallery.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_keyboard_voice.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_lock_closed.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_login_arrow.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_mail_letter.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_notification_bell.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_plus_round.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_save.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_search.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_take_photo.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_theme_color.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_trash_can.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_user_group.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_duotone_user_single.xml" value="0.35625" />
         <entry key="app/src/main/res/drawable/ic_nothing_here_graphic.xml" value="0.17291666666666666" />
         <entry key="app/src/main/res/drawable/ic_welcome_screen_graphic.xml" value="0.1695" />
         <entry key="app/src/main/res/drawable/provider_sheet_background_corners.xml" value="0.34974358974358977" />

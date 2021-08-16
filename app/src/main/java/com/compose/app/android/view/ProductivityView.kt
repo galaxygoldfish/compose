@@ -26,13 +26,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.CheckBox
-import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.KeyboardVoice
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -59,6 +53,11 @@ import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
+import com.compose.app.android.theme.IconAddNew
+import com.compose.app.android.theme.IconCheckCircle
+import com.compose.app.android.theme.IconEditPen
+import com.compose.app.android.theme.IconKeyboardVoice
+import com.compose.app.android.theme.IconSearch
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.viewmodel.ProductivityViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -191,7 +190,7 @@ fun ProductivityView(
                                 singleLine = true,
                                 leadingIcon = @Composable {
                                     Icon(
-                                        imageVector = Icons.Rounded.Search,
+                                        painter = painterResource(id = IconSearch),
                                         contentDescription = stringResource(id = R.string.search_icon_content_desc),
                                         tint = MaterialTheme.colors.onBackground
                                     )
@@ -203,7 +202,7 @@ fun ProductivityView(
                                         }
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Rounded.KeyboardVoice,
+                                            painter = painterResource(id = IconKeyboardVoice),
                                             contentDescription = stringResource(id = R.string.keyboard_voice_icon_content_desc),
                                             tint = MaterialTheme.colors.onBackground
                                         )
@@ -278,7 +277,7 @@ fun ProductivityView(
                             )
                         ) {
                             Icon(
-                                imageVector = Icons.Rounded.Edit,
+                                painter = painterResource(id = IconEditPen),
                                 contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                                 modifier = Modifier.size(30.dp),
                                 tint = viewModel.getIconColor(state = noteSelectedState)
@@ -296,7 +295,7 @@ fun ProductivityView(
                             )
                         ) {
                             Icon(
-                                imageVector = Icons.Rounded.CheckCircle,
+                                painter = painterResource(id = IconCheckCircle),
                                 contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                                 modifier = Modifier.size(30.dp),
                                 tint = viewModel.getIconColor(state = taskSelectedState)
@@ -313,20 +312,20 @@ fun ProductivityView(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .fillMaxWidth()
-                            .padding(bottom = 20.dp),
+                            .padding(bottom = 22.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
                         AddNoteTaskMenuFAB(
-                            icon = Icons.Rounded.Add,
+                            icon = painterResource(id = IconAddNew),
                             contentDescription = stringResource(id = R.string.add_button_content_desc),
                             expandedState = floatingActionState.value,
-                            modifier = Modifier.size(50.dp),
+                            modifier = Modifier.size(45.dp),
                             onExpansion = { state ->
                                 floatingActionState.value = state
                             },
                             menuItems = listOf(
                                 ExpandableFABItem(
-                                    icon = Icons.Rounded.Edit,
+                                    icon = painterResource(id = IconEditPen),
                                     contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                                     label = stringResource(id = R.string.productivity_menu_notes),
                                     onClick = {
@@ -334,7 +333,7 @@ fun ProductivityView(
                                     }
                                 ),
                                 ExpandableFABItem(
-                                    icon = Icons.Rounded.CheckBox,
+                                    icon = painterResource(id = IconCheckCircle),
                                     contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                                     label = stringResource(id = R.string.productivity_menu_task),
                                     onClick = {
