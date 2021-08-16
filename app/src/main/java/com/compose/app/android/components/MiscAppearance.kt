@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 fun BasicSnackbar(
     hostState: SnackbarHostState,
     modifier: Modifier,
-    icon: ImageVector,
+    icon: Painter,
     contentDescription: String
 ) {
     SnackbarHost(
@@ -32,7 +32,7 @@ fun BasicSnackbar(
                 content = @Composable {
                     Row {
                         Icon(
-                            imageVector = icon,
+                            painter = icon,
                             contentDescription = contentDescription,
                             modifier = Modifier.align(Alignment.CenterVertically)
                         )
@@ -40,7 +40,8 @@ fun BasicSnackbar(
                             text = data.message,
                             style = MaterialTheme.typography.body1,
                             color = Color.White,
-                            fontSize = 13.sp,modifier = Modifier.padding(horizontal = 15.dp)
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(horizontal = 15.dp)
                         )
                     }
                 },

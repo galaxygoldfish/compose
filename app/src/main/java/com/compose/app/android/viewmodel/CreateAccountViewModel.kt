@@ -9,11 +9,7 @@ import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountTree
-import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -21,6 +17,8 @@ import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
+import com.compose.app.android.theme.IconAlert
+import com.compose.app.android.theme.IconPersonSingle
 import com.compose.app.android.utilities.rawStringResource
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.CoroutineScope
@@ -81,14 +79,14 @@ class CreateAccountViewModel : ViewModel() {
         nameState: String,
         lastNameState: String,
         snackbarState: SnackbarHostState,
-        iconState: MutableState<ImageVector>,
+        iconState: MutableState<Int>,
         descriptionState: MutableState<String>,
         context: Context,
         navController: NavController
     ) {
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
         asyncScope.launch {
-            iconState.value = Icons.Rounded.AccountTree
+            iconState.value = IconPersonSingle
             descriptionState.value = context.rawStringResource(R.string.account_tree_icon_content_desc)
             snackbarState.showSnackbar(message = context.rawStringResource(R.string.create_account_queue_text))
             val avatar: Bitmap = if (avatarImageLive.value == null) {
@@ -103,7 +101,7 @@ class CreateAccountViewModel : ViewModel() {
             if (accountResult == "true") {
                 navController.navigate(NavigationDestination.ProductivityActivity)
             } else {
-                iconState.value = Icons.Rounded.Warning
+                iconState.value = IconAlert
                 descriptionState.value = context.rawStringResource(R.string.warning_icon_content_desc)
                 snackbarState.showSnackbar(accountResult)
             }

@@ -13,9 +13,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountTree
-import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -34,9 +31,11 @@ import com.compose.app.android.components.LargeTextInputField
 import com.compose.app.android.components.TextOnlyButton
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
+import com.compose.app.android.theme.IconAlert
 import com.compose.app.android.theme.IconBackArrow
 import com.compose.app.android.theme.IconEmail
 import com.compose.app.android.theme.IconPassword
+import com.compose.app.android.theme.IconPersonSingle
 import com.compose.app.android.utilities.rawStringResource
 import com.compose.app.android.viewmodel.LogInViewModel
 import kotlinx.coroutines.launch
@@ -52,7 +51,7 @@ fun LogInView(
     val passwordValue = remember { mutableStateOf(TextFieldValue()) }
     val scaffoldState = rememberScaffoldState()
 
-    val snackbarIconState = remember { mutableStateOf(Icons.Rounded.Warning) }
+    val snackbarIconState = remember { mutableStateOf(IconAlert) }
     val snackbarIconDescription = remember { mutableStateOf(context.rawStringResource(R.string.warning_icon_content_desc)) }
 
     fun showSnackbar(@StringRes stringID: Int) {
@@ -151,17 +150,17 @@ fun LogInView(
                                             emailValue.value,
                                             passwordValue.value,
                                             context,
-                                            {
+                                            onSuccess = {
                                                 navController.navigate(NavigationDestination.ProductivityActivity)
                                             },
-                                            {
+                                            onFailure = {
                                                 snackbarIconDescription.value = context.rawStringResource(R.string.warning_icon_content_desc)
-                                                snackbarIconState.value = Icons.Rounded.Warning
+                                                snackbarIconState.value = IconAlert
                                                 showSnackbar(R.string.log_in_failure_message)
                                             },
-                                            {
+                                            onPreLaunch = {
                                                 snackbarIconDescription.value = context.rawStringResource(R.string.account_tree_icon_content_desc)
-                                                snackbarIconState.value = Icons.Rounded.AccountTree
+                                                snackbarIconState.value = IconPersonSingle
                                                 showSnackbar(R.string.log_in_progress_message)
                                             }
                                         )
@@ -173,7 +172,7 @@ fun LogInView(
                     BasicSnackbar(
                         hostState = scaffoldState.snackbarHostState,
                         modifier = Modifier.align(Alignment.BottomCenter),
-                        icon = snackbarIconState.value,
+                        icon = painterResource(id = snackbarIconState.value),
                         contentDescription = snackbarIconDescription.value
                     )
                 }

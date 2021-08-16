@@ -39,7 +39,9 @@ class LogInViewModel : ViewModel() {
         asyncScope.launch {
             onPreLaunch.invoke()
             if (FirebaseAccount().authenticateWithEmail(emailState.text, passwordState.text, context)) {
-                onSuccess.invoke()
+                synchronousScope.launch {
+                    onSuccess.invoke()
+                }
             } else {
                 synchronousScope.launch {
                     onFailure.invoke()

@@ -24,8 +24,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +48,7 @@ import com.compose.app.android.components.TextOnlyButton
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
+import com.compose.app.android.theme.IconAlert
 import com.compose.app.android.theme.IconBackArrow
 import com.compose.app.android.theme.IconCamera
 import com.compose.app.android.theme.IconEmail
@@ -78,7 +77,7 @@ fun CreateAccountView(
     val lastNameState = remember { mutableStateOf(TextFieldValue()) }
 
     val scaffoldState = rememberScaffoldState()
-    val snackbarIconState = remember { mutableStateOf(Icons.Rounded.Warning) }
+    val snackbarIconState = remember { mutableStateOf(IconAlert) }
     val snackbarIconDescription = remember { mutableStateOf(context.rawStringResource(R.string.warning_icon_content_desc)) }
     val avatarImageState = remember { mutableStateOf(BitmapFactory.decodeResource(context.resources, R.drawable.default_avatar_image)) }
 
@@ -107,11 +106,11 @@ fun CreateAccountView(
                             onClick = {
                                 navController.navigate(NavigationDestination.WelcomeActivity)
                             },
+                            modifier = Modifier.padding(top = 20.dp, start = 10.dp),
                             content = @Composable {
                                 Icon(
                                     painter = painterResource(id = IconBackArrow),
                                     contentDescription = stringResource(id = R.string.back_button_content_desc),
-                                    modifier = Modifier.padding(top = 20.dp, start = 10.dp),
                                 )
                             },
                         )
@@ -223,7 +222,7 @@ fun CreateAccountView(
                             BasicSnackbar(
                                 hostState = scaffoldState.snackbarHostState,
                                 modifier = Modifier.align(Alignment.BottomCenter),
-                                icon = snackbarIconState.value,
+                                icon = painterResource(id = snackbarIconState.value),
                                 contentDescription = snackbarIconDescription.value
                             )
                         }

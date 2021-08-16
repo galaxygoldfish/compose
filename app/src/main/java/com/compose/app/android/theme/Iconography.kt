@@ -13,6 +13,7 @@ const val IconEmail = R.drawable.ic_duotone_mail_letter
 const val IconPassword = R.drawable.ic_duotone_lock_closed
 const val IconEyeClosed = R.drawable.ic_duotone_eye_closed
 const val IconEyeOpen = R.drawable.ic_duotone_eye_open
+const val IconAlert = R.drawable.ic_duotone_warning_alert
 
 const val IconGallery = R.drawable.ic_duotone_image_gallery
 const val IconCamera = R.drawable.ic_duotone_take_photo

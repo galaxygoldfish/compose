@@ -4,7 +4,6 @@
     <!-- Custom application style attributes -->
     <declare-styleable name="ComposeResources">
         <attr name="iconColorMain" format="color" />
-        <attr name="iconColorSecondary" format="color" />
     </declare-styleable>
 
 </resources>
