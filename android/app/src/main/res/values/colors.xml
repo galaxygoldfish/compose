@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="green">#58CF5D</color>
+
+    <color name="deep_sea">#3B7EF1</color>
+    <color name="mystic_purple">#9152FF</color>
+    <color name="forest_green">#66BB6A</color>
+    <color name="coral_pink">#F06292</color>
+    <color name="super_yellow">#DCE775</color>
+
+    <color name="bottom_sheet_background">@color/white</color>
+    <color name="login_card_background_color">#EFEFEF</color>
+
+    <color name="profile_chooser_action_color">#D5D5D5</color>
+    <color name="button_neutral_background_color">#EDEDED</color>
+    <color name="button_action_background">#EDEDED</color>
+    <color name="button_danger_background_color">#F86B6B</color>
+    <color name="text_color_button">@color/black</color>
+
+    <color name="background_color">#FFFFFF</color>
+
+    <color name="dialog_background_color">@color/white</color>
+    <color name="text_color_enabled">#000000</color>
+    <color name="text_color_disabled">#707070</color>
+    <color name="text_color_reverse">#FFFFFF</color>
+
+    <color name="light_blue_400">#FF29B6F6</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="gray_400">#FFBDBDBD</color>
+    <color name="gray_600">#FF757575</color>
+
+    <color name="note_card_red_light">#FFFFCDD2</color>
+    <color name="note_card_red_alt">#FFF8BBD0</color>
+    <color name="note_card_fuschia">#FFE1BEE7</color>
+    <color name="note_card_purple_light">#FFD1C4E9</color>
+    <color name="note_card_purple_alt">#FFC5CAE9</color>
+    <color name="note_card_blue_light">#FFBBDEFB</color>
+    <color name="note_card_blue_alt">#FFB3E5FC</color>
+    <color name="note_card_teal_light"> #FFB2EBF2</color>
+    <color name="note_card_teal_alt">#FFB2DFDB</color>
+    <color name="note_card_green_reg">#FFC8E6C9</color>
+    <color name="note_card_green_alt">#FFDCEDC8</color>
+    <color name="note_card_yellow_dark">#FFF0F4C3</color>
+    <color name="note_card_yellow_light">#FFFFF9C4</color>
+    <color name="note_card_orange_light">#FFFFECB3</color>
+    <color name="note_card_orange_alt">#FFFFE0B2</color>
+    <color name="note_card_red_dark">#FFFFCCBC</color>
+
+    <color name="text_color_red">#EC404E</color>
+    <color name="text_color_orange">#FFA726</color>
+    <color name="text_color_yellow">#FFEE58</color>
+    <color name="text_color_green">#66BB6A</color>
+    <color name="text_color_blue">#4275F5</color>
+    <color name="text_color_purple">#8057C2</color>
+    <color name="text_color_disabled_on_color">#737373</color>
+    <color name="bottom_sheet_handle_color">#DCDCDC</color>
+
+</resources>

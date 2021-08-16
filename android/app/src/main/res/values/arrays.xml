@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- SOURCE: https://type.fit/api/quotes -->
+    <string-array name="inspirational_quotes_default">
+        <item>Every day is a new day.</item>
+        <item>Well done is better than well said.</item>
+        <item>One today is worth two tomorrows.</item>
+        <item>Be as you wish to seem.</item>
+        <item>The world is always in movement.</item>
+        <item>Wisdom begins in wonder.</item>
+        <item>To get, you must first give.</item>
+        <item>Skill to do comes of doing.</item>
+        <item>What we think, we will become.</item>
+        <item>If you can dream it, you can do it.</item>
+        <item>Our intention creates our reality.</item>
+        <item>Fortune favors the brave.</item>
+        <item>No garden is without it\'s weeds.</item>
+        <item>Fortune befriends the brave.</item>
+    </string-array>
+
+</resources>

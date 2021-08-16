@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Custom application style attributes -->
+    <declare-styleable name="ComposeResources">
+        <attr name="iconColorMain" format="color" />
+    </declare-styleable>
+
+</resources>

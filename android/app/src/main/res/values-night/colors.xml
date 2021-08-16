@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="dialog_background_color">#202020</color>
+    <color name="login_card_background_color">#292929</color>
+    <color name="button_neutral_background_color">#54787878</color>
+    <color name="bottom_sheet_background">#202020</color>
+    <color name="button_action_background">#252525</color>
+    <color name="bottom_sheet_handle_color">#555555</color>
+
+    <color name="background_color">#000000</color>
+
+    <color name="text_color_button">@color/black</color>
+    <color name="text_color_enabled">#FFFFFF</color>
+    <color name="text_color_disabled">#B6B6B6</color>
+    <color name="text_color_reverse">#000000</color>
+
+    <color name="note_card_red_light">#EF9A9A</color>
+    <color name="note_card_red_alt">#F48FB1</color>
+    <color name="note_card_fuschia">#CE93D8</color>
+    <color name="note_card_purple_light">#B39DDB</color>
+    <color name="note_card_purple_alt">#9FA8DA</color>
+    <color name="note_card_blue_light">#90CAF9</color>
+    <color name="note_card_blue_alt">#81D4FA</color>
+    <color name="note_card_teal_light">#80DEEA</color>
+    <color name="note_card_teal_alt">#80CBC4</color>
+    <color name="note_card_green_reg">#A5D6A7</color>
+    <color name="note_card_green_alt">#E6EE9C</color>
+    <color name="note_card_yellow_dark">#FFF59D</color>
+    <color name="note_card_yellow_light">#FFE082</color>
+    <color name="note_card_orange_light">#FFCC80</color>
+    <color name="note_card_orange_alt">#FFAB91</color>
+    <color name="note_card_red_dark">#FF9696</color>
+
+</resources>
