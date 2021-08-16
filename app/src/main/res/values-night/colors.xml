@@ -3,7 +3,7 @@
 
     <color name="dialog_background_color">#202020</color>
     <color name="login_card_background_color">#292929</color>
-    <color name="button_neutral_background_color">#787878</color>
+    <color name="button_neutral_background_color">#54787878</color>
     <color name="bottom_sheet_background">#202020</color>
     <color name="button_action_background">#252525</color>
     <color name="bottom_sheet_handle_color">#555555</color>

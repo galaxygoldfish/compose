@@ -86,45 +86,6 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
     val noteRefreshState = viewModel.isUpdatingNoteList
     val taskRefreshState = viewModel.isUpdatingTaskList
 
-    val tabLayoutItems = listOf<@Composable () -> Unit>(
-        {
-            SwipeRefresh(
-                state = noteRefreshState,
-                onRefresh = {
-                    viewModel.updateNoteList()
-                },
-                modifier = Modifier.fillMaxSize(),
-                content = @Composable {
-                    NoteListView(
-                        noteItemList = viewModel.noteLiveList as MutableLiveData<MutableList<NoteDocument>>,
-                        context = context,
-                        onItemClick = {
-
-                        }
-                    )
-                }
-            )
-        },
-        {
-            SwipeRefresh(
-                state = taskRefreshState,
-                onRefresh = {
-                    viewModel.updateTaskList()
-                },
-                modifier = Modifier.fillMaxSize(),
-                content = @Composable {
-                    TaskListView(
-                        context = context,
-                        taskList = viewModel.taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
-                        onItemClick = {
-
-                        }
-                    )
-                }
-            )
-        }
-    )
-
     val scaffoldState = rememberScaffoldState()
     val viewPagerState = rememberPagerState(
         pageCount = 2,
@@ -247,10 +208,47 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                         }
                         HorizontalPager(
                             state = viewPagerState,
-                            modifier = Modifier.fillMaxSize(),
-                            dragEnabled = true
-                        ) {
-                            tabLayoutItems[this@HorizontalPager.currentPage].invoke()
+                            modifier = Modifier.weight(1F)
+                                .fillMaxSize()
+                        ) { page ->
+                            when (page) {
+                                0 -> {
+                                    SwipeRefresh(
+                                        state = noteRefreshState,
+                                        onRefresh = {
+                                            viewModel.updateNoteList()
+                                        },
+                                        modifier = Modifier.fillMaxSize(),
+                                        content = @Composable {
+                                            NoteListView(
+                                                noteItemList = viewModel.noteLiveList as MutableLiveData<MutableList<NoteDocument>>,
+                                                context = context,
+                                                onItemClick = {
+
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                                1 -> {
+                                    SwipeRefresh(
+                                        state = taskRefreshState,
+                                        onRefresh = {
+                                            viewModel.updateTaskList()
+                                        },
+                                        modifier = Modifier.fillMaxSize(),
+                                        content = @Composable {
+                                            TaskListView(
+                                                context = context,
+                                                taskList = viewModel.taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
+                                                onItemClick = {
+
+                                                }
+                                            )
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
                     Row(
