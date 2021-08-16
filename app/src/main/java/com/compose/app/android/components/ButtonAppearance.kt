@@ -65,6 +65,7 @@ fun FullWidthButton(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 1.dp, start = 24.dp),
+                color = Color.Black,
             )
         }
     }
@@ -91,7 +92,8 @@ fun TextOnlyButton(
             Text(
                 text = text,
                 style = MaterialTheme.typography.button,
-                modifier = Modifier.align(Alignment.TopCenter)
+                modifier = Modifier.align(Alignment.TopCenter),
+                color = Color.Black
             )
         }
     }

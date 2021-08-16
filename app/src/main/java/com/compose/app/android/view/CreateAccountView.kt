@@ -1,9 +1,9 @@
 package com.compose.app.android.view
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -46,19 +47,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.BasicSnackbar
 import com.compose.app.android.components.IconOnlyButton
 import com.compose.app.android.components.LargeTextInputField
 import com.compose.app.android.components.TextOnlyButton
-import com.compose.app.android.presentation.CreateAccountActivity
-import com.compose.app.android.presentation.WelcomeActivity
+import com.compose.app.android.presentation.ComposeBaseActivity
+import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.utilities.rawStringResource
 import com.compose.app.android.viewmodel.CreateAccountViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
 
 @Composable
-fun CreateAccountView(context: Context, viewModel: CreateAccountViewModel) {
+@ExperimentalPagerApi
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
+fun CreateAccountView(
+    context: Context,
+    viewModel: CreateAccountViewModel,
+    navController: NavController
+) {
 
     val emailState = remember { mutableStateOf(TextFieldValue()) }
     val passwordState = remember { mutableStateOf(TextFieldValue()) }
@@ -71,13 +81,11 @@ fun CreateAccountView(context: Context, viewModel: CreateAccountViewModel) {
     val snackbarIconDescription = remember { mutableStateOf(context.rawStringResource(R.string.warning_icon_content_desc)) }
     val avatarImageState = remember { mutableStateOf(BitmapFactory.decodeResource(context.resources, R.drawable.default_avatar_image)) }
 
-    val createAccountActivity = (context as CreateAccountActivity)
-
     val avatarImageUpdater = Observer<Bitmap> { avatar ->
         avatarImageState.value = avatar
     }
 
-    viewModel.avatarImageLive.observe(context, avatarImageUpdater)
+    viewModel.avatarImageLive.observe(context as ComposeBaseActivity, avatarImageUpdater)
 
     ComposeTheme(false) {
         Scaffold(
@@ -96,9 +104,7 @@ fun CreateAccountView(context: Context, viewModel: CreateAccountViewModel) {
                     ) {
                         IconButton(
                             onClick = {
-                                context.startActivity(
-                                    Intent(context, WelcomeActivity::class.java)
-                                )
+                                navController.navigate(NavigationDestination.WelcomeActivity)
                             },
                             content = @Composable {
                                 Icon(
@@ -183,14 +189,14 @@ fun CreateAccountView(context: Context, viewModel: CreateAccountViewModel) {
                                         icon = Icons.Rounded.Camera,
                                         contentDescription = stringResource(id = R.string.file_folder_content_desc),
                                         onClick = {
-                                            createAccountActivity.openCameraForResult()
+                                            viewModel.openCameraForResult(context)
                                         },
                                     )
                                     IconOnlyButton(
                                         icon = Icons.Rounded.Folder,
                                         contentDescription = stringResource(id = R.string.camera_icon_content_desc),
                                         onClick = {
-                                            createAccountActivity.openGalleryForResult()
+                                            viewModel.openGalleryForResult(context)
                                         },
                                     )
                                 }
@@ -230,21 +236,23 @@ fun CreateAccountView(context: Context, viewModel: CreateAccountViewModel) {
                                 text = stringResource(id = R.string.create_account_cancel_button),
                                 color = colorResource(id = R.color.button_neutral_background_color),
                                 onClick = {
-                                    createAccountActivity.onBackPressed()
+                                    navController.navigate(NavigationDestination.WelcomeActivity)
                                 }
                             )
                             TextOnlyButton(
                                 text = stringResource(id = R.string.create_account_continue_button),
                                 color = colorResource(id = R.color.deep_sea),
                                 onClick = {
-                                    createAccountActivity.attemptCreateNewUser(
+                                    viewModel.attemptCreateNewUser(
                                         emailState = emailState.value.text,
                                         passwordState = passwordState.value.text,
                                         nameState = firstNameState.value.text,
                                         lastNameState = lastNameState.value.text,
                                         snackbarState = scaffoldState.snackbarHostState,
                                         iconState = snackbarIconState,
-                                        descriptionState = snackbarIconDescription
+                                        descriptionState = snackbarIconDescription,
+                                        context = context,
+                                        navController = navController
                                     )
                                 }
                             )

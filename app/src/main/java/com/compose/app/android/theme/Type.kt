@@ -51,7 +51,7 @@ val Typography = Typography(
     body2 = TextStyle(
         fontFamily = InterTypeface,
         fontWeight = FontWeight.Normal,
-        fontSize = 18.sp
+        fontSize = 16.sp
     ),
 
     button = TextStyle(

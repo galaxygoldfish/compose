@@ -41,6 +41,7 @@ android {
 
     buildFeatures {
         compose true
+        aidl false
     }
 
     composeOptions {
@@ -74,5 +75,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-swiperefresh:0.14.0"
 
     implementation "androidx.preference:preference-ktx:1.1.1"
+
+    implementation "androidx.navigation:navigation-compose:2.4.0-alpha06"
 
 }

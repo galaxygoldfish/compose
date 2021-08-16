@@ -1,7 +1,6 @@
 package com.compose.app.android.view
 
 import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,14 +20,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.FullWidthButton
-import com.compose.app.android.presentation.CreateAccountActivity
-import com.compose.app.android.presentation.LogInActivity
+import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
 
 @Composable
-fun WelcomeView(context: Context) {
+fun WelcomeView(context: Context, navController: NavController) {
     ComposeTheme {
         Box(
             modifier = Modifier.fillMaxSize()
@@ -39,12 +38,14 @@ fun WelcomeView(context: Context) {
                 Text(
                     text = stringResource(id = R.string.welcome_activity_title),
                     style = MaterialTheme.typography.h1,
-                    modifier = Modifier.padding(start = 20.dp, top = 36.dp)
+                    modifier = Modifier.padding(start = 20.dp, top = 36.dp),
+                    color = MaterialTheme.colors.onSurface
                 )
                 Text(
                     text = stringResource(id = R.string.welcome_activity_preview_text),
                     style = MaterialTheme.typography.body1,
-                    modifier = Modifier.padding(start = 20.dp, top = 10.dp, end = 15.dp)
+                    modifier = Modifier.padding(start = 20.dp, top = 10.dp, end = 15.dp),
+                    color = MaterialTheme.colors.onSurface
                 )
             }
             Image(
@@ -67,9 +68,7 @@ fun WelcomeView(context: Context) {
                     contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
                     color = colorResource(id = R.color.deep_sea),
                     onClick = {
-                        context.startActivity(
-                            Intent(context, LogInActivity::class.java)
-                        )
+                        navController.navigate(NavigationDestination.LogInActivity)
                     }
                 )
                 FullWidthButton(
@@ -78,9 +77,7 @@ fun WelcomeView(context: Context) {
                     contentDescription = stringResource(id = R.string.welcome_create_account_button_content_desc),
                     color = colorResource(id = R.color.button_neutral_background_color),
                     onClick = {
-                        context.startActivity(
-                            Intent(context, CreateAccountActivity::class.java)
-                        )
+                        navController.navigate(NavigationDestination.CreateAccountActivity)
                     }
                 )
             }

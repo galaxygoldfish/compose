@@ -23,16 +23,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.TextOnlyTextInput
-import com.compose.app.android.presentation.NoteEditorActivity
+import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.viewmodel.NoteEditorViewModel
 
 @Composable
 fun NoteEditorView(
     viewModel: NoteEditorViewModel,
-    context: Context
+    context: Context,
+    navController: NavController,
+    documentID: String
 ) {
     val titleTextValue = remember { mutableStateOf(viewModel.titleTextValue) }
     val contentTextValue = remember { mutableStateOf(viewModel.contentTextValue) }
@@ -53,7 +56,7 @@ fun NoteEditorView(
                             .padding(start = 15.dp, top = 5.dp)
                             .size(30.dp),
                         onClick = {
-                            (context as NoteEditorActivity).onBackPressed()
+                           navController.navigate(NavigationDestination.ProductivityActivity)
                         },
                         content = @Composable {
                             Icon(

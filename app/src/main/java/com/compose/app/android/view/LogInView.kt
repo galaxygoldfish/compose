@@ -1,7 +1,6 @@
 package com.compose.app.android.view
 
 import android.content.Context
-import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,19 +29,23 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.BasicSnackbar
 import com.compose.app.android.components.LargeTextInputField
 import com.compose.app.android.components.TextOnlyButton
-import com.compose.app.android.presentation.ProductivityActivity
-import com.compose.app.android.presentation.WelcomeActivity
+import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.utilities.rawStringResource
 import com.compose.app.android.viewmodel.LogInViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun LogInView(context: Context, viewModel: LogInViewModel) {
+fun LogInView(
+    context: Context,
+    viewModel: LogInViewModel,
+    navController: NavController
+) {
 
     val emailValue = remember { mutableStateOf(TextFieldValue()) }
     val passwordValue = remember { mutableStateOf(TextFieldValue()) }
@@ -74,9 +77,7 @@ fun LogInView(context: Context, viewModel: LogInViewModel) {
                     ) {
                         IconButton(
                             onClick = {
-                                context.startActivity(
-                                    Intent(context, WelcomeActivity::class.java)
-                                )
+                                navController.navigate(NavigationDestination.WelcomeActivity)
                             },
                             content = @Composable {
                                 Icon(
@@ -132,7 +133,7 @@ fun LogInView(context: Context, viewModel: LogInViewModel) {
                                     text = stringResource(id = R.string.log_in_activity_action_cancel),
                                     color = colorResource(id = R.color.button_neutral_background_color),
                                     onClick = {
-                                        (context as ProductivityActivity).onBackPressed()
+                                        navController.navigate(NavigationDestination.WelcomeActivity)
                                     }
                                 )
                             }
@@ -150,9 +151,7 @@ fun LogInView(context: Context, viewModel: LogInViewModel) {
                                             passwordValue.value,
                                             context,
                                             {
-                                                context.startActivity(
-                                                    Intent(context, ProductivityActivity::class.java)
-                                                )
+                                                navController.navigate(NavigationDestination.ProductivityActivity)
                                             },
                                             {
                                                 snackbarIconDescription.value = context.rawStringResource(R.string.warning_icon_content_desc)

@@ -1,7 +1,6 @@
 package com.compose.app.android.view
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -51,13 +50,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.AddNoteTaskMenuFAB
 import com.compose.app.android.model.ExpandableFABItem
 import com.compose.app.android.model.ExpandableFABState
 import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
-import com.compose.app.android.presentation.NoteEditorActivity
+import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.viewmodel.ProductivityViewModel
@@ -73,9 +73,14 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
-fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
+fun ProductivityView(
+    context: Context,
+    viewModel: ProductivityViewModel,
+    navController: NavController
+) {
 
     viewModel.apply {
+        updateToNewestAvatar(context.filesDir.path)
         updateNoteList()
         updateTaskList()
     }
@@ -324,9 +329,7 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                                     contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                                     label = stringResource(id = R.string.productivity_menu_notes),
                                     onClick = {
-                                        val intent = Intent(context, NoteEditorActivity::class.java)
-                                        intent.putExtra("documentID", UUID.randomUUID().toString())
-                                        context.startActivity(intent)
+                                        navController.navigate("""noteEditor/${UUID.randomUUID()}""")
                                     }
                                 ),
                                 ExpandableFABItem(
@@ -334,7 +337,7 @@ fun ProductivityView(context: Context, viewModel: ProductivityViewModel) {
                                     contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                                     label = stringResource(id = R.string.productivity_menu_task),
                                     onClick = {
-
+                                        navController.navigate(NavigationDestination.TaskEditorActivity)
                                     }
                                 ),
                             )
