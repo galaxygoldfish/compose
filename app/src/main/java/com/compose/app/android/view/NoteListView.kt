@@ -77,8 +77,8 @@ fun NoteListCard(
         modifier = Modifier.padding(
             top = 5.dp,
             bottom = 5.dp,
-            start = paddingStart,
-            end = paddingEnd
+            end = paddingEnd,
+            start = paddingStart
         ),
         content = @Composable {
             Column(
@@ -113,12 +113,12 @@ fun NoteListCard(
                 ) {
                     Text(
                         text = currentNote.date,
-                        style = MaterialTheme.typography.body2,
+                        style = MaterialTheme.typography.body1,
                         color = colorResource(id = R.color.text_color_disabled_on_color)
                     )
                     Text(
                         text = currentNote.time,
-                        style = MaterialTheme.typography.body2,
+                        style = MaterialTheme.typography.body1,
                         color = colorResource(id = R.color.text_color_disabled_on_color)
                     )
                 }

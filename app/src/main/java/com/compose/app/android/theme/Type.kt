@@ -24,6 +24,12 @@ val Typography = Typography(
         fontSize = 40.sp
     ),
 
+    h2 = TextStyle(
+        fontFamily = InterTypeface,
+        fontWeight = FontWeight.Bold,
+        fontSize = 36.sp
+    ),
+
     h4 = TextStyle(
         fontFamily = InterTypeface,
         fontSize = 26.sp,
@@ -45,7 +51,7 @@ val Typography = Typography(
     body2 = TextStyle(
         fontFamily = InterTypeface,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 18.sp
     ),
 
     button = TextStyle(

@@ -1,4 +1,4 @@
-package com.compose.app.android.view
+package com.compose.app.android.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
@@ -94,5 +95,38 @@ fun LargeTextInputField(
             PasswordVisualTransformation()
         },
         keyboardOptions = keyboardType
+    )
+}
+
+@Composable
+fun TextOnlyTextInput(
+    textFieldValue: TextFieldValue,
+    hint: String,
+    onValueChange: (TextFieldValue) -> Unit,
+    modifier: Modifier = Modifier,
+    textStyle: TextStyle
+) {
+    TextField(
+        modifier = modifier,
+        value = textFieldValue,
+        textStyle = textStyle,
+        placeholder = @Composable {
+            Text(
+                text = hint,
+                style = textStyle,
+                modifier = Modifier.padding(0.dp)
+            )
+        },
+        colors = TextFieldDefaults.textFieldColors(
+            backgroundColor = Color.Transparent,
+            cursorColor = MaterialTheme.colors.onSurface,
+            disabledLabelColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+        onValueChange = {
+            onValueChange(it)
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
 }

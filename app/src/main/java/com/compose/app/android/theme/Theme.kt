@@ -7,7 +7,6 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.lifecycle.MutableLiveData
 import com.compose.app.android.R
 
 @Composable
@@ -18,7 +17,7 @@ fun ComposeTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composabl
             primaryVariant = colorResource(id = R.color.button_neutral_background_color),
             secondary = colorResource(id = R.color.deep_sea),
             background = colorResource(id = R.color.background_color),
-            surface = Color.White,
+            surface = colorResource(id = R.color.background_color),
             onPrimary = Color.White,
             onSecondary = Color.White,
             onBackground = Color.White,

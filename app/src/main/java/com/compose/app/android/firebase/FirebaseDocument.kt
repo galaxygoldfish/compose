@@ -8,6 +8,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CompletableDeferred
 
 class FirebaseDocument {
 
@@ -17,6 +18,17 @@ class FirebaseDocument {
     private val userdataBasePath = firebaseFirestore.collection("userdata")
         .document(firebaseAuth.currentUser!!.uid)
 
+    /**
+     * Fetch all notes in the current user's note folder, updating
+     * the LiveData list value with all the notes found once fetched,
+     * avoiding the need to use a coroutine in the view to call this
+     * function.
+     * @param liveData - A mutable LiveData value containing a mutable
+     * list of NoteDocument model classes, which will be updated as soon as
+     * notes are available from Firebase
+     * @param isUpdating - SwipeRefreshState used to manage the swipe
+     * refresh view to indicate fetching progress
+     */
     fun getAllNotes(
         liveData: MutableLiveData<MutableList<NoteDocument>>,
         isUpdating: SwipeRefreshState
@@ -40,6 +52,22 @@ class FirebaseDocument {
         }
     }
 
+    // WIP
+    suspend fun getNoteByID(documentID: String) : Map<String, Any> {
+        val completableToken = CompletableDeferred<Map<String, Any>>()
+        return completableToken.await()
+    }
+
+    /**
+     * Fetch all tasks in the user's current task folder, updating
+     * the LiveData value with all the tasks found once they have
+     * been fetched.
+     * @param liveData - A mutable LiveData value containing a list
+     * of TaskDocument model classes, representing each task
+     * @param isUpdating - SwipeRefreshState used to manage the
+     * state of a swipe refresh view to indicate the progress of
+     * task updating
+     */
     fun getAllTasks(
         liveData: MutableLiveData<MutableList<TaskDocument>>,
         isUpdating: SwipeRefreshState
@@ -66,6 +94,13 @@ class FirebaseDocument {
         }
     }
 
+    /**
+     * Update the state of a task's 'isComplete' value, which
+     * indicates whether the task is done or not.
+     * @param newValue - The new value of the task's complete
+     * state to send to Firebase
+     * @param taskID - The document ID of the task to be updated.
+     */
     fun updateTaskCompletion(
         newValue: Boolean,
         taskID: String

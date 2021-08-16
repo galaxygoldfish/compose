@@ -70,4 +70,7 @@
     <string name="productivity_menu_notes">NEW NOTE</string>
     <string name="productivity_menu_task">NEW TASK</string>
 
+    <string name="note_editor_title_placeholder">Title here</string>
+    <string name="note_editor_content_placeholder">Content here</string>
+
 </resources>
