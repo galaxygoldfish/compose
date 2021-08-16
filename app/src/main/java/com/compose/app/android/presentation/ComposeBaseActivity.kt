@@ -31,7 +31,7 @@ object NavigationDestination {
     const val LogInActivity = "login"
     const val CreateAccountActivity = "createAccount"
     const val ProductivityActivity = "productivity"
-    const val NoteEditorActivity = "noteEditor/{noteID}"
+    const val NoteEditorActivity = "noteEditor"
     const val TaskEditorActivity = "taskEditor"
 }
 
@@ -92,7 +92,7 @@ class ComposeBaseActivity : ComponentActivity() {
                             navController = navigationController
                         )
                     }
-                    composable(NavigationDestination.NoteEditorActivity) { backStackEntry ->
+                    composable("""${NavigationDestination.NoteEditorActivity}/{noteID}""") { backStackEntry ->
                         NoteEditorView(
                             viewModel = noteEditorViewModel,
                             context = this@ComposeBaseActivity,

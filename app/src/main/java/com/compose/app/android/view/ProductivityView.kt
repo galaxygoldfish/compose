@@ -213,7 +213,8 @@ fun ProductivityView(
                         }
                         HorizontalPager(
                             state = viewPagerState,
-                            modifier = Modifier.weight(1F)
+                            modifier = Modifier
+                                .weight(1F)
                                 .fillMaxSize()
                         ) { page ->
                             when (page) {
@@ -228,8 +229,8 @@ fun ProductivityView(
                                             NoteListView(
                                                 noteItemList = viewModel.noteLiveList as MutableLiveData<MutableList<NoteDocument>>,
                                                 context = context,
-                                                onItemClick = {
-
+                                                onItemClick = { note ->
+                                                    navController.navigate("""${NavigationDestination.NoteEditorActivity}/${note.noteID}""")
                                                 }
                                             )
                                         }
@@ -247,7 +248,7 @@ fun ProductivityView(
                                                 context = context,
                                                 taskList = viewModel.taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
                                                 onItemClick = {
-
+                                                    navController.navigate(NavigationDestination.TaskEditorActivity)
                                                 }
                                             )
                                         }
@@ -329,7 +330,7 @@ fun ProductivityView(
                                     contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                                     label = stringResource(id = R.string.productivity_menu_notes),
                                     onClick = {
-                                        navController.navigate("""noteEditor/${UUID.randomUUID()}""")
+                                        navController.navigate("""${NavigationDestination.NoteEditorActivity}/${UUID.randomUUID()}""")
                                     }
                                 ),
                                 ExpandableFABItem(

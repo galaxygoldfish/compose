@@ -34,7 +34,7 @@ import com.compose.app.android.model.NoteDocument
 fun NoteListView(
     noteItemList: MutableLiveData<MutableList<NoteDocument>>,
     context: Context,
-    onItemClick: () -> Unit
+    onItemClick: (NoteDocument) -> Unit
 ) {
     val gridCellValue = remember { mutableStateOf(GridCells.Fixed(2)) }
     val listItems = noteItemList.observeAsState().value!!
@@ -64,13 +64,15 @@ fun NoteListView(
 fun NoteListCard(
     index: Int,
     currentNote: NoteDocument,
-    onItemClick: () -> Unit
+    onItemClick: (NoteDocument) -> Unit
 ) {
     val isCardEven = index % 2 == 0
     val paddingStart = if (!isCardEven) 3.dp else 0.dp
     val paddingEnd = if (!isCardEven) 0.dp else 6.dp
     Card(
-        onClick = onItemClick,
+        onClick = {
+            onItemClick.invoke(currentNote)
+        },
         shape = RoundedCornerShape(7.dp),
         backgroundColor = colorResource(id = currentNote.color),
         elevation = 0.dp,

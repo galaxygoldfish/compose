@@ -18,7 +18,6 @@ import androidx.compose.material.icons.rounded.ColorLens
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Save
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,8 +36,12 @@ fun NoteEditorView(
     navController: NavController,
     documentID: String
 ) {
-    val titleTextValue = remember { mutableStateOf(viewModel.titleTextValue) }
-    val contentTextValue = remember { mutableStateOf(viewModel.contentTextValue) }
+    val titleTextValue = remember { viewModel.titleTextValue }
+    val contentTextValue = remember { viewModel.contentTextValue }
+    viewModel.apply {
+        noteDocumentID.value = documentID
+        updateNoteContents()
+    }
     ComposeTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),

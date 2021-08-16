@@ -55,6 +55,12 @@ class FirebaseDocument {
     // WIP
     suspend fun getNoteByID(documentID: String) : Map<String, Any> {
         val completableToken = CompletableDeferred<Map<String, Any>>()
+        val currentNotePath = userdataBasePath.collection("note-data").document(documentID)
+        currentNotePath.get().addOnSuccessListener {
+            it.data?.let { note ->
+                completableToken.complete(note)
+            }
+        }
         return completableToken.await()
     }
 
