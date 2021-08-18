@@ -1,9 +1,10 @@
 import SwiftUI
 
-struct LogInViewController: App {
+@main
+struct WelcomeViewController: App {
     var body: some Scene {
         return WindowGroup {
-            LogInView()
+            ComposeView()
         }
-    }
+	}
 }

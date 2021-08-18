@@ -1,0 +1,24 @@
+"welcome_header_message" = "Welcome to\nCompose";
+"welcome_subtitle_text" = "Organize your life by saving all your notes & tasks with Compose, backed by cloud save.";
+"welcome_button_log_in" = "LOG IN";
+"welcome_button_create_account" = "CREATE ACCOUNT";
+
+"log_in_header_message" = "Log in to your account";
+"log_in_subtitle_text" = "Welcome back to Compose. To continue, enter your account details below.";
+"log_in_form_header" = "LOG IN";
+"log_in_email_field_hint" = "Email address";
+"log_in_password_field_hint" = "Password";
+"log_in_button_cancel_text" = "CANCEL";
+"log_in_button_continue_text" = "CONTINUE";
+
+"create_account_header_message" = "Create a new account";
+"create_account_subtitle_text" = "To continue, you'll need to create an account which will allow you to sync your notes and tasks to the cloud:";
+"create_account_account_form_header" = "ACCOUNT";
+"create_account_email_field_hint" = "Email address";
+"create_account_password_field_hint" = "Secure password";
+"create_account_profile_form_header" = "PROFILE";
+"create_account_name_field_hint" = "First name";
+"create_account_surname_field_hint" = "Last name";
+"create_account_choose_avatar_header" = "Choose a profile image";
+"create_account_button_cancel" = "CANCEL";
+"create_account_button_continue" = "CREATE ACOUNT";

@@ -5,63 +5,67 @@ struct LogInView: View {
     @State public var emailText: String = ""
     @State public var passwordText: String = ""
     
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     var body: some View {
         ZStack(alignment: .topLeading) {
             FullscreenPlaceholder()
-            VStack {
-                VStack(alignment: .leading) {
-                    Text("Log in to your account")
-                        .font(.custom(InterBold, size: 35.0))
+            VStack(alignment: .leading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image("BackArrow")
                         .padding(.top)
-                        .padding(.leading, 20)
-                    Text("Welcome back to Compose. To continue, enter your account details below:")
-                        .font(.custom(InterRegular, size: 16))
-                        .padding(.leading, 20)
-                        .padding(.top, 2)
-                        .padding(.trailing, 30)
-                    Text("SIGN-IN")
-                        .font(.custom(InterBold, size: 14))
-                        .padding(.leading, 20)
-                        .padding(.top, 15)
-                        .padding(.trailing, 30)
-                    TextInputFieldLarge(
-                        icon: "envelope.fill",
-                        hint: "Email address",
-                        inputText: $emailText
-                    )
-                    TextInputFieldLarge(
-                        icon: "lock.rectangle.fill",
-                        hint: "Password",
-                        inputText: $passwordText
-                    )
-                    HStack(alignment: .center) {
-                        TextOnlyButton(
-                            text: "CANCEL",
-                            color: Color("NeutralGray"),
-                            onAction: {
-                            
-                            }
-                        )
-                        .padding(.leading, 20)
-                        Spacer()
-                        TextOnlyButton(
-                            text: "CONTINUE",
-                            color: Color("DeepSea"),
-                            onAction: {
-                            
-                            }
-                        )
-                        .padding(.trailing, 20)
-                    }
-                    .padding(.top, 10)
+                        .padding(.leading, 16)
                 }
+                Text("log_in_header_message")
+                    .font(.custom(InterBold, size: 35.0))
+                    .padding(.top, 2)
+                    .padding(.leading, 20)
+                Text("log_in_subtitle_text")
+                    .font(.custom(InterRegular, size: 16))
+                    .padding(.leading, 20)
+                    .padding(.top, 2)
+                    .padding(.trailing, 30)
+                Text("log_in_form_header")
+                    .font(.custom(InterBold, size: 14))
+                    .padding(.leading, 20)
+                    .padding(.top, 15)
+                    .padding(.trailing, 30)
+                TextInputFieldLarge(
+                    icon: "MailLetter",
+                    hint: "log_in_email_field_hint",
+                    inputText: $emailText
+                )
+                TextInputFieldLarge(
+                    icon: "PasswordLock",
+                    hint: "log_in_password_field_hint",
+                    inputText: $passwordText,
+                    secureField: true
+                )
+                HStack(alignment: .center) {
+                    TextOnlyButton(
+                        text: "log_in_button_cancel_text",
+                        color: Color("NeutralGray"),
+                        onAction: {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    )
+                    .padding(.leading, 20)
+                    Spacer()
+                    TextOnlyButton(
+                        text: "log_in_button_continue_text",
+                        color: Color("DeepSea"),
+                        onAction: {
+                            
+                        }
+                    )
+                    .padding(.trailing, 20)
+                }
+                .padding(.top, 10)
             }
         }
-    }
-}
-
-struct LogInView_Previews : PreviewProvider {
-    static var previews: some View {
-        LogInView()
+        .navigationBarTitle("")
+        .navigationBarHidden(true)
     }
 }
