@@ -57,7 +57,7 @@ struct LogInView: View {
                         text: "log_in_button_continue_text",
                         color: Color("DeepSea"),
                         onAction: {
-                            
+                            FirebaseAccount().authenticateWithEmail(email: emailText, password: passwordText)
                         }
                     )
                     .padding(.trailing, 20)

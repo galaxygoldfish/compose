@@ -1,3 +1,5 @@
+"success_internal" = "null";
+
 "welcome_header_message" = "Welcome to\nCompose";
 "welcome_subtitle_text" = "Organize your life by saving all your notes & tasks with Compose, backed by cloud save.";
 "welcome_button_log_in" = "LOG IN";
@@ -22,3 +24,8 @@
 "create_account_choose_avatar_header" = "Choose a profile image";
 "create_account_button_cancel" = "CANCEL";
 "create_account_button_continue" = "CREATE ACOUNT";
+"create_account_failure_generic" = "Oops! Please make sure that you have an internet connection.";
+"create_account_failure_email" = "Oops! Please make sure to enter a valid email before continuing.";
+"create_account_failure_password" = "Your password must be longer than 6 characters to continue.";
+"create_account_failure_name" = "Please enter your first and last name to continue.";
+"create_account_progress_message" = "Please wait. Creating account...";
