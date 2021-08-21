@@ -2,14 +2,21 @@ import SwiftUI
 
 struct LogInView: View {
     
-    @State public var emailText: String = ""
-    @State public var passwordText: String = ""
+    @State private var emailText: String = ""
+    @State private var passwordText: String = ""
+    
+    @State private var navigateProductivity: Bool = false
+    
+    @State private var snackbarOpen: Bool = false
+    @State private var snackbarIcon: String = "WarningAlert"
+    @State private var snackbarMessage: LocalizedStringKey = LocalizedStringKey("log_in_progress")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     var body: some View {
         ZStack(alignment: .topLeading) {
             FullscreenPlaceholder()
+            ScrollView {
             VStack(alignment: .leading) {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
@@ -43,6 +50,16 @@ struct LogInView: View {
                     inputText: $passwordText,
                     secureField: true
                 )
+                if (snackbarOpen) {
+                    withAnimation {
+                        Snackbar(
+                            message: $snackbarMessage,
+                            icon: $snackbarIcon,
+                            showingSnackbar: $snackbarOpen
+                        )
+                        .padding(.top, 15)
+                    }
+                }
                 HStack(alignment: .center) {
                     TextOnlyButton(
                         text: "log_in_button_cancel_text",
@@ -53,14 +70,31 @@ struct LogInView: View {
                     )
                     .padding(.leading, 20)
                     Spacer()
-                    TextOnlyButton(
-                        text: "log_in_button_continue_text",
-                        color: Color("DeepSea"),
-                        onAction: {
-                            FirebaseAccount().authenticateWithEmail(email: emailText, password: passwordText)
-                        }
-                    )
-                    .padding(.trailing, 20)
+                    NavigationLink(
+                        destination: ProductivityView(),
+                        isActive: $navigateProductivity
+                    ) {
+                        TextOnlyButton(
+                            text: "log_in_button_continue_text",
+                            color: Color("DeepSea"),
+                            onAction: {
+                                FirebaseAccount().authenticateWithEmail(
+                                    email: emailText,
+                                    password: passwordText,
+                                    onCompletion: { stringKey in
+                                        if (stringKey == LocalizedStringKey("success_internal")) {
+                                            navigateProductivity = true
+                                        } else {
+                                            snackbarOpen = true
+                                            snackbarMessage = stringKey
+                                            snackbarIcon = "WarningAlert"
+                                        }
+                                    }
+                                )
+                            }
+                        )
+                        .padding(.trailing, 20)
+                    }
                 }
                 .padding(.top, 10)
             }
@@ -68,4 +102,5 @@ struct LogInView: View {
         .navigationBarTitle("")
         .navigationBarHidden(true)
     }
+}
 }

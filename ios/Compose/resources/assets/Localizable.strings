@@ -12,6 +12,11 @@
 "log_in_password_field_hint" = "Password";
 "log_in_button_cancel_text" = "CANCEL";
 "log_in_button_continue_text" = "CONTINUE";
+"log_in_progress" = "Logging in...";
+"log_in_failure_generic" = "Oops! Please make sure that you entered your email and password correctly.";
+"log_in_failure_disabled" = "Hmm... It seems that your account has been disabled.";
+"log_in_failure_password" = "Oops! Looks like the password that you entered didn't seem to work";
+"log_in_failure_email" = "Looks like we can't find an account with that e-mail. Maybe try a different one?";
 
 "create_account_header_message" = "Create a new account";
 "create_account_subtitle_text" = "To continue, you'll need to create an account which will allow you to sync your notes and tasks to the cloud:";
@@ -29,3 +34,6 @@
 "create_account_failure_password" = "Your password must be longer than 6 characters to continue.";
 "create_account_failure_name" = "Please enter your first and last name to continue.";
 "create_account_progress_message" = "Please wait. Creating account...";
+
+"productivity_temp_message" = "One today is worth two tomorrows.";
+"productivity_search_hint" = "Search notes & tasks";

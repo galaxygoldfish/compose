@@ -1,8 +1,14 @@
 import Foundation
+import UIKit
 
 func getDocumentsDirectory() -> URL {
     let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     return paths[0]
+}
+
+func getAvatarImage() -> UIImage {
+    let avatarImageData = try! Data(contentsOf: getDocumentsDirectory().appendingPathComponent("avatar.png"))
+    return UIImage(data: avatarImageData)!
 }
 
 func determineIfEmailIsValid(email: String) -> Bool {

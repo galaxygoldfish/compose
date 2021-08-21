@@ -14,10 +14,10 @@ func Snackbar(
     icon: Binding<String>,
     showingSnackbar: Binding<Bool>
 ) -> some View {
-    return ZStack {
+    return ZStack(alignment: .leading) {
         Color("NeutralGrayDark")
             .cornerRadius(10)
-        HStack {
+        HStack() {
            Spacer()
             Image(icon.wrappedValue)
                 .padding(10)

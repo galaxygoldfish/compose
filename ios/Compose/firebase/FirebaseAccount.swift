@@ -17,14 +17,32 @@ class FirebaseAccount {
      *    with their existing Compose account.
      *  - password: User-inputted password string that is also
      *    set to their Compose account. (case-sensitive)
-     * - Returns: A boolean value indicating whether the user is signed
-     *    in or not (TODO)
+     *  - onCompletion: A void-returning function that is to be invoked
+     *    once a result has been determined, containing a LocalizedStringKey
+     *    value describing the result.
      */
-    public func authenticateWithEmail(email: String, password: String) -> Bool {
-        firebaseAuth.signIn(withEmail: email, password: password)
-        getExistingAvatarImage()
-        getExistingUserMetadata()
-        return true
+    public func authenticateWithEmail(
+        email: String,
+        password: String,
+        onCompletion: @escaping (LocalizedStringKey) -> Void
+    ) {
+        if (email != "" && determineIfEmailIsValid(email: email)) {
+            if (password != "" && password.count > 6) {
+                firebaseAuth.signIn(withEmail: email, password: password, completion: { (result, error) in
+                    if (error == nil) {
+                        self.getExistingUserMetadata()
+                        self.getExistingAvatarImage()
+                        onCompletion(LocalizedStringKey("success_internal"))
+                    } else {
+                        onCompletion(LocalizedStringKey("log_in_failure_generic"))
+                    }
+                })
+            } else {
+                onCompletion(LocalizedStringKey("log_in_failure_password"))
+            }
+        } else {
+            onCompletion(LocalizedStringKey("log_in_failure_email"))
+        }
     }
     
     /**
