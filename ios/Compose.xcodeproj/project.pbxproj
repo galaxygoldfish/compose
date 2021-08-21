@@ -143,8 +143,8 @@
 		9EF876F026BA302500790481 /* resources */ = {
 			isa = PBXGroup;
 			children = (
-				9EF876F126BA302500790481 /* fonts */,
 				9EF876FC26BA302500790481 /* assets */,
+				9EF876F126BA302500790481 /* fonts */,
 			);
 			path = resources;
 			sourceTree = "<group>";
