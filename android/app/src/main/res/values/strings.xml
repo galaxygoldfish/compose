@@ -23,6 +23,7 @@
     <string name="save_button_content_desc">Save item</string>
     <string name="palette_icon_content_desc">Note color</string>
     <string name="delete_icon_content_desc">Delete item</string>
+    <string name="check_mark_content_desc">Check mark</string>
 
     <string name="firebase_error_fetching_title">There was an error.</string>
     <string name="firebase_error_fetching_content">Unfortunately there was an error retrieving the requested content. Please try again</string>
@@ -72,5 +73,7 @@
 
     <string name="note_editor_title_placeholder">Title here</string>
     <string name="note_editor_content_placeholder">Content here</string>
+    <string name="note_editor_color_picker_title">Note card color</string>
+    <string name="note_editor_color_picker_subtitle">Select a color to be displayed on this note\'s card</string>
 
 </resources>

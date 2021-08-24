@@ -131,13 +131,19 @@ fun LogInView(
                             contentDescription = stringResource(id = R.string.lock_icon_content_desc),
                             passwordType = true
                         )
+                        BasicSnackbar(
+                            hostState = scaffoldState.snackbarHostState,
+                            modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 5.dp, top = 15.dp),
+                            icon = painterResource(id = snackbarIconState.value),
+                            contentDescription = snackbarIconDescription.value
+                        )
                         Box(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Box(
                                 modifier = Modifier
                                     .align(Alignment.CenterStart)
-                                    .padding(start = 20.dp, top = 5.dp)
+                                    .padding(start = 20.dp)
                             ) {
                                 TextOnlyButton(
                                     text = stringResource(id = R.string.log_in_activity_action_cancel),
@@ -150,7 +156,7 @@ fun LogInView(
                             Box(
                                 modifier = Modifier
                                     .align(Alignment.CenterEnd)
-                                    .padding(end = 20.dp, top = 5.dp)
+                                    .padding(end = 20.dp)
                             ) {
                                 TextOnlyButton(
                                     text = stringResource(id = R.string.log_in_activity_action_proceed),
@@ -182,12 +188,6 @@ fun LogInView(
                             }
                         }
                     }
-                    BasicSnackbar(
-                        hostState = scaffoldState.snackbarHostState,
-                        modifier = Modifier.align(Alignment.BottomCenter),
-                        icon = painterResource(id = snackbarIconState.value),
-                        contentDescription = snackbarIconDescription.value
-                    )
                 }
             }
         )

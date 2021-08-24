@@ -26,6 +26,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import com.compose.app.android.R
+import com.compose.app.android.model.NoteColorResourceIDs
+import com.compose.app.android.model.NoteColorUniversalIDs
 import com.compose.app.android.model.NoteDocument
 
 @Composable
@@ -74,7 +76,9 @@ fun NoteListCard(
             onItemClick.invoke(currentNote)
         },
         shape = RoundedCornerShape(7.dp),
-        backgroundColor = colorResource(id = currentNote.color),
+        backgroundColor = colorResource(id = NoteColorResourceIDs[
+                NoteColorUniversalIDs.indexOf(currentNote.color)
+        ]),
         elevation = 0.dp,
         modifier = Modifier.padding(
             top = 5.dp,

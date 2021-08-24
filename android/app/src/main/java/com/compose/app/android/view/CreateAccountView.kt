@@ -223,7 +223,8 @@ fun CreateAccountView(
                         Box {
                             BasicSnackbar(
                                 hostState = scaffoldState.snackbarHostState,
-                                modifier = Modifier.align(Alignment.BottomCenter),
+                                modifier = Modifier.align(Alignment.BottomCenter)
+                                    .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp),
                                 icon = painterResource(id = snackbarIconState.value),
                                 contentDescription = snackbarIconDescription.value
                             )

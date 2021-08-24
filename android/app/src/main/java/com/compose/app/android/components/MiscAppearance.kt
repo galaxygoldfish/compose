@@ -29,7 +29,7 @@ fun BasicSnackbar(
         hostState = hostState,
         snackbar = @Composable { data ->
             Snackbar(
-                modifier = Modifier.padding(16.dp),
+                elevation = 0.dp,
                 backgroundColor = colorResource(id = R.color.neutral_gray),
                 content = @Composable {
                     Row {

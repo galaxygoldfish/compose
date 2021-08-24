@@ -32,3 +32,4 @@ const val IconCheckCircle = R.drawable.ic_duotone_check_circle
 const val IconNotification = R.drawable.ic_duotone_notification_bell
 const val IconCalendar = R.drawable.ic_duotone_calendar_empty
 
+const val IconCheckMark = R.drawable.ic_duotone_check
