@@ -13,16 +13,16 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.ExperimentalTextOnlyTextField
+import com.compose.app.android.firebase.FirebaseDocument
+import com.compose.app.android.model.DocumentType
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.theme.IconBackArrow
@@ -38,12 +38,13 @@ fun NoteEditorView(
     navController: NavController,
     documentID: String
 ) {
-    val titleTextValue = remember { viewModel.titleTextValue }
-    val contentTextValue = remember { viewModel.contentTextValue }
     viewModel.apply {
         noteDocumentID.value = documentID
         updateNoteContents()
     }
+    val titleTextValue = remember { viewModel.titleTextValue }
+    val contentTextValue = remember { viewModel.contentTextValue }
+
     ComposeTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -61,11 +62,9 @@ fun NoteEditorView(
                             .padding(start = 15.dp, top = 5.dp)
                             .size(30.dp),
                         onClick = {
-                            // TEMP
-                            viewModel.contentTextValue = mutableStateOf(TextFieldValue())
-                            viewModel.titleTextValue = mutableStateOf(TextFieldValue())
-                            //
-                           navController.navigate(NavigationDestination.ProductivityActivity)
+                            viewModel.saveNoteContents()
+                            viewModel.clearTextFields()
+                            navController.navigate(NavigationDestination.ProductivityActivity)
                         },
                         content = @Composable {
                             Icon(
@@ -111,7 +110,9 @@ fun NoteEditorView(
                                 .padding(end = 10.dp)
                                 .size(30.dp),
                             onClick = {
-
+                                FirebaseDocument().deleteDocument(viewModel.noteDocumentID.value!!, DocumentType.NOTE)
+                                viewModel.clearTextFields()
+                                navController.navigate(NavigationDestination.ProductivityActivity)
                             },
                             content = @Composable {
                                 Icon(

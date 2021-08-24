@@ -28,7 +28,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.compose.app.android.R
-import com.compose.app.android.model.ExpandableFABItem
+import com.compose.app.android.model.ExpandableFAB
 import com.compose.app.android.model.ExpandableFABState
 
 
@@ -135,7 +135,7 @@ fun AddNoteTaskMenuFAB(
     onExpansion: (state: ExpandableFABState) -> Unit,
     expandedState: ExpandableFABState,
     modifier: Modifier,
-    menuItems: List<ExpandableFABItem>
+    menuItems: List<ExpandableFAB>
 ) {
     val transitionUpdate = updateTransition(targetState = expandedState, label = "Rotating FAB")
     val iconRotation: Float by transitionUpdate.animateFloat(label = "Icon rotation") { state ->

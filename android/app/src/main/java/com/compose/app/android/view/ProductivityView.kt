@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,7 +49,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.AddNoteTaskMenuFAB
-import com.compose.app.android.model.ExpandableFABItem
+import com.compose.app.android.model.ExpandableFAB
 import com.compose.app.android.model.ExpandableFABState
 import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
@@ -158,6 +159,7 @@ fun ProductivityView(
                                         modifier = Modifier
                                             .clip(CircleShape)
                                             .size(60.dp)
+                                            .aspectRatio(1F)
                                             .align(Alignment.CenterVertically)
                                             .padding(end = 16.dp)
                                             .clickable {
@@ -326,7 +328,7 @@ fun ProductivityView(
                                 floatingActionState.value = state
                             },
                             menuItems = listOf(
-                                ExpandableFABItem(
+                                ExpandableFAB(
                                     icon = painterResource(id = IconEditPen),
                                     contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                                     label = stringResource(id = R.string.productivity_menu_notes),
@@ -334,7 +336,7 @@ fun ProductivityView(
                                         navController.navigate("""${NavigationDestination.NoteEditorActivity}/${UUID.randomUUID()}""")
                                     }
                                 ),
-                                ExpandableFABItem(
+                                ExpandableFAB(
                                     icon = painterResource(id = IconCheckCircle),
                                     contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                                     label = stringResource(id = R.string.productivity_menu_task),

@@ -1,6 +1,7 @@
 package com.compose.app.android.firebase
 
 import androidx.lifecycle.MutableLiveData
+import com.compose.app.android.model.DocumentType
 import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
 import com.google.accompanist.swiperefresh.SwipeRefreshState
@@ -36,6 +37,9 @@ class FirebaseDocument {
         isUpdating.isRefreshing = true
         val noteCollectionPath = userdataBasePath.collection("note-data")
         noteCollectionPath.get().addOnSuccessListener { result ->
+            if (result.isEmpty) {
+                isUpdating.isRefreshing = false
+            }
             liveData.value = mutableListOf()
             result.documents.forEach { documentSnapshot ->
                 val noteData = documentSnapshot.data
@@ -119,6 +123,24 @@ class FirebaseDocument {
             }
             taskItemPath.set(documentTemp, SetOptions.merge())
         }
+    }
+
+    fun saveDocument(
+        documentFields: Map<String, Any>,
+        documentID: String,
+        type: DocumentType
+    ) {
+        val noteOrTask = if (type == DocumentType.NOTE) "note-data" else "task-data"
+        val documentPath = firebaseFirestore.collection("userdata")
+            .document(firebaseAuth.currentUser!!.uid).collection(noteOrTask).document(documentID)
+        documentPath.set(documentFields)
+    }
+
+    fun deleteDocument(documentID: String, documentType: DocumentType) {
+        val noteOrTask = if (documentType == DocumentType.NOTE) "note-data" else "task-data"
+        val documentPath = firebaseFirestore.collection("userdata")
+            .document(firebaseAuth.currentUser!!.uid).collection(noteOrTask).document(documentID)
+        documentPath.delete()
     }
 
 }
