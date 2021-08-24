@@ -2,6 +2,7 @@ package com.compose.app.android.firebase
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import android.util.Patterns
 import androidx.core.net.toUri
 import com.compose.app.android.R
@@ -104,7 +105,7 @@ class FirebaseAccount {
         firstName: String,
         lastName: String,
         profileImage: Bitmap,
-        context: Context
+        context: Context,
     ) : String {
         val completableToken = CompletableDeferred<String>()
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
@@ -150,6 +151,7 @@ class FirebaseAccount {
         userMetadataPath.set(mapData).addOnSuccessListener {
             completableToken.complete(true)
         }.addOnFailureListener {
+            Log.e("COMPOSE", "${it.message}\n\n\n${it.stackTrace}\n\n\n${it.cause}")
             completableToken.complete(false)
         }
         return completableToken.await()
@@ -167,7 +169,7 @@ class FirebaseAccount {
      */
     suspend fun uploadNewProfileImage(
         avatarImage: Bitmap,
-        context: Context
+        context: Context,
     ) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())

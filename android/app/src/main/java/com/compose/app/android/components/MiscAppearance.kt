@@ -11,10 +11,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.compose.app.android.R
 
 @Composable
 fun BasicSnackbar(
@@ -29,19 +30,21 @@ fun BasicSnackbar(
         snackbar = @Composable { data ->
             Snackbar(
                 modifier = Modifier.padding(16.dp),
+                backgroundColor = colorResource(id = R.color.neutral_gray),
                 content = @Composable {
                     Row {
                         Icon(
                             painter = icon,
                             contentDescription = contentDescription,
-                            modifier = Modifier.align(Alignment.CenterVertically)
+                            modifier = Modifier.align(Alignment.CenterVertically),
+                            tint = colorResource(id = R.color.text_color_enabled)
                         )
                         Text(
                             text = data.message,
                             style = MaterialTheme.typography.body1,
-                            color = Color.White,
                             fontSize = 14.sp,
-                            modifier = Modifier.padding(horizontal = 15.dp)
+                            modifier = Modifier.padding(horizontal = 15.dp),
+                            color = colorResource(id = R.color.text_color_enabled)
                         )
                     }
                 },

@@ -13,7 +13,7 @@ fun ComposeTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composabl
     }
     MaterialTheme(
         colors = colors,
-        typography = Typography,
+        typography = typography(),
         shapes = Shapes,
         content = content
     )

@@ -1,17 +1,21 @@
 package com.compose.app.android.view
 
 import android.content.Context
+import android.view.WindowManager
 import androidx.annotation.StringRes
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -29,6 +33,7 @@ import com.compose.app.android.R
 import com.compose.app.android.components.BasicSnackbar
 import com.compose.app.android.components.LargeTextInputField
 import com.compose.app.android.components.TextOnlyButton
+import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.theme.IconAlert
@@ -38,8 +43,12 @@ import com.compose.app.android.theme.IconPassword
 import com.compose.app.android.theme.IconPersonSingle
 import com.compose.app.android.utilities.rawStringResource
 import com.compose.app.android.viewmodel.LogInViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
+@ExperimentalMaterialApi
+@ExperimentalFoundationApi
+@ExperimentalPagerApi
 @Composable
 fun LogInView(
     context: Context,
@@ -57,7 +66,8 @@ fun LogInView(
     fun showSnackbar(@StringRes stringID: Int) {
         viewModel.asyncScope.launch {
             scaffoldState.snackbarHostState.showSnackbar(
-                context.rawStringResource(stringID)
+                context.rawStringResource(stringID),
+                duration = SnackbarDuration.Indefinite
             )
         }
     }
@@ -146,6 +156,9 @@ fun LogInView(
                                     text = stringResource(id = R.string.log_in_activity_action_proceed),
                                     color = colorResource(id = R.color.deep_sea),
                                     onClick = {
+                                        (context as ComposeBaseActivity).window.setSoftInputMode(
+                                            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                                        )
                                         viewModel.attemptSignIn(
                                             emailValue.value,
                                             passwordValue.value,

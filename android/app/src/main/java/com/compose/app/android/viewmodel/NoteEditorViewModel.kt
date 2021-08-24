@@ -14,8 +14,8 @@ class NoteEditorViewModel : ViewModel() {
 
     val noteDocumentID: MutableLiveData<String> = MutableLiveData("")
 
-    val titleTextValue = mutableStateOf(TextFieldValue())
-    val contentTextValue = mutableStateOf(TextFieldValue())
+    var titleTextValue = mutableStateOf(TextFieldValue())
+    var contentTextValue = mutableStateOf(TextFieldValue())
 
     private val asynchronousScope = CoroutineScope(Dispatchers.IO + Job())
 

@@ -112,7 +112,7 @@ fun IconOnlyButton(
             .size(height = 45.dp, width = Dp.Unspecified),
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(id = R.color.button_neutral_background_color)
+            backgroundColor = colorResource(id = R.color.neutral_gray)
         ),
         elevation = elevation(
             defaultElevation = 0.dp,

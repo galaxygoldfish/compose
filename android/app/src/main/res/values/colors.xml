@@ -11,6 +11,7 @@
     <color name="forest_green">#66BB6A</color>
     <color name="coral_pink">#F06292</color>
     <color name="super_yellow">#DCE775</color>
+    <color name="neutral_gray">#EDEDED</color>
 
     <color name="bottom_sheet_background">@color/white</color>
     <color name="login_card_background_color">#EFEFEF</color>

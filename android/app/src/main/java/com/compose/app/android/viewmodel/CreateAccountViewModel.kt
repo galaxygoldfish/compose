@@ -8,8 +8,11 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
@@ -37,6 +40,7 @@ class CreateAccountViewModel : ViewModel() {
     }
 
     var avatarImageLive: MutableLiveData<Bitmap> = MutableLiveData<Bitmap>()
+    val avatarRowPadding = mutableStateOf(25.dp)
 
     /**
      * Opens the device's default gallery app expecting an image
@@ -85,9 +89,11 @@ class CreateAccountViewModel : ViewModel() {
         navController: NavController
     ) {
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
+        val synchronousScope = CoroutineScope(Dispatchers.Main + Job())
         asyncScope.launch {
             iconState.value = IconPersonSingle
             descriptionState.value = context.rawStringResource(R.string.account_tree_icon_content_desc)
+            avatarRowPadding.value = 5.dp
             snackbarState.showSnackbar(message = context.rawStringResource(R.string.create_account_queue_text))
             val avatar: Bitmap = if (avatarImageLive.value == null) {
                 BitmapFactory.decodeResource(context.resources, R.drawable.default_avatar_image)
@@ -99,11 +105,13 @@ class CreateAccountViewModel : ViewModel() {
                 lastNameState, avatar, context
             )
             if (accountResult == "true") {
-                navController.navigate(NavigationDestination.ProductivityActivity)
+                synchronousScope.launch {
+                    navController.navigate(NavigationDestination.ProductivityActivity)
+                }
             } else {
                 iconState.value = IconAlert
                 descriptionState.value = context.rawStringResource(R.string.warning_icon_content_desc)
-                snackbarState.showSnackbar(accountResult)
+                snackbarState.showSnackbar(accountResult, duration = SnackbarDuration.Indefinite)
             }
         }
     }

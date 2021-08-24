@@ -1,8 +1,10 @@
 package com.compose.app.android.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -56,9 +58,9 @@ fun LargeTextInputField(
             )
         },
         colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = colorResource(id = com.compose.app.android.R.color.button_neutral_background_color),
+            backgroundColor = colorResource(id = com.compose.app.android.R.color.neutral_gray),
             cursorColor = Color.Black,
-            disabledLabelColor = colorResource(id = com.compose.app.android.R.color.button_neutral_background_color),
+            disabledLabelColor = colorResource(id = com.compose.app.android.R.color.neutral_gray),
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         ),
@@ -102,34 +104,29 @@ fun LargeTextInputField(
 }
 
 @Composable
-fun TextOnlyTextInput(
+fun ExperimentalTextOnlyTextField(
     textFieldValue: TextFieldValue,
     hint: String,
     onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
     textStyle: TextStyle
 ) {
-    TextField(
-        modifier = modifier,
-        value = textFieldValue,
-        textStyle = textStyle,
-        placeholder = @Composable {
+    Box(
+        modifier = modifier
+    ) {
+        BasicTextField(
+            value = textFieldValue,
+            onValueChange = { value ->
+                onValueChange(value)
+            },
+            textStyle = textStyle
+        )
+        if (textFieldValue.text.isEmpty()) {
             Text(
                 text = hint,
                 style = textStyle,
-                modifier = Modifier.padding(0.dp)
+                color = MaterialTheme.colors.onSurface.copy(0.5F)
             )
-        },
-        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent,
-            cursorColor = MaterialTheme.colors.onSurface,
-            disabledLabelColor = Color.Transparent,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        ),
-        onValueChange = {
-            onValueChange(it)
-        },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-    )
+        }
+    }
 }

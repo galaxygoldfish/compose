@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -155,6 +156,7 @@ fun ProductivityView(
                                         bitmap = it.asImageBitmap(),
                                         contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
                                         modifier = Modifier
+                                            .clip(CircleShape)
                                             .size(60.dp)
                                             .align(Alignment.CenterVertically)
                                             .padding(end = 16.dp)
@@ -177,9 +179,9 @@ fun ProductivityView(
                                     )
                                 },
                                 colors = TextFieldDefaults.textFieldColors(
-                                    backgroundColor = colorResource(id = R.color.button_neutral_background_color),
+                                    backgroundColor = colorResource(id = R.color.neutral_gray),
                                     cursorColor = Color.Black,
-                                    disabledLabelColor = colorResource(id = R.color.button_neutral_background_color),
+                                    disabledLabelColor = colorResource(id = R.color.neutral_gray),
                                     focusedIndicatorColor = Color.Transparent,
                                     unfocusedIndicatorColor = Color.Transparent
                                 ),
@@ -263,7 +265,7 @@ fun ProductivityView(
                             .wrapContentHeight()
                             .padding(start = 15.dp, end = 15.dp, bottom = 10.dp)
                             .clip(RoundedCornerShape(10.dp))
-                            .background(colorResource(id = R.color.button_neutral_background_color)),
+                            .background(colorResource(id = R.color.neutral_gray)),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         IconButton(

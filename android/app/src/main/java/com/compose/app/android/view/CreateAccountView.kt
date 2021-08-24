@@ -3,6 +3,7 @@ package com.compose.app.android.view
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.view.WindowManager
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -87,7 +88,7 @@ fun CreateAccountView(
 
     viewModel.avatarImageLive.observe(context as ComposeBaseActivity, avatarImageUpdater)
 
-    ComposeTheme(false) {
+    ComposeTheme {
         Scaffold(
             scaffoldState = scaffoldState,
             snackbarHost = {
@@ -106,7 +107,7 @@ fun CreateAccountView(
                             onClick = {
                                 navController.navigate(NavigationDestination.WelcomeActivity)
                             },
-                            modifier = Modifier.padding(top = 20.dp, start = 10.dp),
+                            modifier = Modifier.padding(top = 15.dp, start = 10.dp),
                             content = @Composable {
                                 Icon(
                                     painter = painterResource(id = IconBackArrow),
@@ -117,7 +118,7 @@ fun CreateAccountView(
                         Text(
                             text = stringResource(id = R.string.create_account_activity_title),
                             style = MaterialTheme.typography.h1,
-                            modifier = Modifier.padding(start = 20.dp, top = 5.dp)
+                            modifier = Modifier.padding(start = 20.dp, top = 0.dp)
                         )
                         Text(
                             text = stringResource(id = R.string.create_account_activity_subtitle),
@@ -173,7 +174,8 @@ fun CreateAccountView(
                             passwordType = false
                         )
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(bottom = viewModel.avatarRowPadding.value),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column {
@@ -229,7 +231,7 @@ fun CreateAccountView(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 20.dp, vertical = 25.dp),
+                                .padding(start = 20.dp, end = 20.dp, bottom = 25.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             TextOnlyButton(
@@ -243,6 +245,9 @@ fun CreateAccountView(
                                 text = stringResource(id = R.string.create_account_continue_button),
                                 color = colorResource(id = R.color.deep_sea),
                                 onClick = {
+                                    context.window.setSoftInputMode(
+                                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                                    )
                                     viewModel.attemptCreateNewUser(
                                         emailState = emailState.value.text,
                                         passwordState = passwordState.value.text,
