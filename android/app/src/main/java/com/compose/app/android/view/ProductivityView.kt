@@ -24,10 +24,13 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,6 +56,7 @@ import com.compose.app.android.model.ExpandableFAB
 import com.compose.app.android.model.ExpandableFABState
 import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
+import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.theme.IconAddNew
@@ -86,27 +90,37 @@ fun ProductivityView(
         updateTaskList()
     }
 
-    val asyncScope = rememberCoroutineScope()
     val preferences = context.getDefaultPreferences()
+    val composeAsync = rememberCoroutineScope()
 
     val noteRefreshState = viewModel.isUpdatingNoteList
     val taskRefreshState = viewModel.isUpdatingTaskList
 
     val scaffoldState = rememberScaffoldState()
+    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val viewPagerState = rememberPagerState(
         pageCount = 2,
         initialPage = 0,
         initialOffscreenLimit = 2,
         infiniteLoop = false
     )
+
     val floatingActionState = remember { mutableStateOf(ExpandableFABState.COLLAPSED) }
     val taskSelectedState = remember { mutableStateOf(false) }
     val noteSelectedState = remember { mutableStateOf(true) }
     val searchFieldValue = remember { mutableStateOf(TextFieldValue()) }
 
     fun changeCurrentPageState(notePage: Boolean) {
-        asyncScope.launch {
+        composeAsync.launch {
             viewPagerState.animateScrollToPage(if (notePage) 0 else 1)
+        }
+    }
+
+    (context as ComposeBaseActivity).apply {
+        if (bottomSheetState.isVisible) {
+            window.navigationBarColor = resources.getColor(R.color.neutral_gray)
+        } else {
+            window.navigationBarColor = resources.getColor(R.color.text_color_reverse)
         }
     }
 
@@ -115,237 +129,262 @@ fun ProductivityView(
             scaffoldState = scaffoldState,
             modifier = Modifier.fillMaxSize(),
             content = @Composable {
-                Box(
-                    modifier = Modifier.fillMaxSize()
+                ModalBottomSheetLayout(
+                    sheetState = bottomSheetState,
+                    sheetContent = {
+                        Box {
+                            when (viewPagerState.currentPage) {
+                                0 -> NoteOptionMenu(viewModel, navController, context, bottomSheetState)
+                                1 -> TaskOptionMenu()
+                            }
+                        }
+                    },
+                    sheetShape = RoundedCornerShape(8.dp),
+                    sheetElevation = 0.dp,
+                    sheetBackgroundColor = colorResource(id = R.color.neutral_gray),
+                    scrimColor = MaterialTheme.colors.surface.copy(0.5F)
                 ) {
-                    Column(
+                    Box(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Column(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxSize()
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 15.dp, bottom = 5.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                            Column(
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                Column(
+                                Row(
                                     modifier = Modifier
-                                        .padding(start = 20.dp)
-                                        .align(Alignment.CenterVertically)
+                                        .fillMaxWidth()
+                                        .padding(top = 15.dp, bottom = 5.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Text(
-                                        text = """${stringResource(id = R.string.productivity_welcome_message)} ${
-                                            preferences.getString(
-                                                "IDENTITY_USER_NAME_FIRST",
-                                                "Error"
-                                            )
-                                        }""".trimMargin(),
-                                        style = MaterialTheme.typography.h4,
-                                    )
-                                    Text(
-                                        text = remember {
-                                            context.resources.getStringArray(R.array.inspirational_quotes_default)
-                                                .random()
-                                        },
-                                        style = MaterialTheme.typography.body1
-                                    )
-                                }
-                                BitmapFactory.decodeFile("${context.filesDir}/avatar.png")?.let {
-                                    Image(
-                                        bitmap = it.asImageBitmap(),
-                                        contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
+                                    Column(
                                         modifier = Modifier
-                                            .clip(CircleShape)
-                                            .size(60.dp)
-                                            .aspectRatio(1F)
+                                            .padding(start = 20.dp)
                                             .align(Alignment.CenterVertically)
-                                            .padding(end = 16.dp)
-                                            .clickable {
-                                                // TODO - Show account context menu dialog
-                                            }
-                                    )
-                                }
-                            }
-                            TextField(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = 14.dp, end = 15.dp, top = 10.dp)
-                                    .height(55.dp),
-                                value = searchFieldValue.value,
-                                placeholder = @Composable {
-                                    Text(
-                                        text = "Search notes & tasks",
-                                        style = MaterialTheme.typography.body1,
-                                    )
-                                },
-                                colors = TextFieldDefaults.textFieldColors(
-                                    backgroundColor = colorResource(id = R.color.neutral_gray),
-                                    cursorColor = Color.Black,
-                                    disabledLabelColor = colorResource(id = R.color.neutral_gray),
-                                    focusedIndicatorColor = Color.Transparent,
-                                    unfocusedIndicatorColor = Color.Transparent
-                                ),
-                                onValueChange = {
-                                    searchFieldValue.value = it
-                                },
-                                shape = RoundedCornerShape(8.dp),
-                                singleLine = true,
-                                leadingIcon = @Composable {
-                                    Icon(
-                                        painter = painterResource(id = IconSearch),
-                                        contentDescription = stringResource(id = R.string.search_icon_content_desc),
-                                        tint = MaterialTheme.colors.onBackground
-                                    )
-                                },
-                                trailingIcon = @Composable {
-                                    IconButton(
-                                        onClick = {
-
-                                        }
                                     ) {
+                                        Text(
+                                            text = """${stringResource(id = R.string.productivity_welcome_message)} ${
+                                                preferences.getString(
+                                                    "IDENTITY_USER_NAME_FIRST",
+                                                    "Error"
+                                                )
+                                            }""".trimMargin(),
+                                            style = MaterialTheme.typography.h4,
+                                        )
+                                        Text(
+                                            text = remember {
+                                                context.resources.getStringArray(R.array.inspirational_quotes_default)
+                                                    .random()
+                                            },
+                                            style = MaterialTheme.typography.body1
+                                        )
+                                    }
+                                    BitmapFactory.decodeFile("${context.filesDir}/avatar.png")
+                                        ?.let {
+                                            Image(
+                                                bitmap = it.asImageBitmap(),
+                                                contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
+                                                modifier = Modifier
+                                                    .clip(CircleShape)
+                                                    .size(60.dp)
+                                                    .aspectRatio(1F)
+                                                    .align(Alignment.CenterVertically)
+                                                    .padding(end = 16.dp)
+                                                    .clickable {
+                                                        // TODO - Show account context menu dialog
+                                                    }
+                                            )
+                                        }
+                                }
+                                TextField(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = 14.dp, end = 15.dp, top = 10.dp)
+                                        .height(55.dp),
+                                    value = searchFieldValue.value,
+                                    placeholder = @Composable {
+                                        Text(
+                                            text = "Search notes & tasks",
+                                            style = MaterialTheme.typography.body1,
+                                        )
+                                    },
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        backgroundColor = colorResource(id = R.color.neutral_gray),
+                                        cursorColor = Color.Black,
+                                        disabledLabelColor = colorResource(id = R.color.neutral_gray),
+                                        focusedIndicatorColor = Color.Transparent,
+                                        unfocusedIndicatorColor = Color.Transparent
+                                    ),
+                                    onValueChange = {
+                                        searchFieldValue.value = it
+                                    },
+                                    shape = RoundedCornerShape(8.dp),
+                                    singleLine = true,
+                                    leadingIcon = @Composable {
                                         Icon(
-                                            painter = painterResource(id = IconKeyboardVoice),
-                                            contentDescription = stringResource(id = R.string.keyboard_voice_icon_content_desc),
+                                            painter = painterResource(id = IconSearch),
+                                            contentDescription = stringResource(id = R.string.search_icon_content_desc),
                                             tint = MaterialTheme.colors.onBackground
+                                        )
+                                    },
+                                    trailingIcon = @Composable {
+                                        IconButton(
+                                            onClick = {
+
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(id = IconKeyboardVoice),
+                                                contentDescription = stringResource(id = R.string.keyboard_voice_icon_content_desc),
+                                                tint = MaterialTheme.colors.onBackground
+                                            )
+                                        }
+                                    }
+                                )
+                            }
+                            HorizontalPager(
+                                state = viewPagerState,
+                                modifier = Modifier
+                                    .weight(1F)
+                                    .fillMaxSize()
+                            ) { page ->
+                                when (page) {
+                                    0 -> {
+                                        SwipeRefresh(
+                                            state = noteRefreshState,
+                                            onRefresh = {
+                                                viewModel.updateNoteList()
+                                            },
+                                            modifier = Modifier.fillMaxSize(),
+                                            content = @Composable {
+                                                NoteListView(
+                                                    noteItemList = viewModel.noteLiveList as MutableLiveData<MutableList<NoteDocument>>,
+                                                    context = context,
+                                                    onItemClick = { note ->
+                                                        navController.navigate("""${NavigationDestination.NoteEditorActivity}/${note.noteID}""")
+                                                    },
+                                                    onItemLongClick = { note ->
+                                                        viewModel.apply {
+                                                            bottomSheetNoteDocument.value = note
+                                                            composeAsync.launch {
+                                                                bottomSheetState.show()
+                                                            }
+                                                        }
+                                                    }
+                                                )
+                                            }
+                                        )
+                                    }
+                                    1 -> {
+                                        SwipeRefresh(
+                                            state = taskRefreshState,
+                                            onRefresh = {
+                                                viewModel.updateTaskList()
+                                            },
+                                            modifier = Modifier.fillMaxSize(),
+                                            content = @Composable {
+                                                TaskListView(
+                                                    context = context,
+                                                    taskList = viewModel.taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
+                                                    onItemClick = {
+                                                        navController.navigate(NavigationDestination.TaskEditorActivity)
+                                                    }
+                                                )
+                                            }
                                         )
                                     }
                                 }
-                            )
+                            }
                         }
-                        HorizontalPager(
-                            state = viewPagerState,
+                        Row(
                             modifier = Modifier
-                                .weight(1F)
-                                .fillMaxSize()
-                        ) { page ->
-                            when (page) {
-                                0 -> {
-                                    SwipeRefresh(
-                                        state = noteRefreshState,
-                                        onRefresh = {
-                                            viewModel.updateNoteList()
-                                        },
-                                        modifier = Modifier.fillMaxSize(),
-                                        content = @Composable {
-                                            NoteListView(
-                                                noteItemList = viewModel.noteLiveList as MutableLiveData<MutableList<NoteDocument>>,
-                                                context = context,
-                                                onItemClick = { note ->
-                                                    navController.navigate("""${NavigationDestination.NoteEditorActivity}/${note.noteID}""")
-                                                }
-                                            )
-                                        }
-                                    )
-                                }
-                                1 -> {
-                                    SwipeRefresh(
-                                        state = taskRefreshState,
-                                        onRefresh = {
-                                            viewModel.updateTaskList()
-                                        },
-                                        modifier = Modifier.fillMaxSize(),
-                                        content = @Composable {
-                                            TaskListView(
-                                                context = context,
-                                                taskList = viewModel.taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
-                                                onItemClick = {
-                                                    navController.navigate(NavigationDestination.TaskEditorActivity)
-                                                }
-                                            )
-                                        }
-                                    )
+                                .align(Alignment.BottomCenter)
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(start = 15.dp, end = 15.dp, bottom = 10.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(colorResource(id = R.color.neutral_gray)),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            IconButton(
+                                onClick = {
+                                    changeCurrentPageState(notePage = true)
+                                },
+                                modifier = Modifier.padding(
+                                    top = 10.dp,
+                                    bottom = 10.dp,
+                                    end = 20.dp
+                                )
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = IconEditPen),
+                                    contentDescription = stringResource(id = R.string.edit_icon_content_desc),
+                                    modifier = Modifier.size(30.dp),
+                                    tint = viewModel.getIconColor(state = noteSelectedState)
+                                )
+                            }
+                            Spacer(modifier = Modifier.size(50.dp))
+                            IconButton(
+                                onClick = {
+                                    changeCurrentPageState(notePage = false)
+                                },
+                                modifier = Modifier.padding(
+                                    top = 10.dp,
+                                    bottom = 10.dp,
+                                    start = 20.dp
+                                )
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = IconCheckCircle),
+                                    contentDescription = stringResource(id = R.string.edit_icon_content_desc),
+                                    modifier = Modifier.size(30.dp),
+                                    tint = viewModel.getIconColor(state = taskSelectedState)
+                                )
+                            }
+                            LaunchedEffect(viewPagerState) {
+                                snapshotFlow { viewPagerState.currentPage }.collect {
+                                    taskSelectedState.value = it != 0
+                                    noteSelectedState.value = it == 0
                                 }
                             }
                         }
-                    }
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(start = 15.dp, end = 15.dp, bottom = 10.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(colorResource(id = R.color.neutral_gray)),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        IconButton(
-                            onClick = {
-                                changeCurrentPageState(notePage = true)
-                            },
-                            modifier = Modifier.padding(
-                                top = 10.dp,
-                                bottom = 10.dp,
-                                end = 20.dp
-                            )
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .fillMaxWidth()
+                                .padding(bottom = 22.dp),
+                            horizontalArrangement = Arrangement.Center
                         ) {
-                            Icon(
-                                painter = painterResource(id = IconEditPen),
-                                contentDescription = stringResource(id = R.string.edit_icon_content_desc),
-                                modifier = Modifier.size(30.dp),
-                                tint = viewModel.getIconColor(state = noteSelectedState)
+                            AddNoteTaskMenuFAB(
+                                icon = painterResource(id = IconAddNew),
+                                contentDescription = stringResource(id = R.string.add_button_content_desc),
+                                expandedState = floatingActionState.value,
+                                modifier = Modifier.size(45.dp),
+                                onExpansion = { state ->
+                                    floatingActionState.value = state
+                                },
+                                menuItems = listOf(
+                                    ExpandableFAB(
+                                        icon = painterResource(id = IconEditPen),
+                                        contentDescription = stringResource(id = R.string.edit_icon_content_desc),
+                                        label = stringResource(id = R.string.productivity_menu_notes),
+                                        onClick = {
+                                            navController.navigate("""${NavigationDestination.NoteEditorActivity}/${UUID.randomUUID()}""")
+                                        }
+                                    ),
+                                    ExpandableFAB(
+                                        icon = painterResource(id = IconCheckCircle),
+                                        contentDescription = stringResource(id = R.string.edit_icon_content_desc),
+                                        label = stringResource(id = R.string.productivity_menu_task),
+                                        onClick = {
+                                            navController.navigate(NavigationDestination.TaskEditorActivity)
+                                        }
+                                    ),
+                                )
                             )
                         }
-                        Spacer(modifier = Modifier.size(50.dp))
-                        IconButton(
-                            onClick = {
-                                changeCurrentPageState(notePage = false)
-                            },
-                            modifier = Modifier.padding(
-                                top = 10.dp,
-                                bottom = 10.dp,
-                                start = 20.dp
-                            )
-                        ) {
-                            Icon(
-                                painter = painterResource(id = IconCheckCircle),
-                                contentDescription = stringResource(id = R.string.edit_icon_content_desc),
-                                modifier = Modifier.size(30.dp),
-                                tint = viewModel.getIconColor(state = taskSelectedState)
-                            )
-                        }
-                        LaunchedEffect(viewPagerState) {
-                            snapshotFlow { viewPagerState.currentPage }.collect {
-                                taskSelectedState.value = it != 0
-                                noteSelectedState.value = it == 0
-                            }
-                        }
-                    }
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth()
-                            .padding(bottom = 22.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        AddNoteTaskMenuFAB(
-                            icon = painterResource(id = IconAddNew),
-                            contentDescription = stringResource(id = R.string.add_button_content_desc),
-                            expandedState = floatingActionState.value,
-                            modifier = Modifier.size(45.dp),
-                            onExpansion = { state ->
-                                floatingActionState.value = state
-                            },
-                            menuItems = listOf(
-                                ExpandableFAB(
-                                    icon = painterResource(id = IconEditPen),
-                                    contentDescription = stringResource(id = R.string.edit_icon_content_desc),
-                                    label = stringResource(id = R.string.productivity_menu_notes),
-                                    onClick = {
-                                        navController.navigate("""${NavigationDestination.NoteEditorActivity}/${UUID.randomUUID()}""")
-                                    }
-                                ),
-                                ExpandableFAB(
-                                    icon = painterResource(id = IconCheckCircle),
-                                    contentDescription = stringResource(id = R.string.edit_icon_content_desc),
-                                    label = stringResource(id = R.string.productivity_menu_task),
-                                    onClick = {
-                                        navController.navigate(NavigationDestination.TaskEditorActivity)
-                                    }
-                                ),
-                            )
-                        )
                     }
                 }
             }

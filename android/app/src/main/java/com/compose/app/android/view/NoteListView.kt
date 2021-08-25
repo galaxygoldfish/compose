@@ -2,6 +2,7 @@ package com.compose.app.android.view
 
 import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,7 +37,8 @@ import com.compose.app.android.model.NoteDocument
 fun NoteListView(
     noteItemList: MutableLiveData<MutableList<NoteDocument>>,
     context: Context,
-    onItemClick: (NoteDocument) -> Unit
+    onItemClick: (NoteDocument) -> Unit,
+    onItemLongClick: (NoteDocument) -> Unit
 ) {
     val gridCellValue = remember { mutableStateOf(GridCells.Fixed(2)) }
     val listItems = noteItemList.observeAsState().value!!
@@ -53,7 +55,8 @@ fun NoteListView(
                     NoteListCard(
                         index = index,
                         currentNote = currentNote,
-                        onItemClick = onItemClick
+                        onItemClick = onItemClick,
+                        onItemLongClick = onItemLongClick
                     )
                 }
             )
@@ -61,31 +64,39 @@ fun NoteListView(
     )
 }
 
+@ExperimentalFoundationApi
 @Composable
 @ExperimentalMaterialApi
 fun NoteListCard(
     index: Int,
     currentNote: NoteDocument,
-    onItemClick: (NoteDocument) -> Unit
+    onItemClick: (NoteDocument) -> Unit,
+    onItemLongClick: (NoteDocument) -> Unit
 ) {
     val isCardEven = index % 2 == 0
     val paddingStart = if (!isCardEven) 3.dp else 0.dp
     val paddingEnd = if (!isCardEven) 0.dp else 6.dp
     Card(
-        onClick = {
-            onItemClick.invoke(currentNote)
-        },
         shape = RoundedCornerShape(7.dp),
         backgroundColor = colorResource(id = NoteColorResourceIDs[
                 NoteColorUniversalIDs.indexOf(currentNote.color)
         ]),
         elevation = 0.dp,
-        modifier = Modifier.padding(
-            top = 5.dp,
-            bottom = 5.dp,
-            end = paddingEnd,
-            start = paddingStart
-        ),
+        modifier = Modifier
+            .padding(
+                top = 5.dp,
+                bottom = 5.dp,
+                end = paddingEnd,
+                start = paddingStart
+            )
+            .combinedClickable(
+                onClick = {
+                    onItemClick.invoke(currentNote)
+                },
+                onLongClick = {
+                    onItemLongClick.invoke(currentNote)
+                }
+            ),
         content = @Composable {
             Column(
                 modifier = Modifier.wrapContentHeight()

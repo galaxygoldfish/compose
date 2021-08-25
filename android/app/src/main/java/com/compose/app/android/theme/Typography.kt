@@ -3,6 +3,7 @@ package com.compose.app.android.theme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -52,6 +53,12 @@ fun typography() : Typography{
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
             color = MaterialTheme.colors.onSurface
+        ),
+        subtitle1 = TextStyle(
+            fontFamily = InterTypeface,
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.text_color_disabled)
         ),
         button = TextStyle(
             fontFamily = InterTypeface,

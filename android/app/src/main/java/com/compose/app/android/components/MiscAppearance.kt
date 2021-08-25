@@ -1,7 +1,13 @@
 package com.compose.app.android.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Snackbar
@@ -51,4 +57,21 @@ fun BasicSnackbar(
             )
         },
     )
+}
+
+@Composable
+fun SheetHandle() {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Card(
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+                .padding(top = 15.dp)
+                .width(100.dp)
+                .height(4.dp),
+            shape = RoundedCornerShape(8.dp),
+            backgroundColor = colorResource(id = R.color.bottom_sheet_handle_color),
+            elevation = 0.dp
+        ) {  }
+    }
 }

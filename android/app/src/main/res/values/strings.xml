@@ -24,6 +24,7 @@
     <string name="palette_icon_content_desc">Note color</string>
     <string name="delete_icon_content_desc">Delete item</string>
     <string name="check_mark_content_desc">Check mark</string>
+    <string name="share_menu_content_desc">Share menu</string>
 
     <string name="firebase_error_fetching_title">There was an error.</string>
     <string name="firebase_error_fetching_content">Unfortunately there was an error retrieving the requested content. Please try again</string>
@@ -75,5 +76,9 @@
     <string name="note_editor_content_placeholder">Content here</string>
     <string name="note_editor_color_picker_title">Note card color</string>
     <string name="note_editor_color_picker_subtitle">Select a color to be displayed on this note\'s card</string>
+    <string name="note_option_menu_last_edited">Last edited %1$s at %2$s</string>
+    <string name="note_option_menu_list_item_edit">View &amp; edit</string>
+    <string name="note_option_menu_list_item_share">Share note</string>
+    <string name="note_option_menu_list_item_delete">Delete note</string>
 
 </resources>

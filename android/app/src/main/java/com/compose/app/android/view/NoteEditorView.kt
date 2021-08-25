@@ -16,8 +16,9 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Surface
+import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -64,6 +65,7 @@ fun NoteEditorView(
     val coroutineScope = rememberCoroutineScope()
 
     val bottomSheetScaffoldState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val mainScaffoldState = rememberScaffoldState()
 
     (context as ComposeBaseActivity).apply {
         if (bottomSheetScaffoldState.isVisible) {
@@ -74,9 +76,12 @@ fun NoteEditorView(
     }
 
     ComposeTheme {
-        Surface(
+        Scaffold(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.surface
+            scaffoldState = mainScaffoldState,
+            snackbarHost = {
+                mainScaffoldState.snackbarHostState
+            }
         ) {
             ModalBottomSheetLayout(
                 sheetState = bottomSheetScaffoldState,

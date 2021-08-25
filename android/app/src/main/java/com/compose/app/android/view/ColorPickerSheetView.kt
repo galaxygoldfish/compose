@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import com.compose.app.android.R
+import com.compose.app.android.components.SheetHandle
 import com.compose.app.android.model.NoteColorResourceIDs
 import com.compose.app.android.model.NoteColorUniversalIDs
 import com.compose.app.android.theme.IconCheckMark
@@ -45,6 +46,7 @@ fun NoteColorPickerSheet(
     Column(modifier = Modifier
         .fillMaxWidth()
     ) {
+        SheetHandle()
         Row(
             modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 15.dp)
         ) {
