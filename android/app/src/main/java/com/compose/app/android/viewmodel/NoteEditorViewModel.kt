@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 class NoteEditorViewModel : ViewModel() {
 
     val noteDocumentID: MutableLiveData<String> = MutableLiveData("")
+    val previousDocumentID: MutableLiveData<String> = MutableLiveData("")
     val selectedNoteColorRes: MutableLiveData<Int> = MutableLiveData(NoteColorResourceIDs[7])
     val selectedNoteColorCentral: MutableLiveData<Int> = MutableLiveData(NoteColorUniversalIDs[7])
 

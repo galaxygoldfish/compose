@@ -140,7 +140,7 @@ fun ProductivityView(
                         }
                     },
                     sheetShape = RoundedCornerShape(8.dp),
-                    sheetElevation = 0.dp,
+                    sheetElevation = 20.dp,
                     sheetBackgroundColor = colorResource(id = R.color.neutral_gray),
                     scrimColor = MaterialTheme.colors.surface.copy(0.5F)
                 ) {

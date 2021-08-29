@@ -171,7 +171,7 @@ fun AddNoteTaskMenuFAB(
                 modifier = Modifier.padding(bottom = if (index % 2 == 0) 12.dp else 20.dp)
                     .size(scaleTransition.value.dp),
                 backgroundColor = colorResource(id = R.color.text_color_enabled),
-                elevation = FloatingActionButtonDefaults.elevation(1.dp),
+                elevation = FloatingActionButtonDefaults.elevation(10.dp),
                 shape = RoundedCornerShape(10.dp)
             )
         }

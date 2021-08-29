@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -57,8 +58,13 @@ fun NoteEditorView(
 ) {
 
     viewModel.apply {
+        previousDocumentID.value = noteDocumentID.value
         noteDocumentID.value = documentID
         updateNoteContents()
+        if (previousDocumentID.value != noteDocumentID.value) {
+            titleTextValue.value = TextFieldValue("")
+            contentTextValue.value = TextFieldValue("")
+        }
     }
 
     val titleTextValue = remember { viewModel.titleTextValue }
