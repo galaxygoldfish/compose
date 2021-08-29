@@ -24,6 +24,7 @@ import com.compose.app.android.viewmodel.CreateAccountViewModel
 import com.compose.app.android.viewmodel.LogInViewModel
 import com.compose.app.android.viewmodel.NoteEditorViewModel
 import com.compose.app.android.viewmodel.ProductivityViewModel
+import com.compose.app.android.viewmodel.TaskEditorViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 object NavigationDestination {
@@ -44,6 +45,7 @@ class ComposeBaseActivity : ComponentActivity() {
     private val logInViewModel: LogInViewModel by viewModels()
     private val productivityViewModel: ProductivityViewModel by viewModels()
     private val noteEditorViewModel: NoteEditorViewModel by viewModels()
+    private val taskEditorViewModel: TaskEditorViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,9 +102,11 @@ class ComposeBaseActivity : ComponentActivity() {
                             documentID = backStackEntry.arguments!!.getString("noteID")!!
                         )
                     }
-                    composable(NavigationDestination.TaskEditorActivity) {
+                    composable("""${NavigationDestination.TaskEditorActivity}/{taskID}""") { backStackEntry ->
                         TaskEditorView(
-                            navController = navigationController
+                            navController = navigationController,
+                            documentID = backStackEntry.arguments!!.getString("taskID")!!,
+                            viewModel = taskEditorViewModel
                         )
                     }
                 }

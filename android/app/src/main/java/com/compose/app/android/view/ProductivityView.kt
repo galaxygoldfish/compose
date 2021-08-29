@@ -288,8 +288,8 @@ fun ProductivityView(
                                                 TaskListView(
                                                     context = context,
                                                     taskList = viewModel.taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
-                                                    onItemClick = {
-                                                        navController.navigate(NavigationDestination.TaskEditorActivity)
+                                                    onItemClick = { task ->
+                                                        navController.navigate("""${NavigationDestination.TaskEditorActivity}/${task.taskID}""")
                                                     }
                                                 )
                                             }
@@ -379,9 +379,10 @@ fun ProductivityView(
                                         contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                                         label = stringResource(id = R.string.productivity_menu_task),
                                         onClick = {
-                                            navController.navigate(NavigationDestination.TaskEditorActivity)
+                                            navController.navigate("""${NavigationDestination.TaskEditorActivity}/${UUID.randomUUID()}""")
                                         }
                                     ),
+
                                 )
                             )
                         }

@@ -85,6 +85,9 @@ class FirebaseDocument {
         isUpdating.isRefreshing = true
         val taskCollectionPath = userdataBasePath.collection("task-data")
         taskCollectionPath.get().addOnSuccessListener { result ->
+            if (result.isEmpty) {
+                isUpdating.isRefreshing = false
+            }
             liveData.value = mutableListOf()
             result.documents.forEach { document ->
                 document.data?.let {
@@ -94,7 +97,7 @@ class FirebaseDocument {
                             document["ID"] as String, document["title"] as String,
                             document["content"] as String, document["dueDateHumanReadable"] as String,
                             document["dueTimeHumanReadable"] as String, document["complete"] as Boolean,
-                            document["dueDateTimeUnix"] as Double
+                            (document["dueDateTimeUnix"] as Long).toDouble()
                         )
                     )
                     liveData.value = tempTaskList

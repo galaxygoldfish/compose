@@ -81,4 +81,7 @@
     <string name="note_option_menu_list_item_share">Share note</string>
     <string name="note_option_menu_list_item_delete">Delete note</string>
 
+    <string name="task_editor_title_placeholder">Task name</string>
+    <string name="task_editor_content_placeholder">Extra details here</string>
+
 </resources>

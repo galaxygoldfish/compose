@@ -41,7 +41,7 @@ import com.compose.app.android.theme.IconNotification
 @ExperimentalMaterialApi
 fun TaskListView(
     context: Context,
-    onItemClick: () -> Unit,
+    onItemClick: (TaskDocument) -> Unit,
     taskList: MutableLiveData<MutableList<TaskDocument>>
 ) {
     val taskListState = rememberLazyListState()
@@ -70,7 +70,7 @@ fun TaskListView(
 @ExperimentalMaterialApi
 fun TaskListCard(
     index: Int,
-    onClick: () -> Unit,
+    onClick: (TaskDocument) -> Unit,
     taskList: MutableList<TaskDocument>
 ) {
     val currentTask = taskList[index]
@@ -81,9 +81,11 @@ fun TaskListCard(
             .wrapContentHeight()
             .padding(bottom = 9.dp),
         shape = RoundedCornerShape(7.dp),
-        backgroundColor = colorResource(id = R.color.button_neutral_background_color),
+        backgroundColor = colorResource(id = R.color.neutral_gray),
         elevation = 0.dp,
-        onClick = onClick
+        onClick = {
+            onClick.invoke(currentTask)
+        }
     ) {
         Row(
             modifier = Modifier.padding(start = 15.dp)
