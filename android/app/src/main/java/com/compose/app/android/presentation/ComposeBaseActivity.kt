@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -47,6 +48,8 @@ class ComposeBaseActivity : ComponentActivity() {
     private val noteEditorViewModel: NoteEditorViewModel by viewModels()
     private val taskEditorViewModel: TaskEditorViewModel by viewModels()
 
+    private lateinit var navigationController: NavHostController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -56,7 +59,7 @@ class ComposeBaseActivity : ComponentActivity() {
 
     @Composable
     fun ComposeNavigationHost() {
-        val navigationController = rememberNavController()
+        navigationController = rememberNavController()
         val navigationStart = if (FirebaseAccount().determineIfUserExists()) {
             NavigationDestination.ProductivityActivity
         } else {
@@ -114,7 +117,10 @@ class ComposeBaseActivity : ComponentActivity() {
         }
     }
 
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        // TODO
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

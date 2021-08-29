@@ -17,6 +17,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -27,6 +28,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.ExperimentalTextOnlyTextField
@@ -178,16 +180,26 @@ fun NoteEditorView(
                         textFieldValue = titleTextValue.value,
                         hint = stringResource(id = R.string.note_editor_title_placeholder),
                         textStyle = MaterialTheme.typography.h2,
-                        modifier = Modifier.padding(start = 20.dp, top = 10.dp),
+                        modifier = Modifier.padding(start = 20.dp, top = 10.dp, end = 20.dp),
                         onValueChange = { newValue ->
                             titleTextValue.value = newValue
                         },
+                    )
+                    Text(
+                        text = String.format(
+                            stringResource(id = R.string.note_option_menu_last_edited),
+                            viewModel.getCurrentDate(),
+                            viewModel.getCurrentTime()
+                        ),
+                        color = colorResource(id = R.color.text_color_disabled),
+                        modifier = Modifier.padding(top = 2.dp, start = 20.dp),
+                        fontSize = 14.sp
                     )
                     ExperimentalTextOnlyTextField(
                         textFieldValue = contentTextValue.value,
                         hint = stringResource(id = R.string.note_editor_content_placeholder),
                         textStyle = MaterialTheme.typography.body2,
-                        modifier = Modifier.padding(start = 20.dp, top = 15.dp),
+                        modifier = Modifier.padding(start = 20.dp, top = 10.dp, end = 20.dp),
                         onValueChange = { newValue ->
                             contentTextValue.value = newValue
                         }

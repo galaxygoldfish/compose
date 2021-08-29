@@ -36,7 +36,7 @@ class NoteEditorViewModel : ViewModel() {
                         selectedNoteColorCentral.value = (noteData["color"] as Long).toInt()
                         selectedNoteColorRes.value = NoteColorResourceIDs[
                                 NoteColorUniversalIDs.indexOf((noteData["color"] as Long).toInt())
-                            ]
+                        ]
                     }
                 }
             }
@@ -54,8 +54,8 @@ class NoteEditorViewModel : ViewModel() {
                 "title" to titleTextValue.value.text,
                 "content" to contentTextValue.value.text,
                 "color" to selectedNoteColorCentral.value!!,
-                "date" to """${calendar[Calendar.MONTH] + 1}/${calendar[Calendar.DATE]}""",
-                "time" to """${calendar[Calendar.HOUR]}:${editedMinute}"""
+                "date" to getCurrentDate(),
+                "time" to getCurrentTime()
             )
             FirebaseDocument().saveDocument(
                 noteDocumentMap,
@@ -68,5 +68,17 @@ class NoteEditorViewModel : ViewModel() {
     fun clearTextFields() {
         contentTextValue = mutableStateOf(TextFieldValue(""))
         titleTextValue = mutableStateOf(TextFieldValue(""))
+    }
+
+    fun getCurrentDate() : String {
+        val calendar = Calendar.getInstance()
+        return """${calendar[Calendar.MONTH] + 1}/${calendar[Calendar.DATE]}"""
+    }
+
+    fun getCurrentTime() : String {
+        val calendar = Calendar.getInstance()
+        val calendarMinute = calendar[Calendar.MINUTE]
+        val editedMinute = if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute
+        return """${calendar[Calendar.HOUR]}:${editedMinute}"""
     }
 }
