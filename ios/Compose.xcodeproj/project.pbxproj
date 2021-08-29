@@ -16,6 +16,8 @@
 		9E14D3E326CDD31600898D19 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E14D3E226CDD31600898D19 /* Utilities.swift */; };
 		9E14D3E526CDDBEC00898D19 /* SystemViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E14D3E426CDDBEC00898D19 /* SystemViews.swift */; };
 		9E7C337E26CC9174003BF000 /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7C337D26CC9174003BF000 /* CreateAccountView.swift */; };
+		9EB5471526D5BA7200C52767 /* NoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB5471426D5BA7200C52767 /* NoteListView.swift */; };
+		9EB5471726D5BA7A00C52767 /* TaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB5471626D5BA7A00C52767 /* TaskListView.swift */; };
 		9EF8770926BA302500790481 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9EF876EF26BA302500790481 /* GoogleService-Info.plist */; };
 		9EF8770A26BA302500790481 /* Inter-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9EF876F226BA302500790481 /* Inter-Bold.otf */; };
 		9EF8770B26BA302500790481 /* Inter-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9EF876F326BA302500790481 /* Inter-Regular.otf */; };
@@ -48,6 +50,8 @@
 		9E14D3E226CDD31600898D19 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		9E14D3E426CDDBEC00898D19 /* SystemViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemViews.swift; sourceTree = "<group>"; };
 		9E7C337D26CC9174003BF000 /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
+		9EB5471426D5BA7200C52767 /* NoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListView.swift; sourceTree = "<group>"; };
+		9EB5471626D5BA7A00C52767 /* TaskListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListView.swift; sourceTree = "<group>"; };
 		9EF876DD26BA2E7600790481 /* Compose.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Compose.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EF876E926BA2E7800790481 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9EF876EF26BA302500790481 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -191,6 +195,8 @@
 			children = (
 				9EF8770326BA302500790481 /* LogInView.swift */,
 				9E7C337D26CC9174003BF000 /* CreateAccountView.swift */,
+				9EB5471626D5BA7A00C52767 /* TaskListView.swift */,
+				9EB5471426D5BA7200C52767 /* NoteListView.swift */,
 				9E14D3D826CDC66400898D19 /* ProductivityView.swift */,
 				9EF8770426BA302500790481 /* WelcomeView.swift */,
 			);
@@ -341,8 +347,10 @@
 			files = (
 				9EF8771826BA302500790481 /* LogInView.swift in Sources */,
 				9EF8771926BA302500790481 /* WelcomeView.swift in Sources */,
+				9EB5471726D5BA7A00C52767 /* TaskListView.swift in Sources */,
 				9E14D3E026CDCB7500898D19 /* FirebaseAccount.swift in Sources */,
 				9EF8771726BA302500790481 /* MiscViews.swift in Sources */,
+				9EB5471526D5BA7200C52767 /* NoteListView.swift in Sources */,
 				9E14D3E526CDDBEC00898D19 /* SystemViews.swift in Sources */,
 				9E7C337E26CC9174003BF000 /* CreateAccountView.swift in Sources */,
 				9E14D3D926CDC66400898D19 /* ProductivityView.swift in Sources */,

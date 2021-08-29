@@ -1,8 +1,8 @@
-//
-//  TaskListView.swift
-//  Compose
-//
-//  Created by Sebastian Hriscu on 8/24/21.
-//
+import SwiftUI
 
-import Foundation
+func TaskListView() -> some View {
+    return VStack {
+        Text("Tasks")
+    }
+}
+

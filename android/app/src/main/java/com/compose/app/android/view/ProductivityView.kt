@@ -259,12 +259,9 @@ fun ProductivityView(
                                             },
                                             modifier = Modifier.fillMaxSize(),
                                             content = @Composable {
-                                                NoteListView(
+                                                ExperimentalNoteListView(
                                                     noteItemList = viewModel.noteLiveList as MutableLiveData<MutableList<NoteDocument>>,
                                                     context = context,
-                                                    onItemClick = { note ->
-                                                        navController.navigate("""${NavigationDestination.NoteEditorActivity}/${note.noteID}""")
-                                                    },
                                                     onItemLongClick = { note ->
                                                         viewModel.apply {
                                                             bottomSheetNoteDocument.value = note
@@ -272,6 +269,9 @@ fun ProductivityView(
                                                                 bottomSheetState.show()
                                                             }
                                                         }
+                                                    },
+                                                    onItemClick = { note ->
+                                                        navController.navigate("""${NavigationDestination.NoteEditorActivity}/${note.noteID}""")
                                                     }
                                                 )
                                             }

@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUIPager
 import UIKit
 
 struct ProductivityView: View {
@@ -8,6 +9,9 @@ struct ProductivityView: View {
     @State private var selectedTab: Int = 0
     @State private var noteTabColor: Color = Color.white
     @State private var taskTabColor: Color = Color("NeutralGrayDisabled")
+    
+    @StateObject private var currentPage: Page = .first()
+    private var pagerItems: [() -> VStack<Content>] = [NoteListView, TaskListView]
     
     var body: some View {
         
@@ -57,7 +61,13 @@ struct ProductivityView: View {
                 .padding(.leading, 18)
                 .padding(.trailing, 17)
                 .padding(.top, 10)
-                Spacer()
+                Pager(
+                    page: self.currentPage,
+                    data: self.pagerItems,
+                    id: \.self
+                ) { item in
+                    item.
+                }
                 ZStack {
                     Color("NeutralGray")
                         .cornerRadius(10)

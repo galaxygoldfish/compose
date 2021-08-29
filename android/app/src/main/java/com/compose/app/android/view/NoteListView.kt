@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -27,6 +28,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import com.compose.app.android.R
+import com.compose.app.android.components.ExperimentalStaggeredVerticalGrid
 import com.compose.app.android.model.NoteColorResourceIDs
 import com.compose.app.android.model.NoteColorUniversalIDs
 import com.compose.app.android.model.NoteDocument
@@ -62,6 +64,38 @@ fun NoteListView(
             )
         }
     )
+}
+
+@ExperimentalMaterialApi
+@ExperimentalFoundationApi
+@Composable
+fun ExperimentalNoteListView(
+    noteItemList: MutableLiveData<MutableList<NoteDocument>>,
+    context: Context,
+    onItemLongClick: (NoteDocument) -> Unit,
+    onItemClick: (NoteDocument) -> Unit
+) {
+    val listItems = noteItemList.observeAsState().value!!
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+            .padding(top = 10.dp, start = 14.dp, end = 15.dp),
+    ) {
+        item {
+            ExperimentalStaggeredVerticalGrid(
+                maxColumnWidth = 220.dp,
+                content = @Composable {
+                    listItems.forEachIndexed { index, document ->
+                        NoteListCard(
+                            index = index,
+                            currentNote = document,
+                            onItemClick = onItemClick,
+                            onItemLongClick = onItemLongClick
+                        )
+                    }
+                }
+            )
+        }
+    }
 }
 
 @ExperimentalFoundationApi
