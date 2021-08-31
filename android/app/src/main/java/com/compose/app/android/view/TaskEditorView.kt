@@ -1,5 +1,9 @@
 package com.compose.app.android.view
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -19,6 +24,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -27,10 +35,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.ExperimentalTextOnlyTextField
+import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.IconBackArrow
+import com.compose.app.android.theme.IconCalendar
+import com.compose.app.android.theme.IconNotification
+import com.compose.app.android.theme.IconTrashItem
 import com.compose.app.android.viewmodel.TaskEditorViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
+import kotlinx.coroutines.launch
 
+@ExperimentalPagerApi
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
 fun TaskEditorView(
@@ -38,8 +54,25 @@ fun TaskEditorView(
     documentID: String,
     viewModel: TaskEditorViewModel
 ) {
+
     val mainScaffoldState = rememberScaffoldState()
-    val bottomSheetScaffoldState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val composeAsync = rememberCoroutineScope()
+
+    val bottomSheetScaffoldState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+
+    val monthState = remember { mutableStateOf("") }
+    val hourState = remember { mutableStateOf("") }
+    val interactionMonitor = remember { mutableStateOf(false) }
+
+    (navController.context as ComposeBaseActivity).apply {
+        if (bottomSheetScaffoldState.isVisible) {
+            window.navigationBarColor = resources.getColor(R.color.neutral_gray)
+        } else {
+            window.navigationBarColor = resources.getColor(R.color.text_color_reverse)
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         scaffoldState = mainScaffoldState,
@@ -50,7 +83,11 @@ fun TaskEditorView(
         ModalBottomSheetLayout(
             sheetState = bottomSheetScaffoldState,
             sheetContent = {
-                Text(text = "d")
+                DatePickerSheetView(
+                    monthDayState = monthState,
+                    timeHourState = hourState,
+                    interactionMonitor = interactionMonitor
+                )
             },
             sheetShape = RoundedCornerShape(8.dp),
             sheetBackgroundColor = colorResource(id = R.color.neutral_gray),
@@ -78,6 +115,57 @@ fun TaskEditorView(
                             )
                         }
                     )
+                    Row(
+                        horizontalArrangement = Arrangement.End,
+                        modifier = Modifier.padding(end = 5.dp, top = 5.dp)
+                    ) {
+                        IconButton(
+                            modifier = Modifier
+                                .padding(end = 10.dp)
+                                .size(30.dp),
+                            onClick = {
+                                composeAsync.launch {
+                                    bottomSheetScaffoldState.show()
+                                }
+                            },
+                            content = @Composable {
+                                Icon(
+                                    painter = painterResource(id = IconCalendar),
+                                    contentDescription = stringResource(id = R.string.calendar_icon_content_desc)
+                                )
+                            }
+                        )
+                        IconButton(
+                            modifier = Modifier
+                                .padding(end = 10.dp)
+                                .size(30.dp),
+                            onClick = {
+                                composeAsync.launch {
+                                    bottomSheetScaffoldState.show()
+                                }
+                            },
+                            content = @Composable {
+                                Icon(
+                                    painter = painterResource(id = IconNotification),
+                                    contentDescription = stringResource(id = R.string.notification_bell_content_desc)
+                                )
+                            }
+                        )
+                        IconButton(
+                            modifier = Modifier
+                                .padding(end = 10.dp)
+                                .size(30.dp),
+                            onClick = {
+
+                            },
+                            content = @Composable {
+                                Icon(
+                                    painter = painterResource(id = IconTrashItem),
+                                    contentDescription = stringResource(id = R.string.delete_icon_content_desc)
+                                )
+                            }
+                        )
+                    }
                 }
                 ExperimentalTextOnlyTextField(
                     textFieldValue = viewModel.titleTextFieldValue.value,
@@ -88,16 +176,43 @@ fun TaskEditorView(
                     textStyle = MaterialTheme.typography.h2,
                     modifier = Modifier.padding(start = 20.dp, top = 10.dp)
                 )
-                ExperimentalTextOnlyTextField(
-                    textFieldValue = viewModel.contentTextFieldValue.value,
-                    hint = stringResource(id = R.string.task_editor_content_placeholder),
-                    onValueChange = { newValue ->
-                        viewModel.contentTextFieldValue.value = newValue
+                Text(
+                    text = if (!interactionMonitor.value) {
+                        stringResource(id = R.string.task_editor_due_date_null)
+                    } else {
+                        String.format(
+                            stringResource(id = R.string.task_editor_due_date_template),
+                            monthState.value,
+                            hourState.value
+                        )
                     },
-                    textStyle = MaterialTheme.typography.body2,
-                    modifier = Modifier.padding(start = 20.dp, top = 10.dp)
+                    color = colorResource(id = R.color.text_color_disabled),
+                    modifier = Modifier
+                        .padding(start = 21.dp, top = 2.dp)
+                        .clickable {
+                            composeAsync.launch {
+                                bottomSheetScaffoldState.show()
+                            }
+                        }
                 )
+                Column(
+                    Modifier.scrollable(
+                        rememberScrollState(),
+                        Orientation.Vertical
+                    )
+                ) {
+                    ExperimentalTextOnlyTextField(
+                        textFieldValue = viewModel.contentTextFieldValue.value,
+                        hint = stringResource(id = R.string.task_editor_content_placeholder),
+                        onValueChange = { newValue ->
+                            viewModel.contentTextFieldValue.value = newValue
+                        },
+                        textStyle = MaterialTheme.typography.body2,
+                        modifier = Modifier.padding(start = 21.dp, top = 10.dp)
+                    )
+                }
             }
         }
     }
 }
+

@@ -3,6 +3,8 @@ package com.compose.app.android.theme
 import com.compose.app.android.R
 
 const val IconBackArrow = R.drawable.ic_duotone_back_arrow
+const val IconLeftArrowSmall = R.drawable.ic_duotone_arrow_left_small
+const val IconRightArrowSmall = R.drawable.ic_duotone_arrow_right_small
 const val IconLogIn = R.drawable.ic_duotone_login_arrow
 
 const val IconCreateAccount = R.drawable.ic_duotone_create_account

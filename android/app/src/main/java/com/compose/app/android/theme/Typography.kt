@@ -60,6 +60,11 @@ fun typography() : Typography{
             fontSize = 14.sp,
             color = colorResource(id = R.color.text_color_disabled)
         ),
+        subtitle2 = TextStyle(
+            fontFamily = InterTypeface,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 16.sp
+        ),
         button = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Bold,
