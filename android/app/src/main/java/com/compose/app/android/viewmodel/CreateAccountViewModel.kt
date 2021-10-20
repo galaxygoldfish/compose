@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.provider.MediaStore
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SnackbarDuration
@@ -46,6 +47,7 @@ class CreateAccountViewModel : ViewModel() {
      * Opens the device's default gallery app expecting an image
      * as a result.
      */
+    @ExperimentalAnimationApi
     fun openGalleryForResult(context: ComposeBaseActivity) {
         val galleryIntent = Intent(Intent.ACTION_GET_CONTENT)
         galleryIntent.type = "image/*"
@@ -56,6 +58,7 @@ class CreateAccountViewModel : ViewModel() {
      * Opens the device's default camera app expecting an image
      * in return.
      */
+    @ExperimentalAnimationApi
     fun openCameraForResult(context: ComposeBaseActivity) {
         val pictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         context.startActivityForResult(pictureIntent, CODE_INTENT_CAMERA)
@@ -116,6 +119,7 @@ class CreateAccountViewModel : ViewModel() {
         }
     }
 
+    @ExperimentalAnimationApi
     fun processActivityResult(data: Intent?, requestCode: Int, context: ComposeBaseActivity) {
         data?.let {
             when (requestCode) {

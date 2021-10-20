@@ -1,28 +1,14 @@
 package com.compose.app.android.view
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,13 +24,14 @@ import com.compose.app.android.components.ExperimentalTextOnlyTextField
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.IconBackArrow
-import com.compose.app.android.theme.IconCalendar
 import com.compose.app.android.theme.IconNotification
+import com.compose.app.android.theme.IconSaveContent
 import com.compose.app.android.theme.IconTrashItem
 import com.compose.app.android.viewmodel.TaskEditorViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -124,14 +111,12 @@ fun TaskEditorView(
                                 .padding(end = 10.dp)
                                 .size(30.dp),
                             onClick = {
-                                composeAsync.launch {
-                                    bottomSheetScaffoldState.show()
-                                }
+
                             },
                             content = @Composable {
                                 Icon(
-                                    painter = painterResource(id = IconCalendar),
-                                    contentDescription = stringResource(id = R.string.calendar_icon_content_desc)
+                                    painter = painterResource(id = IconSaveContent),
+                                    contentDescription = stringResource(id = R.string.save_button_content_desc)
                                 )
                             }
                         )

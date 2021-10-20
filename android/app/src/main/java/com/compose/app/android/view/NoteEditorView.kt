@@ -1,25 +1,11 @@
 package com.compose.app.android.view
 
 import android.content.Context
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,15 +23,12 @@ import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.DocumentType
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
-import com.compose.app.android.theme.ComposeTheme
-import com.compose.app.android.theme.IconBackArrow
-import com.compose.app.android.theme.IconSaveContent
-import com.compose.app.android.theme.IconThemeColor
-import com.compose.app.android.theme.IconTrashItem
+import com.compose.app.android.theme.*
 import com.compose.app.android.viewmodel.NoteEditorViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi

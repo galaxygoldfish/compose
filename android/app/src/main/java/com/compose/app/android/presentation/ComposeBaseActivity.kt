@@ -6,26 +6,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.theme.ComposeTheme
-import com.compose.app.android.view.CreateAccountView
-import com.compose.app.android.view.LogInView
-import com.compose.app.android.view.NoteEditorView
-import com.compose.app.android.view.ProductivityView
-import com.compose.app.android.view.TaskEditorView
-import com.compose.app.android.view.WelcomeView
-import com.compose.app.android.viewmodel.CreateAccountViewModel
-import com.compose.app.android.viewmodel.LogInViewModel
-import com.compose.app.android.viewmodel.NoteEditorViewModel
-import com.compose.app.android.viewmodel.ProductivityViewModel
-import com.compose.app.android.viewmodel.TaskEditorViewModel
+import com.compose.app.android.view.*
+import com.compose.app.android.viewmodel.*
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 object NavigationDestination {
@@ -38,6 +30,7 @@ object NavigationDestination {
 }
 
 @ExperimentalPagerApi
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 class ComposeBaseActivity : ComponentActivity() {
@@ -59,14 +52,14 @@ class ComposeBaseActivity : ComponentActivity() {
 
     @Composable
     fun ComposeNavigationHost() {
-        navigationController = rememberNavController()
+        navigationController = rememberAnimatedNavController()
         val navigationStart = if (FirebaseAccount().determineIfUserExists()) {
             NavigationDestination.ProductivityActivity
         } else {
             NavigationDestination.WelcomeActivity
         }
         ComposeTheme {
-            NavHost(
+            AnimatedNavHost(
                 navController = navigationController,
                 startDestination = navigationStart,
                 builder = {
