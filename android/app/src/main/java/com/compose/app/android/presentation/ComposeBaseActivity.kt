@@ -93,7 +93,6 @@ class ComposeBaseActivity : ComponentActivity() {
                     composable("""${NavigationDestination.NoteEditorActivity}/{noteID}""") { backStackEntry ->
                         NoteEditorView(
                             viewModel = noteEditorViewModel,
-                            context = this@ComposeBaseActivity,
                             navController = navigationController,
                             documentID = backStackEntry.arguments!!.getString("noteID")!!
                         )

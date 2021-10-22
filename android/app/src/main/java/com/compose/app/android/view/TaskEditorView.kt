@@ -10,13 +10,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.compose.app.android.R
@@ -45,18 +44,24 @@ fun TaskEditorView(
     val mainScaffoldState = rememberScaffoldState()
     val composeAsync = rememberCoroutineScope()
 
-    val bottomSheetScaffoldState =
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-
-    val monthState = remember { mutableStateOf("") }
-    val hourState = remember { mutableStateOf("") }
-    val interactionMonitor = remember { mutableStateOf(false) }
+    val bottomSheetScaffoldState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
     (navController.context as ComposeBaseActivity).apply {
         if (bottomSheetScaffoldState.isVisible) {
             window.navigationBarColor = resources.getColor(R.color.neutral_gray)
         } else {
             window.navigationBarColor = resources.getColor(R.color.text_color_reverse)
+        }
+    }
+
+    viewModel.apply {
+        previousDocumentID.value = currentDocumentID.value
+        currentDocumentID.value = documentID
+        if (previousDocumentID.value != currentDocumentID.value) {
+            titleTextFieldValue.value = TextFieldValue("")
+            contentTextFieldValue.value = TextFieldValue("")
+            updateTaskContents(navController.context)
+            viewModel.interactionMonitor.value = false
         }
     }
 
@@ -71,9 +76,7 @@ fun TaskEditorView(
             sheetState = bottomSheetScaffoldState,
             sheetContent = {
                 DatePickerSheetView(
-                    monthDayState = monthState,
-                    timeHourState = hourState,
-                    interactionMonitor = interactionMonitor
+                    viewModel = viewModel
                 )
             },
             sheetShape = RoundedCornerShape(8.dp),
@@ -93,6 +96,7 @@ fun TaskEditorView(
                             .padding(start = 15.dp, top = 5.dp)
                             .size(30.dp),
                         onClick = {
+                            viewModel.saveTaskData()
                             navController.navigate(NavigationDestination.ProductivityActivity)
                         },
                         content = @Composable {
@@ -111,7 +115,7 @@ fun TaskEditorView(
                                 .padding(end = 10.dp)
                                 .size(30.dp),
                             onClick = {
-
+                                viewModel.saveTaskData()
                             },
                             content = @Composable {
                                 Icon(
@@ -159,16 +163,16 @@ fun TaskEditorView(
                         viewModel.titleTextFieldValue.value = it
                     },
                     textStyle = MaterialTheme.typography.h2,
-                    modifier = Modifier.padding(start = 20.dp, top = 10.dp)
+                    modifier = Modifier.padding(start = 20.dp, top = 10.dp, end = 20.dp)
                 )
                 Text(
-                    text = if (!interactionMonitor.value) {
+                    text = if (!viewModel.interactionMonitor.value) {
                         stringResource(id = R.string.task_editor_due_date_null)
                     } else {
                         String.format(
                             stringResource(id = R.string.task_editor_due_date_template),
-                            monthState.value,
-                            hourState.value
+                            "${viewModel.currentMonth.value} ${viewModel.selectedDayIndex.value}, ${viewModel.currentYear.value}",
+                            "${viewModel.selectedHour.value}:${viewModel.selectedMinute.value} ${if (viewModel.selectionAMPM.value == 0) "AM" else "PM"}"
                         )
                     },
                     color = colorResource(id = R.color.text_color_disabled),

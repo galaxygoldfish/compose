@@ -8,11 +8,11 @@ import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.DocumentType
 import com.compose.app.android.model.NoteColorResourceIDs
 import com.compose.app.android.model.NoteColorUniversalIDs
-import java.util.Calendar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.*
 
 class NoteEditorViewModel : ViewModel() {
 
@@ -30,13 +30,13 @@ class NoteEditorViewModel : ViewModel() {
     fun updateNoteContents() {
         asynchronousScope.launch {
             noteDocumentID.value?.let {
-                FirebaseDocument().getNoteByID(it).let { noteData ->
+                FirebaseDocument().getDocumentByID(it, DocumentType.NOTE).let { noteData ->
                     titleTextValue.value = TextFieldValue(noteData["title"] as String)
                     contentTextValue.value = TextFieldValue(noteData["content"] as String)
                     synchronousScope.launch {
                         selectedNoteColorCentral.value = (noteData["color"] as Long).toInt()
                         selectedNoteColorRes.value = NoteColorResourceIDs[
-                                NoteColorUniversalIDs.indexOf((noteData["color"] as Long).toInt())
+                            NoteColorUniversalIDs.indexOf((noteData["color"] as Long).toInt())
                         ]
                     }
                 }
@@ -46,10 +46,6 @@ class NoteEditorViewModel : ViewModel() {
 
     fun saveNoteContents() {
         if (titleTextValue.value.text.isNotEmpty() || contentTextValue.value.text.isNotEmpty()) {
-            val calendar = Calendar.getInstance()
-            val calendarMinute = calendar[Calendar.MINUTE]
-            val editedMinute =
-                if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute
             val noteDocumentMap = mapOf<String, Any>(
                 "ID" to noteDocumentID.value!!,
                 "title" to titleTextValue.value.text,

@@ -1,6 +1,5 @@
 package com.compose.app.android.view
 
-import android.content.Context
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -35,7 +34,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun NoteEditorView(
     viewModel: NoteEditorViewModel,
-    context: Context,
     navController: NavController,
     documentID: String
 ) {
@@ -58,7 +56,7 @@ fun NoteEditorView(
     val bottomSheetScaffoldState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val mainScaffoldState = rememberScaffoldState()
 
-    (context as ComposeBaseActivity).apply {
+    (navController.context as ComposeBaseActivity).apply {
         if (bottomSheetScaffoldState.isVisible) {
             window.navigationBarColor = resources.getColor(R.color.neutral_gray)
         } else {

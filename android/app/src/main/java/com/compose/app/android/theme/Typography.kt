@@ -1,6 +1,5 @@
 package com.compose.app.android.theme
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.colorResource
@@ -25,34 +24,38 @@ fun typography() : Typography{
         h1 = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Bold,
-            fontSize = 40.sp
+            fontSize = 40.sp,
+            color = colorResource(id = R.color.text_color_enabled)
         ),
         h2 = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Bold,
             fontSize = 36.sp,
-            color = MaterialTheme.colors.onSurface
+            color = colorResource(id = R.color.text_color_enabled)
         ),
         h4 = TextStyle(
             fontFamily = InterTypeface,
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
+            color = colorResource(id = R.color.text_color_enabled)
         ),
         h6 = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 19.sp
+            fontSize = 19.sp,
+            color = colorResource(id = R.color.text_color_enabled)
         ),
         body1 = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Normal,
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.text_color_enabled)
         ),
         body2 = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
-            color = MaterialTheme.colors.onSurface
+            color = colorResource(id = R.color.text_color_enabled)
         ),
         subtitle1 = TextStyle(
             fontFamily = InterTypeface,
@@ -63,23 +66,26 @@ fun typography() : Typography{
         subtitle2 = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            color = colorResource(id = R.color.text_color_enabled)
         ),
         button = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
-            color = MaterialTheme.colors.onSurface
+            color = colorResource(id = R.color.text_color_enabled)
         ),
         overline = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Bold,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = colorResource(id = R.color.text_color_enabled)
         ),
         caption = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Normal,
-            fontSize = 12.sp
+            fontSize = 12.sp,
+            color = colorResource(id = R.color.text_color_enabled)
         )
     )
 }
