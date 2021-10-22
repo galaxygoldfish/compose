@@ -20,10 +20,10 @@ import kotlinx.coroutines.launch
 
 class ProductivityViewModel : ViewModel() {
 
-    val asyncScope = CoroutineScope(Dispatchers.IO + Job())
-    val synchronousScope = CoroutineScope(Dispatchers.Main + Job())
+    private val asyncScope = CoroutineScope(Dispatchers.IO + Job())
 
     val bottomSheetNoteDocument: MutableLiveData<NoteDocument> = MutableLiveData()
+    val bottomSheetTaskDocument: MutableLiveData<TaskDocument> = MutableLiveData()
 
     val noteLiveList: LiveData<MutableList<NoteDocument>> = MutableLiveData(mutableListOf<NoteDocument>())
     val isUpdatingNoteList = SwipeRefreshState(false)

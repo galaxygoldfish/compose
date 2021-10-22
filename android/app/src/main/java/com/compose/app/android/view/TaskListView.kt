@@ -1,6 +1,8 @@
 package com.compose.app.android.view
 
 import android.content.Context
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -24,11 +26,13 @@ import com.compose.app.android.model.TaskDocument
 import com.compose.app.android.theme.IconCalendar
 import com.compose.app.android.theme.IconNotification
 
+@ExperimentalFoundationApi
 @Composable
 @ExperimentalMaterialApi
 fun TaskListView(
     context: Context,
     onItemClick: (TaskDocument) -> Unit,
+    onItemLongClick: (TaskDocument) -> Unit,
     taskList: MutableLiveData<MutableList<TaskDocument>>
 ) {
     val taskListState = rememberLazyListState()
@@ -45,6 +49,7 @@ fun TaskListView(
                     TaskListCard(
                         item = taskItemState[index],
                         onClick = onItemClick,
+                        onItemLongClick = onItemLongClick
                     )
                 }
             )
@@ -52,24 +57,31 @@ fun TaskListView(
     )
 }
 
+@ExperimentalFoundationApi
 @Composable
 @ExperimentalMaterialApi
 fun TaskListCard(
     item: TaskDocument,
-    onClick: (TaskDocument) -> Unit
+    onClick: (TaskDocument) -> Unit,
+    onItemLongClick: (TaskDocument) -> Unit
 ) {
     val taskCheckboxState = remember { mutableStateOf(item.isComplete) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(bottom = 9.dp),
+            .padding(bottom = 9.dp)
+            .combinedClickable(
+                onLongClick = {
+                    onItemLongClick.invoke(item)
+                },
+                onClick = {
+                    onClick.invoke(item)
+                }
+            ),
         shape = RoundedCornerShape(7.dp),
         backgroundColor = colorResource(id = R.color.neutral_gray),
-        elevation = 0.dp,
-        onClick = {
-            onClick.invoke(item)
-        }
+        elevation = 0.dp
     ) {
         Row(
             modifier = Modifier.padding(start = 15.dp)

@@ -76,6 +76,7 @@
     <string name="note_editor_content_placeholder">Content here</string>
     <string name="note_editor_color_picker_title">Note card color</string>
     <string name="note_editor_color_picker_subtitle">Select a color to be displayed on this note\'s card</string>
+
     <string name="note_option_menu_last_edited">Last edited %1$s at %2$s</string>
     <string name="note_option_menu_list_item_edit">View &amp; edit</string>
     <string name="note_option_menu_list_item_share">Share note</string>
@@ -87,5 +88,9 @@
     <string name="task_editor_due_date_template">Ends on %1$s at %2$s</string>
     <string name="task_editor_time_picker_type_hour">hour</string>
     <string name="task_editor_time_picker_type_minute">minute</string>
+
+    <string name="task_option_menu_ends_on_template">Ends on %1$s at %2$s</string>
+    <string name="task_option_menu_list_item_share">Share task</string>
+    <string name="task_option_menu_list_item_delete">Delete task</string>
 
 </resources>

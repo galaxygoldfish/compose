@@ -3,7 +3,6 @@ package com.compose.app.android.view
 import android.content.Intent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
@@ -17,12 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.compose.app.android.R
+import com.compose.app.android.components.OptionListItem
 import com.compose.app.android.components.SheetHandle
 import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.DocumentType
@@ -122,7 +121,7 @@ fun NoteOptionMenu(
                 .fillMaxWidth()
                 .padding(top = 15.dp)
         ) {
-            NoteOptionListItem(
+            OptionListItem(
                 icon = IconEditPen,
                 contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                 title = stringResource(id = R.string.note_option_menu_list_item_edit),
@@ -130,7 +129,7 @@ fun NoteOptionMenu(
                     navController.navigate("""${NavigationDestination.NoteEditorActivity}/${noteDocument?.noteID}""")
                 }
             )
-            NoteOptionListItem(
+            OptionListItem(
                 icon = IconShareMenu,
                 contentDescription = stringResource(id = R.string.share_menu_content_desc),
                 title = stringResource(id = R.string.note_option_menu_list_item_share),
@@ -148,7 +147,7 @@ fun NoteOptionMenu(
                     }
                 }
             )
-            NoteOptionListItem(
+            OptionListItem(
                 icon = IconTrashItem,
                 contentDescription = stringResource(id = R.string.delete_icon_content_desc),
                 title = stringResource(id = R.string.note_option_menu_list_item_delete),
@@ -165,37 +164,5 @@ fun NoteOptionMenu(
                 }
             )
         }
-    }
-}
-
-@Composable
-fun NoteOptionListItem(
-    icon: Int,
-    contentDescription: String,
-    title: String,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .clickable {
-                onClick.invoke()
-            }
-    ) {
-        Icon(
-            painter = painterResource(id = icon),
-            contentDescription = contentDescription,
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .padding(start = 20.dp)
-        )
-        Text(
-            text = title,
-            style = MaterialTheme.typography.body1,
-            modifier = Modifier
-                .padding(start = 20.dp)
-                .align(Alignment.CenterVertically)
-        )
     }
 }

@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.ExperimentalTextOnlyTextField
+import com.compose.app.android.firebase.FirebaseDocument
+import com.compose.app.android.model.DocumentType
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.IconBackArrow
@@ -145,7 +147,11 @@ fun TaskEditorView(
                                 .padding(end = 10.dp)
                                 .size(30.dp),
                             onClick = {
-
+                                FirebaseDocument().deleteDocument(
+                                    documentID = viewModel.currentDocumentID.value!!,
+                                    documentType = DocumentType.TASK
+                                )
+                                navController.popBackStack()
                             },
                             content = @Composable {
                                 Icon(

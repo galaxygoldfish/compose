@@ -63,9 +63,6 @@ fun ProductivityView(
     val preferences = context.getDefaultPreferences()
     val composeAsync = rememberCoroutineScope()
 
-    val noteRefreshState = viewModel.isUpdatingNoteList
-    val taskRefreshState = viewModel.isUpdatingTaskList
-
     val scaffoldState = rememberScaffoldState()
     val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val viewPagerState = rememberPagerState(
@@ -105,7 +102,7 @@ fun ProductivityView(
                         Box {
                             when (viewPagerState.currentPage) {
                                 0 -> NoteOptionMenu(viewModel, navController, context, bottomSheetState)
-                                1 -> TaskOptionMenu()
+                                1 -> TaskOptionMenu(viewModel, navController, bottomSheetState, context)
                             }
                         }
                     },
@@ -163,7 +160,7 @@ fun ProductivityView(
                                                     .align(Alignment.CenterVertically)
                                                     .padding(end = 16.dp)
                                                     .clickable {
-                                                        // TODO - Show account context menu dialog
+
                                                     }
                                             )
                                         }
@@ -223,7 +220,7 @@ fun ProductivityView(
                                 when (page) {
                                     0 -> {
                                         SwipeRefresh(
-                                            state = noteRefreshState,
+                                            state = viewModel.isUpdatingNoteList,
                                             onRefresh = {
                                                 viewModel.updateNoteList()
                                             },
@@ -249,7 +246,7 @@ fun ProductivityView(
                                     }
                                     1 -> {
                                         SwipeRefresh(
-                                            state = taskRefreshState,
+                                            state = viewModel.isUpdatingTaskList,
                                             onRefresh = {
                                                 viewModel.updateTaskList()
                                             },
@@ -260,6 +257,14 @@ fun ProductivityView(
                                                     taskList = viewModel.taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
                                                     onItemClick = { task ->
                                                         navController.navigate("""${NavigationDestination.TaskEditorActivity}/${task.taskID}""")
+                                                    },
+                                                    onItemLongClick = { task ->
+                                                        viewModel.apply {
+                                                            bottomSheetTaskDocument.value = task
+                                                            composeAsync.launch {
+                                                                bottomSheetState.show()
+                                                            }
+                                                        }
                                                     }
                                                 )
                                             }
