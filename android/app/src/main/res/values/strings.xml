@@ -25,6 +25,9 @@
     <string name="delete_icon_content_desc">Delete item</string>
     <string name="check_mark_content_desc">Check mark</string>
     <string name="share_menu_content_desc">Share menu</string>
+    <string name="settings_icon_content_desc">Settings</string>
+    <string name="sign_out_content_desc">Sign out</string>
+    <string name="theme_switch_icon_content_desc">Switch themes</string>
 
     <string name="firebase_error_fetching_title">There was an error.</string>
     <string name="firebase_error_fetching_content">Unfortunately there was an error retrieving the requested content. Please try again</string>
@@ -92,5 +95,10 @@
     <string name="task_option_menu_ends_on_template">Ends on %1$s at %2$s</string>
     <string name="task_option_menu_list_item_share">Share task</string>
     <string name="task_option_menu_list_item_delete">Delete task</string>
+
+    <string name="profile_context_menu_settings_title">Preferences</string>
+    <string name="profile_context_menu_sign_out_title">Log out</string>
+    <string name="profile_context_menu_account_settings_title">Account settings</string>
+    <string name="profile_context_menu_switch_theme_title">Switch theme</string>
 
 </resources>

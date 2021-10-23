@@ -7,6 +7,8 @@ const val IconLeftArrowSmall = R.drawable.ic_duotone_arrow_left_small
 const val IconRightArrowSmall = R.drawable.ic_duotone_arrow_right_small
 const val IconLogIn = R.drawable.ic_duotone_login_arrow
 
+const val IconSettings = R.drawable.ic_duotone_settings
+
 const val IconCreateAccount = R.drawable.ic_duotone_create_account
 const val IconPersonSingle = R.drawable.ic_duotone_user_single
 const val IconPersonGroup = R.drawable.ic_duotone_user_group

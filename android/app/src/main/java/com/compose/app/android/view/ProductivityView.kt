@@ -20,12 +20,16 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.AddNoteTaskMenuFAB
+import com.compose.app.android.components.OptionListItem
 import com.compose.app.android.model.ExpandableFAB
 import com.compose.app.android.model.ExpandableFABState
 import com.compose.app.android.model.NoteDocument
@@ -72,10 +76,13 @@ fun ProductivityView(
         infiniteLoop = false
     )
 
+    // todo - move these to the viewModel
+
     val floatingActionState = remember { mutableStateOf(ExpandableFABState.COLLAPSED) }
     val taskSelectedState = remember { mutableStateOf(false) }
     val noteSelectedState = remember { mutableStateOf(true) }
     val searchFieldValue = remember { mutableStateOf(TextFieldValue()) }
+    val showProfileContextDialog = remember { mutableStateOf(false) }
 
     fun changeCurrentPageState(notePage: Boolean) {
         composeAsync.launch {
@@ -154,13 +161,13 @@ fun ProductivityView(
                                                 bitmap = it.asImageBitmap(),
                                                 contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
                                                 modifier = Modifier
+                                                    .padding(end = 16.dp)
                                                     .clip(CircleShape)
-                                                    .size(60.dp)
+                                                    .size(40.dp)
                                                     .aspectRatio(1F)
                                                     .align(Alignment.CenterVertically)
-                                                    .padding(end = 16.dp)
                                                     .clickable {
-
+                                                        showProfileContextDialog.value = true
                                                     }
                                             )
                                         }
@@ -357,8 +364,96 @@ fun ProductivityView(
                                             navController.navigate("""${NavigationDestination.TaskEditorActivity}/${UUID.randomUUID()}""")
                                         }
                                     ),
-
                                 )
+                            )
+                        }
+                        if (showProfileContextDialog.value) {
+                            val dataStore = navController.context.getDefaultPreferences()
+                            Dialog(
+                                onDismissRequest = {
+                                },
+                                properties = DialogProperties(
+                                    dismissOnBackPress = true,
+                                    dismissOnClickOutside = true
+                                ),
+                                content = {
+                                    Column(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(10.dp))
+                                            .background(colorResource(id = R.color.neutral_gray))
+                                    ) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            BitmapFactory.decodeFile(
+                                                "${context.filesDir}/avatar.png"
+                                            )?.let {
+                                                    Image(
+                                                        bitmap = it.asImageBitmap(),
+                                                        contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
+                                                        modifier = Modifier
+                                                            .padding(start = 20.dp, top = 20.dp)
+                                                            .clip(CircleShape)
+                                                            .size(90.dp)
+                                                            .aspectRatio(1F)
+                                                            .align(Alignment.CenterVertically)
+                                                    )
+                                                }
+                                            Column(
+                                                modifier = Modifier
+                                                    .padding(top = 30.dp, start = 25.dp)
+                                            ) {
+                                                Text(
+                                                    text = dataStore.getString("IDENTITY_USER_NAME_FIRST", "Error")!!,
+                                                    style = MaterialTheme.typography.h4,
+                                                    modifier = Modifier.padding()
+                                                )
+                                                Text(
+                                                    text = dataStore.getString("IDENTITY_USER_NAME_LAST", "Error")!!,
+                                                    style = MaterialTheme.typography.h4,
+                                                    fontWeight = FontWeight.Normal,
+                                                    modifier = Modifier.padding()
+                                                )
+                                            }
+                                        }
+                                        Column(
+                                            modifier = Modifier.padding(top = 25.dp, bottom = 15.dp)
+                                        ) {
+                                            OptionListItem(
+                                                icon = IconSettings,
+                                                contentDescription = stringResource(id = R.string.settings_icon_content_desc),
+                                                title = stringResource(id = R.string.profile_context_menu_settings_title),
+                                                onClick = {
+
+                                                }
+                                            )
+                                            OptionListItem(
+                                                icon = IconPersonGroup,
+                                                contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
+                                                title = stringResource(id = R.string.profile_context_menu_account_settings_title),
+                                                onClick = {
+                                                    
+                                                }
+                                            )
+                                            OptionListItem(
+                                                icon = IconThemeColor,
+                                                contentDescription = stringResource(id = R.string.theme_switch_icon_content_desc),
+                                                title = stringResource(id = R.string.profile_context_menu_switch_theme_title),
+                                                onClick = {
+
+                                                }
+                                            )
+                                            OptionListItem(
+                                                icon = IconLogIn,
+                                                contentDescription = stringResource(id = R.string.sign_out_content_desc),
+                                                title = stringResource(id = R.string.profile_context_menu_sign_out_title),
+                                                onClick = {
+
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
                             )
                         }
                     }
