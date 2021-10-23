@@ -1,15 +1,20 @@
 package com.compose.app.android.viewmodel
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.firebase.FirebaseDocument
+import com.compose.app.android.model.ExpandableFABState
 import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
 import com.google.accompanist.swiperefresh.SwipeRefreshState
@@ -25,11 +30,19 @@ class ProductivityViewModel : ViewModel() {
     val bottomSheetNoteDocument: MutableLiveData<NoteDocument> = MutableLiveData()
     val bottomSheetTaskDocument: MutableLiveData<TaskDocument> = MutableLiveData()
 
-    val noteLiveList: LiveData<MutableList<NoteDocument>> = MutableLiveData(mutableListOf<NoteDocument>())
+    val noteLiveList: LiveData<MutableList<NoteDocument>> = MutableLiveData(mutableListOf())
     val isUpdatingNoteList = SwipeRefreshState(false)
 
-    val taskLiveList: LiveData<MutableList<TaskDocument>> = MutableLiveData(mutableListOf<TaskDocument>())
+    val taskLiveList: LiveData<MutableList<TaskDocument>> = MutableLiveData(mutableListOf())
     val isUpdatingTaskList = SwipeRefreshState(false)
+
+    val avatarImageStore: MutableState<Bitmap?> = mutableStateOf(null)
+    val showProfileContextDialog = mutableStateOf(false)
+
+    val floatingActionState = mutableStateOf(ExpandableFABState.COLLAPSED)
+    val taskSelectedState = mutableStateOf(false)
+    val noteSelectedState = mutableStateOf(true)
+    val searchFieldValue = mutableStateOf(TextFieldValue())
 
     /**
      * Fetch the latest version of the user's avatar image from
@@ -39,6 +52,7 @@ class ProductivityViewModel : ViewModel() {
     fun updateToNewestAvatar(filesDir: String) {
         asyncScope.launch {
             FirebaseAccount().sendProfileImageToFile(filesDir)
+            avatarImageStore.value = BitmapFactory.decodeFile("${filesDir}/avatar.png")
         }
     }
 

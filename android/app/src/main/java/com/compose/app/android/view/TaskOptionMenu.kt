@@ -1,6 +1,5 @@
 package com.compose.app.android.view
 
-import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -35,8 +34,7 @@ import kotlinx.coroutines.launch
 fun TaskOptionMenu(
     viewModel: ProductivityViewModel,
     navController: NavController,
-    bottomSheetState: ModalBottomSheetState,
-    context: Context
+    bottomSheetState: ModalBottomSheetState
 ) {
     val composeAsync = rememberCoroutineScope()
     val taskDocument by viewModel.bottomSheetTaskDocument.observeAsState()
@@ -80,7 +78,7 @@ fun TaskOptionMenu(
                         action = Intent.ACTION_SEND
                         type = "text/plain"
                         putExtra(Intent.EXTRA_TEXT, taskContent)
-                        context.startActivity(Intent.createChooser(this, taskContent))
+                        navController.context.startActivity(Intent.createChooser(this, taskContent))
                     }
                     composeAsync.launch {
                         bottomSheetState.hide()

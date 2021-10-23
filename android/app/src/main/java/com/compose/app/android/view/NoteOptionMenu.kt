@@ -27,7 +27,6 @@ import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.DocumentType
 import com.compose.app.android.model.NoteColorResourceIDs
 import com.compose.app.android.model.NoteColorUniversalIDs
-import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.IconEditPen
 import com.compose.app.android.theme.IconShareMenu
@@ -44,7 +43,6 @@ import kotlinx.coroutines.launch
 fun NoteOptionMenu(
     viewModel: ProductivityViewModel,
     navController: NavController,
-    context: ComposeBaseActivity,
     bottomSheetState: ModalBottomSheetState
 ) {
     val noteDocument by viewModel.bottomSheetNoteDocument.observeAsState()
@@ -140,7 +138,7 @@ fun NoteOptionMenu(
                         action = Intent.ACTION_SEND
                         type = "text/plain"
                         putExtra(Intent.EXTRA_TEXT, noteContent)
-                        context.startActivity(Intent.createChooser(this, noteContent))
+                        navController.context.startActivity(Intent.createChooser(this, noteContent))
                     }
                     composeAsync.launch {
                         bottomSheetState.hide()
