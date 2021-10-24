@@ -126,9 +126,6 @@ fun NoteListCard(
     onItemClick: (NoteDocument) -> Unit,
     onItemLongClick: (NoteDocument) -> Unit
 ) {
-    val isCardEven = index % 2 == 0
-    val paddingStart = if (!isCardEven) 3.dp else 0.dp
-    val paddingEnd = if (!isCardEven) 0.dp else 6.dp
     Card(
         shape = RoundedCornerShape(7.dp),
         backgroundColor = colorResource(id = NoteColorResourceIDs[
@@ -137,10 +134,7 @@ fun NoteListCard(
         elevation = 0.dp,
         modifier = Modifier
             .padding(
-                top = 5.dp,
-                bottom = 5.dp,
-                end = paddingEnd,
-                start = paddingStart
+                4.dp
             )
             .combinedClickable(
                 onClick = {

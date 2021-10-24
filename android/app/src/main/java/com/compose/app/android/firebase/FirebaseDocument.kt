@@ -16,7 +16,7 @@ class FirebaseDocument {
     private val firebaseFirestore = Firebase.firestore
     private val firebaseAuth = Firebase.auth
 
-    private val userdataBasePath = firebaseFirestore.collection("userdata")
+    private val userdataBasePath = firebaseFirestore.collection("USERDATA")
         .document(firebaseAuth.currentUser!!.uid)
 
     /**
@@ -35,7 +35,7 @@ class FirebaseDocument {
         isUpdating: SwipeRefreshState
     ) {
         isUpdating.isRefreshing = true
-        val noteCollectionPath = userdataBasePath.collection("note-data")
+        val noteCollectionPath = userdataBasePath.collection("NOTE-DATA")
         noteCollectionPath.get().addOnSuccessListener { result ->
             if (result.isEmpty) {
                 isUpdating.isRefreshing = false
@@ -45,9 +45,9 @@ class FirebaseDocument {
                 val noteData = documentSnapshot.data
                 noteData?.let { document ->
                     val liveDataTemp = liveData.value!!
-                    val noteModel = NoteDocument(document["ID"] as String, (document["color"] as Long).toInt(),
-                        document["content"] as String, document["title"] as String, document["date"] as String,
-                        document["time"] as String)
+                    val noteModel = NoteDocument(document["ID"] as String, (document["COLOR"] as Long).toInt(),
+                        document["CONTENT"] as String, document["TITLE"] as String, document["DATE"] as String,
+                        document["TIME"] as String)
                     liveDataTemp.add(noteModel)
                     liveData.value = liveDataTemp
                     isUpdating.isRefreshing = false
@@ -60,7 +60,7 @@ class FirebaseDocument {
     suspend fun getDocumentByID(documentID: String, documentType: DocumentType) : Map<String, Any> {
         val completableToken = CompletableDeferred<Map<String, Any>>()
         val currentDocumentPath = userdataBasePath.collection(
-            if (documentType == DocumentType.NOTE) "note-data" else "task-data"
+            if (documentType == DocumentType.NOTE) "NOTE-DATA" else "TASK-DATA"
         ).document(documentID)
         currentDocumentPath.get()
             .addOnSuccessListener {
@@ -89,7 +89,7 @@ class FirebaseDocument {
         isUpdating: SwipeRefreshState
     ) {
         isUpdating.isRefreshing = true
-        val taskCollectionPath = userdataBasePath.collection("task-data")
+        val taskCollectionPath = userdataBasePath.collection("TASK-DATA")
         taskCollectionPath.get().addOnSuccessListener { result ->
             if (result.isEmpty) {
                 isUpdating.isRefreshing = false
@@ -100,10 +100,10 @@ class FirebaseDocument {
                     val tempTaskList = liveData.value!!
                     tempTaskList.add(
                         TaskDocument(
-                            document["ID"] as String, document["title"] as String,
-                            document["content"] as String, document["dueDateHumanReadable"] as String,
-                            document["dueTimeHumanReadable"] as String, document["complete"] as Boolean,
-                            (document["dueDateTimeUnix"] as Long).toDouble()
+                            document["ID"] as String, document["TITLE"] as String,
+                            document["CONTENT"] as String, document["DUE-DATE-HR"] as String,
+                            document["DUE-TIME-HR"] as String, document["COMPLETE"] as Boolean,
+                            (document["DUE-DATE-TIME-UNIX"] as Long).toDouble()
                         )
                     )
                     liveData.value = tempTaskList
@@ -124,11 +124,11 @@ class FirebaseDocument {
         newValue: Boolean,
         taskID: String
     ) {
-        val taskItemPath = userdataBasePath.collection("task-data").document(taskID)
+        val taskItemPath = userdataBasePath.collection("TASK-DATA").document(taskID)
         taskItemPath.get().addOnSuccessListener { document ->
             val documentTemp = document.data!!
             documentTemp.let {
-                it["complete"] = newValue
+                it["COMPLETE"] = newValue
             }
             taskItemPath.set(documentTemp, SetOptions.merge())
         }
@@ -139,15 +139,15 @@ class FirebaseDocument {
         documentID: String,
         type: DocumentType
     ) {
-        val noteOrTask = if (type == DocumentType.NOTE) "note-data" else "task-data"
-        val documentPath = firebaseFirestore.collection("userdata")
+        val noteOrTask = if (type == DocumentType.NOTE) "NOTE-DATA" else "TASK-DATA"
+        val documentPath = firebaseFirestore.collection("USERDATA")
             .document(firebaseAuth.currentUser!!.uid).collection(noteOrTask).document(documentID)
         documentPath.set(documentFields)
     }
 
     fun deleteDocument(documentID: String, documentType: DocumentType) {
-        val noteOrTask = if (documentType == DocumentType.NOTE) "note-data" else "task-data"
-        val documentPath = firebaseFirestore.collection("userdata")
+        val noteOrTask = if (documentType == DocumentType.NOTE) "NOTE-DATA" else "TASK-DATA"
+        val documentPath = firebaseFirestore.collection("USERDATA")
             .document(firebaseAuth.currentUser!!.uid).collection(noteOrTask).document(documentID)
         documentPath.delete()
     }

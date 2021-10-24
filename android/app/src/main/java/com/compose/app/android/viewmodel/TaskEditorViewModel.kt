@@ -44,11 +44,11 @@ class TaskEditorViewModel : ViewModel() {
         asynchronousScope.launch {
             currentDocumentID.value?.let { id ->
                 FirebaseDocument().getDocumentByID(id, DocumentType.TASK).let { taskData ->
-                    titleTextFieldValue.value = TextFieldValue(taskData["title"] as String? ?: "")
-                    contentTextFieldValue.value = TextFieldValue(taskData["content"] as String? ?: "")
-                    taskCompletionState.value = taskData["complete"] as Boolean? ?: false
-                    val dateData = taskData["dueDateHumanReadable"] as String?
-                    val timeData = taskData["dueTimeHumanReadable"] as String?
+                    titleTextFieldValue.value = TextFieldValue(taskData["TITLE"] as String? ?: "")
+                    contentTextFieldValue.value = TextFieldValue(taskData["CONTENT"] as String? ?: "")
+                    taskCompletionState.value = taskData["COMPLETE"] as Boolean? ?: false
+                    val dateData = taskData["DUE-DATE-HR"] as String?
+                    val timeData = taskData["DUE-TIME-HR"] as String?
                     updateDateValues(timeData, dateData, context)
                 }
             }
@@ -90,14 +90,14 @@ class TaskEditorViewModel : ViewModel() {
         if (titleTextFieldValue.value.text.isNotEmpty()) {
             val taskDataMap = mapOf(
                 "ID" to (currentDocumentID.value ?: UUID.randomUUID().toString()),
-                "title" to titleTextFieldValue.value.text,
-                "content" to contentTextFieldValue.value.text,
-                "complete" to taskCompletionState.value,
-                "dueTimeHumanReadable" to "${selectedHour.value}:${selectedMinute.value} ${
+                "TITLE" to titleTextFieldValue.value.text,
+                "CONTENT" to contentTextFieldValue.value.text,
+                "COMPLETE" to taskCompletionState.value,
+                "DUE-TIME-HR" to "${selectedHour.value}:${selectedMinute.value} ${
                     if (selectionAMPM.value == 0) "AM" else "PM"
                 }",
-                "dueDateHumanReadable" to "${currentMonth.value} ${selectedDayIndex.value}, ${currentYear.value}",
-                "dueDateTimeUnix" to 11111111111111 // temporary value
+                "DUE-DATE-HR" to "${currentMonth.value} ${selectedDayIndex.value}, ${currentYear.value}",
+                "DUE-DATE-TIME-UNIX" to 11111111111111 // temporary value
             )
             asynchronousScope.launch {
                 FirebaseDocument().saveDocument(

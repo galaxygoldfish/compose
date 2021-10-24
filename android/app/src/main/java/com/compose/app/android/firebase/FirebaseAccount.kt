@@ -15,13 +15,9 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileOutputStream
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 class FirebaseAccount {
 
@@ -64,8 +60,8 @@ class FirebaseAccount {
                     getUserMetadata().let {
                         if (sendProfileImageToFile(context.filesDir.path)) {
                             sharedPreferences.edit().apply {
-                                putString("IDENTITY_USER_NAME_FIRST", it["firstName"] as String?)
-                                putString("IDENTITY_USER_NAME_LAST", it["lastName"] as String)
+                                putString("IDENTITY_USER_NAME_FIRST", it["FIRST-NAME"] as String?)
+                                putString("IDENTITY_USER_NAME_LAST", it["LAST-NAME"] as String?)
                             }.apply()
                             completableToken.complete(true)
                         } else {
@@ -114,7 +110,7 @@ class FirebaseAccount {
             if (password.isNotEmpty() && password.length >= 3) {
                 if (firstName.isNotEmpty() && lastName.isNotEmpty()) {
                     firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
-                        val userdataMap = hashMapOf("firstName" to firstName, "lastName" to lastName)
+                        val userdataMap = hashMapOf("FIRST-NAME" to firstName, "LAST-NAME" to lastName)
                         asyncScope.launch {
                             if (uploadNewUserMetadata(userdataMap)) {
                                 sharedPreferences.edit().apply {
@@ -147,7 +143,9 @@ class FirebaseAccount {
         mapData: Map<String, String>
     ) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
-        val userMetadataPath = firebaseFirestore.collection("metadata").document(firebaseAuth.currentUser!!.uid)
+        val userMetadataPath = firebaseFirestore.collection("METADATA")
+            .document("USERS").collection(firebaseAuth.currentUser!!.uid)
+            .document("USERFILE")
         userMetadataPath.set(mapData).addOnSuccessListener {
             completableToken.complete(true)
         }.addOnFailureListener {
@@ -173,7 +171,7 @@ class FirebaseAccount {
     ) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
-        val avatarImagePath = firebaseStorage.reference.child("metadata/avatars/${firebaseAuth.currentUser!!.uid}")
+        val avatarImagePath = firebaseStorage.reference.child("USER-AVATARS/${firebaseAuth.currentUser!!.uid}")
         val avatarImageLocal = File(context.filesDir, "avatar.png")
         asyncScope.launch {
             val fileOutputStream = FileOutputStream(avatarImageLocal)
@@ -199,11 +197,13 @@ class FirebaseAccount {
      */
     suspend fun getUserMetadata() : Map<*, *> {
         val completableToken = CompletableDeferred<Map<*, *>>()
-        val userMetadataPath = firebaseFirestore.collection("metadata").document(firebaseAuth.currentUser!!.uid)
+        val userMetadataPath = firebaseFirestore.collection("METADATA")
+            .document("USERS").collection(firebaseAuth.currentUser!!.uid)
+            .document("USERFILE")
         userMetadataPath.get().addOnSuccessListener {
             completableToken.complete(it.data as Map<*, *>)
         }.addOnFailureListener {
-            val errorMap = hashMapOf("firstName" to "Error", "lastName" to "Error")
+            val errorMap = hashMapOf("FIRST-NAME" to "Error", "LAST-NAME" to "Error")
             completableToken.complete(errorMap)
         }
         return completableToken.await()
@@ -224,7 +224,7 @@ class FirebaseAccount {
         filesDirPath: String
     ) : Boolean {
         val completableToken = CompletableDeferred<Boolean>()
-        val avatarImagePath = firebaseStorage.reference.child("metadata/avatars/${firebaseAuth.currentUser!!.uid}")
+        val avatarImagePath = firebaseStorage.reference.child("USER-AVATARS/${firebaseAuth.currentUser!!.uid}")
         val localImagePath = File("${filesDirPath}/avatar.png")
         avatarImagePath.getFile(localImagePath).addOnSuccessListener {
             completableToken.complete(true)

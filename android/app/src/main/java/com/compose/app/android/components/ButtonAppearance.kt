@@ -131,7 +131,7 @@ fun AddNoteTaskMenuFAB(
     val iconRotation: Float by transitionUpdate.animateFloat(label = "Icon rotation") { state ->
         if (state == ExpandableFABState.EXPANDED) 90F else 0F
     }
-    val actionRotation by transitionUpdate.animateFloat(label = "FAB roation") { state ->
+    val actionRotation by transitionUpdate.animateFloat(label = "FAB rotation") { state ->
         if (state == ExpandableFABState.EXPANDED) 45F else 0F
     }
     val scaleTransition = transitionUpdate.animateFloat(label = "Menu item scale") { state ->

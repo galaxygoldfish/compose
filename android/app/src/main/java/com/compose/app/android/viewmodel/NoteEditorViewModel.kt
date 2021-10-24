@@ -32,12 +32,12 @@ class NoteEditorViewModel : ViewModel() {
         asynchronousScope.launch {
             noteDocumentID.value?.let {
                 FirebaseDocument().getDocumentByID(it, DocumentType.NOTE).let { noteData ->
-                    titleTextValue.value = TextFieldValue(noteData["title"] as String? ?: "")
-                    contentTextValue.value = TextFieldValue(noteData["content"] as String? ?: "")
+                    titleTextValue.value = TextFieldValue(noteData["TITLE"] as String? ?: "")
+                    contentTextValue.value = TextFieldValue(noteData["CONTENT"] as String? ?: "")
                     synchronousScope.launch {
-                        selectedNoteColorCentral.value = (noteData["color"] as Long? ?: CardColorBlueAlt).toInt()
+                        selectedNoteColorCentral.value = (noteData["COLOR"] as Long? ?: CardColorBlueAlt).toInt()
                         selectedNoteColorRes.value = NoteColorResourceIDs[
-                            NoteColorUniversalIDs.indexOf((noteData["color"] as Long? ?: CardColorBlueAlt).toInt())
+                            NoteColorUniversalIDs.indexOf((noteData["COLOR"] as Long? ?: CardColorBlueAlt).toInt())
                         ]
                     }
                 }
@@ -49,11 +49,11 @@ class NoteEditorViewModel : ViewModel() {
         if (titleTextValue.value.text.isNotEmpty() || contentTextValue.value.text.isNotEmpty()) {
             val noteDocumentMap = mapOf<String, Any>(
                 "ID" to noteDocumentID.value!!,
-                "title" to titleTextValue.value.text,
-                "content" to contentTextValue.value.text,
-                "color" to selectedNoteColorCentral.value!!,
-                "date" to getCurrentDate(),
-                "time" to getCurrentTime()
+                "TITLE" to titleTextValue.value.text,
+                "CONTENT" to contentTextValue.value.text,
+                "COLOR" to selectedNoteColorCentral.value!!,
+                "DATE" to getCurrentDate(),
+                "TIME" to getCurrentTime()
             )
             FirebaseDocument().saveDocument(
                 noteDocumentMap,
