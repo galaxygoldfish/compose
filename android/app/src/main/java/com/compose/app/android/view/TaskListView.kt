@@ -2,6 +2,7 @@ package com.compose.app.android.view
 
 import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,25 +37,45 @@ fun TaskListView(
     taskList: MutableLiveData<MutableList<TaskDocument>>
 ) {
     val taskListState = rememberLazyListState()
-    val taskItemState = taskList.observeAsState().value!!
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 15.dp, start = 14.dp, end = 15.dp),
-        state = taskListState,
-        content = {
-            items(
-                count = taskItemState.size,
-                itemContent = @Composable { index ->
-                    TaskListCard(
-                        item = taskItemState[index],
-                        onClick = onItemClick,
-                        onItemLongClick = onItemLongClick
-                    )
-                }
+    val taskItemState = taskList.observeAsState().value
+    if (taskItemState != null && taskItemState.isNotEmpty()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 15.dp, start = 14.dp, end = 15.dp),
+            state = taskListState,
+            content = {
+                items(
+                    count = taskItemState.size,
+                    itemContent = @Composable { index ->
+                        TaskListCard(
+                            item = taskItemState[index],
+                            onClick = onItemClick,
+                            onItemLongClick = onItemLongClick
+                        )
+                    }
+                )
+            }
+        )
+    } else {
+         Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Spacer(modifier = Modifier.fillMaxHeight(0.2F))
+            Image(
+                painter = painterResource(id = R.drawable.ic_nothing_here_illustration),
+                contentDescription = null,
+                modifier = Modifier.padding(start = 100.dp, end = 100.dp)
             )
+            Text(
+                text = stringResource(id = R.string.productivity_nothing_here_message),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 15.dp)
+            )
+            Spacer(modifier = Modifier.fillMaxHeight(0.3F))
         }
-    )
+    }
 }
 
 @ExperimentalFoundationApi

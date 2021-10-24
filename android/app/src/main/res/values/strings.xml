@@ -74,7 +74,8 @@
     <string name="productivity_welcome_message">Welcome,</string>
     <string name="productivity_menu_notes">NEW NOTE</string>
     <string name="productivity_menu_task">NEW TASK</string>
-
+    <string name="productivity_nothing_here_message">There\'s nothing here yet…</string>
+    
     <string name="note_editor_title_placeholder">Title here</string>
     <string name="note_editor_content_placeholder">Content here</string>
     <string name="note_editor_color_picker_title">Note card color</string>

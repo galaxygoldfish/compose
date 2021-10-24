@@ -3,20 +3,10 @@ package com.compose.app.android.components
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.*
 import androidx.compose.material.ButtonDefaults.elevation
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.FloatingActionButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -160,7 +150,10 @@ fun AddNoteTaskMenuFAB(
     ) {
         menuItems.forEachIndexed { index, item ->
             FloatingActionButton(
-                onClick = item.onClick,
+                onClick = {
+                    item.onClick.invoke()
+                    onExpansion(ExpandableFABState.COLLAPSED)
+                },
                 content = {
                     Icon(
                         painter = item.icon,

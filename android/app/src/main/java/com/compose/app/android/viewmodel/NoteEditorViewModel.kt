@@ -5,6 +5,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.compose.app.android.firebase.FirebaseDocument
+import com.compose.app.android.model.CardColorBlueAlt
 import com.compose.app.android.model.DocumentType
 import com.compose.app.android.model.NoteColorResourceIDs
 import com.compose.app.android.model.NoteColorUniversalIDs
@@ -31,12 +32,12 @@ class NoteEditorViewModel : ViewModel() {
         asynchronousScope.launch {
             noteDocumentID.value?.let {
                 FirebaseDocument().getDocumentByID(it, DocumentType.NOTE).let { noteData ->
-                    titleTextValue.value = TextFieldValue(noteData["title"] as String)
-                    contentTextValue.value = TextFieldValue(noteData["content"] as String)
+                    titleTextValue.value = TextFieldValue(noteData["title"] as String? ?: "")
+                    contentTextValue.value = TextFieldValue(noteData["content"] as String? ?: "")
                     synchronousScope.launch {
-                        selectedNoteColorCentral.value = (noteData["color"] as Long).toInt()
+                        selectedNoteColorCentral.value = (noteData["color"] as Long? ?: CardColorBlueAlt).toInt()
                         selectedNoteColorRes.value = NoteColorResourceIDs[
-                            NoteColorUniversalIDs.indexOf((noteData["color"] as Long).toInt())
+                            NoteColorUniversalIDs.indexOf((noteData["color"] as Long? ?: CardColorBlueAlt).toInt())
                         ]
                     }
                 }

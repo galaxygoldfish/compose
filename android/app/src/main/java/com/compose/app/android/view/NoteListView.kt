@@ -2,14 +2,9 @@ package com.compose.app.android.view
 
 import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -22,9 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import com.compose.app.android.R
@@ -75,25 +73,46 @@ fun ExperimentalNoteListView(
     onItemLongClick: (NoteDocument) -> Unit,
     onItemClick: (NoteDocument) -> Unit
 ) {
-    val listItems = noteItemList.observeAsState().value!!
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-            .padding(top = 10.dp, start = 14.dp, end = 15.dp),
-    ) {
-        item {
-            ExperimentalStaggeredVerticalGrid(
-                maxColumnWidth = 220.dp,
-                content = @Composable {
-                    listItems.forEachIndexed { index, document ->
-                        NoteListCard(
-                            index = index,
-                            currentNote = document,
-                            onItemClick = onItemClick,
-                            onItemLongClick = onItemLongClick
-                        )
+    val listItems = noteItemList.observeAsState().value
+    if (listItems != null && listItems.isNotEmpty()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 10.dp, start = 14.dp, end = 15.dp),
+        ) {
+            item {
+                ExperimentalStaggeredVerticalGrid(
+                    maxColumnWidth = 220.dp,
+                    content = @Composable {
+                        listItems.forEachIndexed { index, document ->
+                            NoteListCard(
+                                index = index,
+                                currentNote = document,
+                                onItemClick = onItemClick,
+                                onItemLongClick = onItemLongClick
+                            )
+                        }
                     }
-                }
+                )
+            }
+        }
+    } else {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Spacer(modifier = Modifier.fillMaxHeight(0.2F))
+            Image(
+                painter = painterResource(id = R.drawable.ic_nothing_here_illustration),
+                contentDescription = null,
+                modifier = Modifier.padding(start = 100.dp, end = 100.dp)
             )
+            Text(
+                text = stringResource(id = R.string.productivity_nothing_here_message),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 15.dp)
+            )
+            Spacer(modifier = Modifier.fillMaxHeight(0.3F))
         }
     }
 }
