@@ -81,18 +81,20 @@ fun NoteOptionMenu(
                             noteDocument?.apply {
                                 val selection = NoteColorUniversalIDs[index]
                                 selectedIndex.value = NoteColorUniversalIDs.indexOf(selection)
-                                FirebaseDocument().saveDocument(
-                                    documentFields = mapOf(
-                                        "title" to title,
-                                        "content" to content,
-                                        "date" to date,
-                                        "time" to time,
-                                        "color" to selection,
-                                        "ID" to noteID
-                                    ),
-                                    documentID = noteID,
-                                    type = DocumentType.NOTE
-                                )
+                                composeAsync.launch {
+                                    FirebaseDocument().saveDocument(
+                                        documentFields = mapOf(
+                                            "title" to title,
+                                            "content" to content,
+                                            "date" to date,
+                                            "time" to time,
+                                            "color" to selection,
+                                            "ID" to noteID
+                                        ),
+                                        documentID = noteID,
+                                        type = DocumentType.NOTE
+                                    )
+                                }
                             }
                             viewModel.updateNoteList()
                         }

@@ -1,6 +1,7 @@
 package com.compose.app.android.view
 
 import android.content.Context
+import android.text.format.Formatter.formatFileSize
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.MutableLiveData
@@ -60,6 +62,7 @@ fun ProductivityView(
         updateToNewestAvatar(context.filesDir.path)
         updateNoteList()
         updateTaskList()
+        updateStorageCount()
     }
 
     val scaffoldState = rememberScaffoldState()
@@ -192,6 +195,17 @@ fun ProfileContextMenu(
                             style = MaterialTheme.typography.h4,
                             fontWeight = FontWeight.Normal,
                             modifier = Modifier.padding()
+                        )
+                        Text(
+                            text = String.format(
+                                stringResource(id = R.string.profile_context_menu_storage_template),
+                                formatFileSize(
+                                    navController.context,
+                                    viewModel.userStorageSize.value.toLong()
+                                )
+                            ),
+                            fontSize = 13.sp,
+                            color = colorResource(id = R.color.text_color_enabled).copy(0.7F)
                         )
                     }
                     viewModel.avatarImageStore.value?.let {

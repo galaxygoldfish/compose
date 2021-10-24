@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.firebase.FirebaseDocument
+import com.compose.app.android.firebase.FirebaseUtils
 import com.compose.app.android.model.ExpandableFABState
 import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
@@ -43,6 +44,8 @@ class ProductivityViewModel : ViewModel() {
     val taskSelectedState = mutableStateOf(false)
     val noteSelectedState = mutableStateOf(true)
     val searchFieldValue = mutableStateOf(TextFieldValue())
+
+    val userStorageSize = mutableStateOf(0)
 
     /**
      * Fetch the latest version of the user's avatar image from
@@ -84,6 +87,12 @@ class ProductivityViewModel : ViewModel() {
             taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
             isUpdatingTaskList
         )
+    }
+
+    fun updateStorageCount() {
+        asyncScope.launch {
+            userStorageSize.value = FirebaseUtils.calculateUserStorage()
+        }
     }
 
 }

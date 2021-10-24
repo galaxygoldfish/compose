@@ -55,11 +55,13 @@ class NoteEditorViewModel : ViewModel() {
                 "DATE" to getCurrentDate(),
                 "TIME" to getCurrentTime()
             )
-            FirebaseDocument().saveDocument(
-                noteDocumentMap,
-                noteDocumentID.value!!,
-                DocumentType.NOTE
-            )
+            asynchronousScope.launch {
+                FirebaseDocument().saveDocument(
+                    noteDocumentMap,
+                    noteDocumentID.value!!,
+                    DocumentType.NOTE
+                )
+            }
         }
     }
 
