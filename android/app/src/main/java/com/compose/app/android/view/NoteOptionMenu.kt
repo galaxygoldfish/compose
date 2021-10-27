@@ -84,11 +84,11 @@ fun NoteOptionMenu(
                                 composeAsync.launch {
                                     FirebaseDocument().saveDocument(
                                         documentFields = mapOf(
-                                            "title" to title,
-                                            "content" to content,
-                                            "date" to date,
-                                            "time" to time,
-                                            "color" to selection,
+                                            "TITLE" to title,
+                                            "CONTENT" to content,
+                                            "DATE" to date,
+                                            "TIME" to time,
+                                            "COLOR" to selection,
                                             "ID" to noteID
                                         ),
                                         documentID = noteID,
@@ -160,7 +160,6 @@ fun NoteOptionMenu(
                         documentType = DocumentType.NOTE
                     )
                     viewModel.updateNoteList()
-
                 }
             )
         }

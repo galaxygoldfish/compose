@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.Year
 import java.util.*
 
@@ -38,7 +39,6 @@ class TaskEditorViewModel : ViewModel() {
     val selectionAMPM = mutableStateOf(0)
 
     private val asynchronousScope = CoroutineScope(Dispatchers.IO + Job())
-    private val synchronousScope = CoroutineScope(Dispatchers.Main + Job())
 
     fun updateTaskContents(context: Context) {
         asynchronousScope.launch {
@@ -85,21 +85,21 @@ class TaskEditorViewModel : ViewModel() {
         }
     }
 
-    /// TODO - Calculate unix time for combined date string and save to firebase
     fun saveTaskData() {
         if (titleTextFieldValue.value.text.isNotEmpty()) {
-            val taskDataMap = mapOf(
-                "ID" to (currentDocumentID.value ?: UUID.randomUUID().toString()),
-                "TITLE" to titleTextFieldValue.value.text,
-                "CONTENT" to contentTextFieldValue.value.text,
-                "COMPLETE" to taskCompletionState.value,
-                "DUE-TIME-HR" to "${selectedHour.value}:${selectedMinute.value} ${
-                    if (selectionAMPM.value == 0) "AM" else "PM"
-                }",
-                "DUE-DATE-HR" to "${currentMonth.value} ${selectedDayIndex.value}, ${currentYear.value}",
-                "DUE-DATE-TIME-UNIX" to 11111111111111 // temporary value
-            )
             asynchronousScope.launch {
+                val dueTime = "${selectedHour.value}:${selectedMinute.value} ${if (selectionAMPM.value == 0) "AM" else "PM"}"
+                val baseTimeFormat = SimpleDateFormat("MMMM d h:mm a yyyy", Locale.ENGLISH)
+                val parsedDueDate = baseTimeFormat.parse("${currentMonth.value} ${selectedDayIndex.value} $dueTime ${currentYear.value}")
+                val taskDataMap = mapOf(
+                    "ID" to (currentDocumentID.value ?: UUID.randomUUID().toString()),
+                    "TITLE" to titleTextFieldValue.value.text,
+                    "CONTENT" to contentTextFieldValue.value.text,
+                    "COMPLETE" to taskCompletionState.value,
+                    "DUE-TIME-HR" to dueTime,
+                    "DUE-DATE-HR" to "${currentMonth.value} ${selectedDayIndex.value}, ${currentYear.value}",
+                    "DUE-DATE-TIME-UNIX" to (parsedDueDate?.time ?: 0)
+                )
                 FirebaseDocument().saveDocument(
                     documentID = currentDocumentID.value ?: UUID.randomUUID().toString(),
                     documentFields = taskDataMap,

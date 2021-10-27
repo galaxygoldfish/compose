@@ -112,6 +112,16 @@ fun TaskEditorView(
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier.padding(end = 5.dp, top = 5.dp)
                     ) {
+                        Checkbox(
+                            checked = viewModel.taskCompletionState.value,
+                            onCheckedChange = {
+                                FirebaseDocument().updateTaskCompletion(it, viewModel.currentDocumentID.value!!)
+                                viewModel.taskCompletionState.value = it
+                            },
+                            modifier = Modifier
+                                .size(30.dp)
+                                .padding(end = 10.dp)
+                        )
                         IconButton(
                             modifier = Modifier
                                 .padding(end = 10.dp)
@@ -210,4 +220,3 @@ fun TaskEditorView(
         }
     }
 }
-

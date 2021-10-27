@@ -10,19 +10,16 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 
 class FirebaseDocument {
 
     private val firebaseFirestore = Firebase.firestore
     private val firebaseAuth = Firebase.auth
 
-    private val asyncScope = CoroutineScope(Dispatchers.IO + Job())
-
     private val userdataBasePath = firebaseFirestore.collection("USERDATA")
         .document(firebaseAuth.currentUser!!.uid)
+    private val storageDocumentPath = firebaseFirestore.collection("METADATA").document("USERS")
+        .collection(firebaseAuth.currentUser!!.uid).document("QUOTA-MONITOR")
 
     /**
      * Fetch all notes in the current user's note folder, updating
@@ -61,7 +58,7 @@ class FirebaseDocument {
         }
     }
 
-    // WIP
+
     suspend fun getDocumentByID(documentID: String, documentType: DocumentType) : Map<String, Any> {
         val completableToken = CompletableDeferred<Map<String, Any>>()
         val currentDocumentPath = userdataBasePath.collection(
@@ -147,8 +144,6 @@ class FirebaseDocument {
         val noteOrTask = if (type == DocumentType.NOTE) "NOTE-DATA" else "TASK-DATA"
         val documentPath = firebaseFirestore.collection("USERDATA")
             .document(firebaseAuth.currentUser!!.uid).collection(noteOrTask).document(documentID)
-        val storageDocumentPath = firebaseFirestore.collection("METADATA").document("USERS")
-            .collection(firebaseAuth.currentUser!!.uid).document("QUOTA-MONITOR")
         val documentSize = FirebaseUtils.calculateDocumentSize(documentPath)
         documentPath.set(documentFields)
         storageDocumentPath.set(mapOf("${noteOrTask}-${documentID}" to documentSize), SetOptions.merge())
@@ -158,8 +153,6 @@ class FirebaseDocument {
         val noteOrTask = if (documentType == DocumentType.NOTE) "NOTE-DATA" else "TASK-DATA"
         val documentPath = firebaseFirestore.collection("USERDATA")
             .document(firebaseAuth.currentUser!!.uid).collection(noteOrTask).document(documentID)
-        val storageDocumentPath = firebaseFirestore.collection("METADATA").document("USERS")
-            .collection(firebaseAuth.currentUser!!.uid).document("QUOTA-MONITOR")
         storageDocumentPath.get().addOnSuccessListener {
             it.data?.let { it2 ->
                 it2.remove("${noteOrTask}-${documentID}")
