@@ -11,6 +11,7 @@ import com.compose.app.android.utilities.rawStringResource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -24,6 +25,9 @@ class FirebaseAccount {
     private val firebaseAuth: FirebaseAuth = Firebase.auth
     private val firebaseFirestore: FirebaseFirestore = Firebase.firestore
     private val firebaseStorage: FirebaseStorage = Firebase.storage
+
+    private val storageDocumentPath = firebaseFirestore.collection("METADATA").document("USERS")
+        .collection(firebaseAuth.currentUser!!.uid).document("QUOTA-MONITOR")
 
     /**
      * Check whether there is currently an authenticated user signed-in.
@@ -227,6 +231,7 @@ class FirebaseAccount {
         val avatarImagePath = firebaseStorage.reference.child("USER-AVATARS/${firebaseAuth.currentUser!!.uid}")
         val localImagePath = File("${filesDirPath}/avatar.png")
         avatarImagePath.getFile(localImagePath).addOnSuccessListener {
+            storageDocumentPath.set(mapOf("USER-AVATAR" to localImagePath.length()), SetOptions.merge())
             completableToken.complete(true)
         }.addOnFailureListener {
             completableToken.complete(false)

@@ -14,6 +14,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.compose.app.android.R
 
+/**
+ * Snackbar, containing an icon and text which is usually
+ * displayed at the bottom of the screen
+ * @param hostState - SnackbarHostState determining whether
+ * to show the snackbar or not
+ * @param modifier - Modifier to determine the placement of
+ * the snackbar
+ * @param icon - Painter containing the icon shown to the left
+ * of the text displayed on the snackbar
+ * @param contentDescription - Accessibility content description
+ * of the icon used
+ */
 @Composable
 fun BasicSnackbar(
     hostState: SnackbarHostState,
@@ -67,6 +79,17 @@ fun SheetHandle() {
     }
 }
 
+/**
+ * A List item with text and an icon that can be used in
+ * casual lists and context menus.
+ * @param icon - The resource ID of the icon being used
+ * in the current list item
+ * @param contentDescription - Accessibility content
+ * description of the icon being used
+ * @param title - The text being shown in the current list
+ * item
+ * @param onClick - Invoked when the list item is clicked
+ */
 @Composable
 fun OptionListItem(
     icon: Int,

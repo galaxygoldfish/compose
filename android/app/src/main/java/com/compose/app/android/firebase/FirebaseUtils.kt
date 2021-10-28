@@ -9,6 +9,13 @@ import kotlinx.coroutines.CompletableDeferred
 class FirebaseUtils {
     companion object {
 
+        /**
+         * Get the size, in bytes of a document in firebase.
+         * @return - The number of bytes the document is counted
+         * as under firebase firestore.
+         * @param document - The target DocumentReference to be analyzed
+         * for it's size
+         */
         suspend fun calculateDocumentSize(document: DocumentReference) : Int {
             val completableToken = CompletableDeferred<Int>()
             var totalDocumentSize = 32
@@ -35,6 +42,13 @@ class FirebaseUtils {
             return completableToken.await()
         }
 
+        /**
+         * Fetch the total number of used bytes in firebase by the
+         * current user.
+         * @return - An int value containing the number of bytes that
+         * the user has used in total, containing the profile picture,
+         * and all notes and tasks.
+         */
         suspend fun calculateUserStorage() : Int {
             val quotaDocument = Firebase.firestore.collection("METADATA").document("USERS")
                 .collection(Firebase.auth.currentUser!!.uid).document("QUOTA-MONITOR")

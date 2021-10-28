@@ -2,6 +2,16 @@ package com.compose.app.android.model
 
 import com.compose.app.android.R
 
+/**
+ * Since we can't decode the android resource ID on other
+ * platforms like iOS and the web, NoteColorResourceIDs and
+ * NoteColorUniversalIDs correlate an integer value to each color,
+ * which is recognized on all clients. Each item in NoteColorResourceIDs
+ * correlates to the code at the same index in NoteColorUniversalIDs.
+ *
+ * Used on notes and their cards on the main list in ProductivityView
+ */
+
 const val CardColorRedLight = 1000
 const val CardColorRedAlt = 1001
 const val CardColorFuschia = 2000

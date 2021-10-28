@@ -58,7 +58,13 @@ class FirebaseDocument {
         }
     }
 
-
+    /**
+     * Fetch a specific note or task by it's ID (file name)
+     * @return A map of the document's keys and values
+     * @param documentID - the ID of the document being fetched
+     * @param documentType - Specify whether the document is a note
+     * or a task using the DocumentType enum.
+     */
     suspend fun getDocumentByID(documentID: String, documentType: DocumentType) : Map<String, Any> {
         val completableToken = CompletableDeferred<Map<String, Any>>()
         val currentDocumentPath = userdataBasePath.collection(
@@ -136,6 +142,14 @@ class FirebaseDocument {
         }
     }
 
+    /**
+     * Insert a new document to firebase or save an existing note
+     * or task.
+     * @param documentFields - A map of the document's keys and values
+     * @param documentID - The name of the document to be saved as
+     * @param type - Specify whether the document is a note or task
+     * using the DocumentType enum
+     */
     suspend fun saveDocument(
         documentFields: Map<String, Any>,
         documentID: String,
@@ -149,7 +163,16 @@ class FirebaseDocument {
         storageDocumentPath.set(mapOf("${noteOrTask}-${documentID}" to documentSize), SetOptions.merge())
     }
 
-    fun deleteDocument(documentID: String, documentType: DocumentType) {
+    /**
+     * Remove a document entirely from firebase.
+     * @param documentID - The name the document was saved under.
+     * @param documentType - Specify type of document (note or task)
+     * using the DocumentType enum
+     */
+    fun deleteDocument(
+        documentID: String,
+        documentType: DocumentType
+    ) {
         val noteOrTask = if (documentType == DocumentType.NOTE) "NOTE-DATA" else "TASK-DATA"
         val documentPath = firebaseFirestore.collection("USERDATA")
             .document(firebaseAuth.currentUser!!.uid).collection(noteOrTask).document(documentID)

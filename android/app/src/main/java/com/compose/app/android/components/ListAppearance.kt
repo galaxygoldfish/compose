@@ -16,6 +16,9 @@
  * Code source from
  * https://github.com/android/compose-samples/blob/main/Owl/app/src/main/java/com/example/owl/ui/courses/FeaturedCourses.kt#L179
  *
+ * Code used to create a staggered list effect, something that Jetpack
+ * Compose currently doesn't support out-of-the-box
+ *
  */
 
 package com.compose.app.android.components

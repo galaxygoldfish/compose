@@ -21,7 +21,18 @@ import com.compose.app.android.R
 import com.compose.app.android.model.ExpandableFAB
 import com.compose.app.android.model.ExpandableFABState
 
-
+/**
+ * A button, similar to the LargeTextField, filling the screen
+ * width with an icon to the left and text in the center.
+ * @param text - The main text to be displayed by the button
+ * @param icon - The painter containing the icon to be
+ * displayed to the left of the text
+ * @param contentDescription - An accessibility content
+ * description of the icon used
+ * @param color - The background color of the button
+ * @param onClick - Function to be invoked when the button is
+ * clicked.
+ */
 @Composable
 fun FullWidthButton(
     text: String,
@@ -62,6 +73,14 @@ fun FullWidthButton(
     }
 }
 
+/**
+ * A smaller button, adapting to the text used with only
+ * the text and no icon.
+ * @param text - The text to be displayed on the button
+ * @param color - The background color of the button
+ * @param onClick - Function to be invoked when the user
+ * clicks the button
+ */
 @Composable
 fun TextOnlyButton(
     text: String,
@@ -90,6 +109,14 @@ fun TextOnlyButton(
     }
 }
 
+/**
+ * A button with an icon and gray rounded background.
+ * @param icon - A painter containing the icon to be used
+ * @param contentDescription - Accessibility content description
+ * of the icon used
+ * @param onClick - Function to be invoked when the user clicks
+ * the button
+ */
 @Composable
 fun IconOnlyButton(
     icon: Painter,
@@ -118,6 +145,24 @@ fun IconOnlyButton(
     }
 }
 
+/**
+ * A floating action button used on the center of the bottom
+ * navigation bar in ProductivityView. When clicked, it throws
+ * two extra buttons above it while rotating to create an animated
+ * effect.
+ * @see ExpandableFABState
+ * @see ExpandableFAB
+ * @param icon - The icon of the main floating action button that
+ * is always visible
+ * @param contentDescription - Accessibility content description
+ * of the icon used on the main button
+ * @param onExpansion - Function invoked to change the state of
+ * the expansion of the button
+ * @param expandedState - The current ExpandableFABState representing
+ * the initial state of the button
+ * @param modifier - Modifier to be applied to the button container
+ * @param menuItems - A list of ExpandableFAB, storing their properties
+ */
 @Composable
 fun AddNoteTaskMenuFAB(
     icon: Painter,

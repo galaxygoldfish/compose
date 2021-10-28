@@ -6,17 +6,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -32,6 +23,23 @@ import androidx.compose.ui.unit.dp
 import com.compose.app.android.theme.IconEyeClosed
 import com.compose.app.android.theme.IconEyeOpen
 
+/**
+ * TextField that fills the width of the screen, with a
+ * rounded gray background and an icon to the left.
+ * @param text - the TextFieldValue to be used for this
+ * text field
+ * @param hint - Placeholder text to be shown when the
+ * field is empty
+ * @param valueCallback - Function to be invoked when the
+ * TextFieldValue changes
+ * @param icon - The icon to be displayed on the left side
+ * of the text field
+ * @param contentDescription - A string accessibility content
+ * description of the icon used
+ * @param passwordType - Indicate true if this field is a secure
+ * input field, to hide the text and allow the user to show and
+ * hide when needed.
+ */
 @Composable
 fun LargeTextInputField(
     text: TextFieldValue,
@@ -104,6 +112,20 @@ fun LargeTextInputField(
     )
 }
 
+/**
+ * A TextField with only the text and a hint, no border, underline or
+ * other decoration, like the XML EditText.
+ * @param textFieldValue - The TextFieldValue to be used in the
+ * TextField
+ * @param hint - A placeholder text to be shown when the field is
+ * empty, at a lighter color
+ * @param onValueChange - Function passing the new TextFieldValue to
+ * be called when the text or selection changes, usually where the
+ * new value is assigned to the TextFieldValue
+ * @param modifier - A modifier to be applied to the view
+ * @param textStyle - TextStyle to be applied to the TextField and the
+ * hint.
+ */
 @Composable
 fun ExperimentalTextOnlyTextField(
     textFieldValue: TextFieldValue,
@@ -123,6 +145,7 @@ fun ExperimentalTextOnlyTextField(
             textStyle = textStyle,
             cursorBrush = SolidColor(MaterialTheme.colors.onBackground)
         )
+        // Hint when empty
         if (textFieldValue.text.isEmpty()) {
             Text(
                 text = hint,

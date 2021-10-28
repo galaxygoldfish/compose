@@ -115,7 +115,10 @@ fun TaskEditorView(
                         Checkbox(
                             checked = viewModel.taskCompletionState.value,
                             onCheckedChange = {
-                                FirebaseDocument().updateTaskCompletion(it, viewModel.currentDocumentID.value!!)
+                                FirebaseDocument().updateTaskCompletion(
+                                    newValue = it,
+                                    taskID = viewModel.currentDocumentID.value!!
+                                )
                                 viewModel.taskCompletionState.value = it
                             },
                             modifier = Modifier
