@@ -2,16 +2,15 @@ package com.compose.app.android.viewmodel
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.firebase.FirebaseUtils
@@ -69,9 +68,9 @@ class ProductivityViewModel : ViewModel() {
     @Composable
     fun getIconColor(state: MutableState<Boolean>) : Color {
         return if (state.value) {
-            colorResource(id = R.color.text_color_enabled)
+            MaterialTheme.colors.onBackground
         } else {
-            colorResource(id = R.color.text_color_disabled)
+            MaterialTheme.colors.onBackground.copy(0.5F)
         }
     }
 

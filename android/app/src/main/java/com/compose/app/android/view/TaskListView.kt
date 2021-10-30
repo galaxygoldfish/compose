@@ -15,7 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -101,7 +100,7 @@ fun TaskListCard(
                 }
             ),
         shape = RoundedCornerShape(7.dp),
-        backgroundColor = colorResource(id = R.color.neutral_gray),
+        backgroundColor = MaterialTheme.colors.primaryVariant,
         elevation = 0.dp
     ) {
         Row(
@@ -144,26 +143,26 @@ fun TaskListCard(
                         painter = painterResource(id = IconCalendar),
                         contentDescription = stringResource(id = R.string.calendar_icon_content_desc),
                         modifier = Modifier.size(16.dp),
-                        tint = colorResource(id = R.color.text_color_disabled)
+                        tint = MaterialTheme.colors.onBackground.copy(0.7F)
                     )
                     Text(
                         text = item.dueDate.split(",")[0],
                         style = MaterialTheme.typography.body1,
                         fontSize = 15.sp,
-                        color = colorResource(id = R.color.text_color_disabled),
+                        color = MaterialTheme.colors.onBackground.copy(0.7F),
                         modifier = Modifier.padding(start = 5.dp, end = 15.dp)
                     )
                     Icon(
                         painter = painterResource(id = IconNotification),
                         contentDescription = stringResource(id = R.string.notification_bell_content_desc),
                         modifier = Modifier.size(16.dp),
-                        tint = colorResource(id = R.color.text_color_disabled)
+                        tint = MaterialTheme.colors.onBackground.copy(0.7F)
                     )
                     Text(
                         text = item.dueTime,
                         style = MaterialTheme.typography.body1,
                         fontSize = 15.sp,
-                        color = colorResource(id = R.color.text_color_disabled),
+                        color = MaterialTheme.colors.onBackground.copy(0.7F),
                         modifier = Modifier.padding(start = 5.dp)
                     )
                 }

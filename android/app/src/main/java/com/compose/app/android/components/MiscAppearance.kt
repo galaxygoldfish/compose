@@ -39,21 +39,21 @@ fun BasicSnackbar(
         snackbar = @Composable { data ->
             Snackbar(
                 elevation = 0.dp,
-                backgroundColor = colorResource(id = R.color.neutral_gray),
+                backgroundColor = MaterialTheme.colors.secondaryVariant,
                 content = @Composable {
                     Row {
                         Icon(
                             painter = icon,
                             contentDescription = contentDescription,
                             modifier = Modifier.align(Alignment.CenterVertically),
-                            tint = colorResource(id = R.color.text_color_enabled)
+                            tint = MaterialTheme.colors.onBackground
                         )
                         Text(
                             text = data.message,
                             style = MaterialTheme.typography.body1,
                             fontSize = 14.sp,
                             modifier = Modifier.padding(horizontal = 15.dp),
-                            color = colorResource(id = R.color.text_color_enabled)
+                            color = MaterialTheme.colors.onBackground
                         )
                     }
                 },
@@ -73,7 +73,7 @@ fun SheetHandle() {
                 .width(100.dp)
                 .height(4.dp),
             shape = RoundedCornerShape(8.dp),
-            backgroundColor = colorResource(id = R.color.bottom_sheet_handle_color),
+            backgroundColor = colorResource(id = R.color.bottom_sheet_handle_color), // TODO - Don't use colorResource to fix weird jetpack compose dark/light theme switching
             elevation = 0.dp
         ) {  }
     }

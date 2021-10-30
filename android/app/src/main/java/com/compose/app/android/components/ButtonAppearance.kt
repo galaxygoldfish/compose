@@ -14,10 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.compose.app.android.R
 import com.compose.app.android.model.ExpandableFAB
 import com.compose.app.android.model.ExpandableFABState
 
@@ -129,7 +127,7 @@ fun IconOnlyButton(
             .size(height = 45.dp, width = Dp.Unspecified),
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = colorResource(id = R.color.neutral_gray)
+            backgroundColor = MaterialTheme.colors.secondaryVariant
         ),
         elevation = elevation(
             defaultElevation = 0.dp,
@@ -183,12 +181,12 @@ fun AddNoteTaskMenuFAB(
         if (state == ExpandableFABState.EXPANDED) 47F else 0F
     }
     val colorTransition by transitionUpdate.animateColor(label = "Base FAB color") { state ->
-        if (state == ExpandableFABState.EXPANDED) colorResource(id = R.color.text_color_enabled)
-        else colorResource(id = R.color.deep_sea)
+        if (state == ExpandableFABState.EXPANDED) MaterialTheme.colors.onSurface
+        else MaterialTheme.colors.primary
     }
     val iconColorTransition by transitionUpdate.animateColor(label = "Base FAB icon color") { state ->
-        if (state == ExpandableFABState.EXPANDED) colorResource(id = R.color.text_color_reverse)
-        else colorResource(id = R.color.black)
+        if (state == ExpandableFABState.EXPANDED) MaterialTheme.colors.background
+        else Color.Black
     }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -203,12 +201,12 @@ fun AddNoteTaskMenuFAB(
                     Icon(
                         painter = item.icon,
                         contentDescription = item.contentDescription,
-                        tint = colorResource(id = R.color.text_color_reverse)
+                        tint = MaterialTheme.colors.background
                     )
                 },
                 modifier = Modifier.padding(bottom = if (index % 2 == 0) 12.dp else 20.dp)
                     .size(scaleTransition.value.dp),
-                backgroundColor = colorResource(id = R.color.text_color_enabled),
+                backgroundColor = MaterialTheme.colors.onBackground,
                 elevation = FloatingActionButtonDefaults.elevation(10.dp),
                 shape = RoundedCornerShape(10.dp)
             )

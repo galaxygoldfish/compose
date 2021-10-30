@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.compose.app.android.R
 import com.compose.app.android.components.OptionListItem
 import com.compose.app.android.components.SheetHandle
 import com.compose.app.android.firebase.FirebaseDocument
@@ -34,6 +33,9 @@ import com.compose.app.android.theme.IconTrashItem
 import com.compose.app.android.viewmodel.ProductivityViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
+
+
+
 
 @ExperimentalAnimationApi
 @Composable
@@ -57,7 +59,7 @@ fun NoteOptionMenu(
         )
         Text(
             text = String.format(
-                stringResource(id = R.string.note_option_menu_last_edited),
+                stringResource(id = com.compose.app.android.R.string.note_option_menu_last_edited),
                 noteDocument?.date,
                 noteDocument?.time
             ),
@@ -123,16 +125,16 @@ fun NoteOptionMenu(
         ) {
             OptionListItem(
                 icon = IconEditPen,
-                contentDescription = stringResource(id = R.string.edit_icon_content_desc),
-                title = stringResource(id = R.string.note_option_menu_list_item_edit),
+                contentDescription = stringResource(id = com.compose.app.android.R.string.edit_icon_content_desc),
+                title = stringResource(id = com.compose.app.android.R.string.note_option_menu_list_item_edit),
                 onClick = {
                     navController.navigate("""${NavigationDestination.NoteEditorActivity}/${noteDocument?.noteID}""")
                 }
             )
             OptionListItem(
                 icon = IconShareMenu,
-                contentDescription = stringResource(id = R.string.share_menu_content_desc),
-                title = stringResource(id = R.string.note_option_menu_list_item_share),
+                contentDescription = stringResource(id = com.compose.app.android.R.string.share_menu_content_desc),
+                title = stringResource(id = com.compose.app.android.R.string.note_option_menu_list_item_share),
                 onClick = {
                     val noteContent = """${noteDocument?.title}
                         |${noteDocument?.content}""".trimMargin()
@@ -149,8 +151,8 @@ fun NoteOptionMenu(
             )
             OptionListItem(
                 icon = IconTrashItem,
-                contentDescription = stringResource(id = R.string.delete_icon_content_desc),
-                title = stringResource(id = R.string.note_option_menu_list_item_delete),
+                contentDescription = stringResource(id = com.compose.app.android.R.string.delete_icon_content_desc),
+                title = stringResource(id = com.compose.app.android.R.string.note_option_menu_list_item_delete),
                 onClick = {
                     composeAsync.launch {
                         bottomSheetState.hide()

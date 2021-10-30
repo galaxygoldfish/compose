@@ -60,7 +60,7 @@ fun DatePickerSheetView(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(colorResource(id = R.color.neutral_gray))
+            .background(MaterialTheme.colors.primaryVariant)
     ) {
         SheetHandle()
         Row(
@@ -185,7 +185,7 @@ fun CalendarDayPicker(
                                     Text(
                                         text = item,
                                         style = MaterialTheme.typography.overline,
-                                        color = colorResource(id = R.color.text_color_disabled),
+                                        color = MaterialTheme.colors.onBackground.copy(0.7F),
                                         modifier = Modifier.align(Alignment.Center)
                                     )
                                 }
@@ -207,7 +207,7 @@ fun CalendarDayPicker(
                                         if (viewModel.selectedDayIndex.value == index + 1) {
                                             colorResource(id = R.color.deep_sea)
                                         } else {
-                                            colorResource(id = R.color.neutral_gray)
+                                            MaterialTheme.colors.primaryVariant
                                         }
                                     )
                                     .clickable {
@@ -253,7 +253,7 @@ fun TimeHourPicker(
                 if (currentClockRes.value.indexOf(text) != currentIndexRes.value.value) {
                     Color.Transparent
                 } else {
-                    colorResource(id = R.color.deep_sea)
+                    MaterialTheme.colors.primary
                 }
             )
             .clickable {
@@ -300,7 +300,7 @@ fun TimeHourPicker(
                     .clip(RoundedCornerShape(18.dp))
                     .background(
                         MaterialTheme.colors.background.copy(
-                            if (isSystemInDarkTheme()) 0.3F else 0.9F
+                            if (!MaterialTheme.colors.isLight) 0.3F else 0.9F
                         )
                     )
                     .size(210.dp)
@@ -428,9 +428,9 @@ fun TimeHourPicker(
             TextOnlyButton(
                 text = "AM",
                 color = if (viewModel.selectionAMPM.value == 0) {
-                    colorResource(id = R.color.deep_sea)
+                    MaterialTheme.colors.primary
                 } else {
-                    colorResource(id = R.color.button_neutral_background_color)
+                    MaterialTheme.colors.secondaryVariant
                 },
                 onClick = {
                     viewModel.selectionAMPM.value = 0
@@ -439,9 +439,9 @@ fun TimeHourPicker(
             TextOnlyButton(
                 text = "PM",
                 color = if (viewModel.selectionAMPM.value == 1) {
-                    colorResource(id = R.color.deep_sea)
+                    MaterialTheme.colors.primary
                 } else {
-                    colorResource(id = R.color.button_neutral_background_color)
+                    MaterialTheme.colors.secondaryVariant
                 },
                 onClick = {
                     viewModel.selectionAMPM.value = 1

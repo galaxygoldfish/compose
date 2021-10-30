@@ -12,7 +12,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -22,7 +21,6 @@ import com.compose.app.android.R
 import com.compose.app.android.components.ExperimentalTextOnlyTextField
 import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.DocumentType
-import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.IconBackArrow
 import com.compose.app.android.theme.IconNotification
@@ -30,6 +28,7 @@ import com.compose.app.android.theme.IconSaveContent
 import com.compose.app.android.theme.IconTrashItem
 import com.compose.app.android.viewmodel.TaskEditorViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
@@ -47,13 +46,16 @@ fun TaskEditorView(
     val composeAsync = rememberCoroutineScope()
 
     val bottomSheetScaffoldState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val systemUiController = rememberSystemUiController()
 
-    (navController.context as ComposeBaseActivity).apply {
-        if (bottomSheetScaffoldState.isVisible) {
-            window.navigationBarColor = resources.getColor(R.color.neutral_gray)
-        } else {
-            window.navigationBarColor = resources.getColor(R.color.text_color_reverse)
-        }
+    if (bottomSheetScaffoldState.isVisible) {
+        systemUiController.setNavigationBarColor(
+            color = MaterialTheme.colors.primaryVariant
+        )
+    } else {
+        systemUiController.setNavigationBarColor(
+            color = MaterialTheme.colors.background
+        )
     }
 
     viewModel.apply {
@@ -82,7 +84,7 @@ fun TaskEditorView(
                 )
             },
             sheetShape = RoundedCornerShape(8.dp),
-            sheetBackgroundColor = colorResource(id = R.color.neutral_gray),
+            sheetBackgroundColor = MaterialTheme.colors.primaryVariant,
             sheetElevation = 0.dp,
             scrimColor = MaterialTheme.colors.surface.copy(0.5F)
         ) {
@@ -194,7 +196,7 @@ fun TaskEditorView(
                             "${viewModel.selectedHour.value}:${viewModel.selectedMinute.value} ${if (viewModel.selectionAMPM.value == 0) "AM" else "PM"}"
                         )
                     },
-                    color = colorResource(id = R.color.text_color_disabled),
+                    color = MaterialTheme.colors.onBackground.copy(0.7F),
                     modifier = Modifier
                         .padding(start = 21.dp, top = 2.dp)
                         .clickable {

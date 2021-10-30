@@ -4,6 +4,22 @@
     <!-- Custom application style attributes -->
     <declare-styleable name="ComposeResources">
         <attr name="iconColorMain" format="color" />
+        <attr name="note_card_red_light" format="color" />
+        <attr name="note_card_red_alt" format="color" />
+        <attr name="note_card_fuschia" format="color" />
+        <attr name="note_card_purple_light" format="color" />
+        <attr name="note_card_purple_alt" format="color" />
+        <attr name="note_card_blue_light" format="color" />
+        <attr name="note_card_blue_alt" format="color" />
+        <attr name="note_card_teal_light" format="color" />
+        <attr name="note_card_teal_alt" format="color" />
+        <attr name="note_card_green_reg" format="color" />
+        <attr name="note_card_green_alt" format="color" />
+        <attr name="note_card_yellow_dark" format="color" />
+        <attr name="note_card_yellow_light" format="color" />
+        <attr name="note_card_orange_light" format="color" />
+        <attr name="note_card_orange_alt" format="color" />
+        <attr name="note_card_red_dark" format="color" />
     </declare-styleable>
 
 </resources>

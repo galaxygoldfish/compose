@@ -1,23 +1,12 @@
 package com.compose.app.android.view
 
+import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -41,7 +30,8 @@ import com.compose.app.android.theme.IconThemeColor
 @Composable
 fun NoteColorPickerSheet(
     currentNoteColor: MutableLiveData<Int>,
-    currentColorCentral: MutableLiveData<Int>
+    currentColorCentral: MutableLiveData<Int>,
+    context: Context
 ) {
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -87,7 +77,7 @@ fun NoteColorPickerSheet(
                             .height(90.dp)
                             .padding(5.dp),
                         onClick = {
-                            currentNoteColor.value = NoteColorResourceIDs[index]
+                            currentNoteColor.value = context.getColor(NoteColorResourceIDs[index])
                             currentColorCentral.value = NoteColorUniversalIDs[index]
                         }
                     ) {
@@ -95,7 +85,7 @@ fun NoteColorPickerSheet(
                             modifier = Modifier.fillMaxSize()
                         ) {
                             val stateNoteColor by currentNoteColor.observeAsState()
-                            if (stateNoteColor == NoteColorResourceIDs[index]) {
+                            if (stateNoteColor == context.getColor(NoteColorResourceIDs[index])) {
                                 Icon(
                                     painter = painterResource(id = IconCheckMark),
                                     contentDescription = stringResource(id = R.string.check_mark_content_desc),

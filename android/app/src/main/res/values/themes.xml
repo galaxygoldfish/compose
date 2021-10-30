@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Compose" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Compose.Light" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color -->
         <item name="colorPrimary">@color/deep_sea</item>
         <item name="colorPrimaryVariant">@color/deep_sea</item>
@@ -10,7 +10,7 @@
         <item name="colorSecondaryVariant">@color/deep_sea</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status and background attributes -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>

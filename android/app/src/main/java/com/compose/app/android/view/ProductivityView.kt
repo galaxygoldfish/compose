@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,7 +32,6 @@ import com.compose.app.android.components.OptionListItem
 import com.compose.app.android.model.ExpandableFAB
 import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
-import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.getDefaultPreferences
@@ -43,6 +41,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
@@ -58,6 +57,8 @@ fun ProductivityView(
     navController: NavController
 ) {
 
+    context.setTheme(if (MaterialTheme.colors.isLight) R.style.Theme_Compose_Light else R.style.Theme_Compose_Dark)
+
     viewModel.apply {
         updateToNewestAvatar(context.filesDir.path)
         updateNoteList()
@@ -66,6 +67,7 @@ fun ProductivityView(
     }
 
     val scaffoldState = rememberScaffoldState()
+    val systemUiController = rememberSystemUiController()
     val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val viewPagerState = rememberPagerState(
         pageCount = 2,
@@ -74,12 +76,14 @@ fun ProductivityView(
         infiniteLoop = false
     )
 
-    (context as ComposeBaseActivity).apply {
-        if (bottomSheetState.isVisible) {
-            window.navigationBarColor = resources.getColor(R.color.neutral_gray)
-        } else {
-            window.navigationBarColor = resources.getColor(R.color.text_color_reverse)
-        }
+    if (bottomSheetState.isVisible) {
+        systemUiController.setNavigationBarColor(
+            color = MaterialTheme.colors.primaryVariant
+        )
+    } else {
+        systemUiController.setNavigationBarColor(
+            color = MaterialTheme.colors.background
+        )
     }
 
     ComposeTheme {
@@ -107,7 +111,7 @@ fun ProductivityView(
                     },
                     sheetShape = RoundedCornerShape(8.dp),
                     sheetElevation = 20.dp,
-                    sheetBackgroundColor = colorResource(id = R.color.neutral_gray),
+                    sheetBackgroundColor = MaterialTheme.colors.primaryVariant,
                     scrimColor = MaterialTheme.colors.surface.copy(0.5F)
                 ) {
                     Box(
@@ -168,7 +172,7 @@ fun ProfileContextMenu(
             Column(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .background(colorResource(id = R.color.neutral_gray))
+                    .background(MaterialTheme.colors.primaryVariant)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -205,7 +209,7 @@ fun ProfileContextMenu(
                                 )
                             ),
                             fontSize = 13.sp,
-                            color = colorResource(id = R.color.text_color_enabled).copy(0.7F)
+                            color = MaterialTheme.colors.onBackground.copy(0.7F)
                         )
                     }
                     viewModel.avatarImageStore.value?.let {
@@ -245,7 +249,11 @@ fun ProfileContextMenu(
                         contentDescription = stringResource(id = R.string.theme_switch_icon_content_desc),
                         title = stringResource(id = R.string.profile_context_menu_switch_theme_title),
                         onClick = {
-
+                            currentAppThemeState.value = !currentAppThemeState.value
+                            navController.context.getDefaultPreferences().edit().apply {
+                                putBoolean("STATE_DARK_MODE", currentAppThemeState.value)
+                                    .apply()
+                            }
                         }
                     )
                     OptionListItem(
@@ -280,9 +288,9 @@ fun SearchBar(
             )
         },
         colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = colorResource(id = R.color.neutral_gray),
+            backgroundColor = MaterialTheme.colors.primaryVariant,
             cursorColor = Color.Black,
-            disabledLabelColor = colorResource(id = R.color.neutral_gray),
+            disabledLabelColor = MaterialTheme.colors.primaryVariant,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         ),
@@ -362,8 +370,7 @@ fun TopAppBar(
                         .aspectRatio(1F)
                         .align(Alignment.CenterVertically)
                         .clickable {
-                            viewModel.showProfileContextDialog.value =
-                                true
+                            viewModel.showProfileContextDialog.value = true
                         }
                 )
             }
@@ -463,7 +470,7 @@ fun BottomNavigationBar(
             .wrapContentHeight()
             .padding(start = 15.dp, end = 15.dp, bottom = 10.dp)
             .clip(RoundedCornerShape(10.dp))
-            .background(colorResource(id = R.color.neutral_gray)),
+            .background(MaterialTheme.colors.primaryVariant),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         IconButton(

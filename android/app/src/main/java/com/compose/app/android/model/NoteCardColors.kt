@@ -30,22 +30,22 @@ const val CardColorOrangeAlt = 8001
 const val CardColorRedDark = 1002
 
 val NoteColorResourceIDs = listOf(
-    R.color.note_card_red_light,
-    R.color.note_card_red_alt,
-    R.color.note_card_fuschia,
-    R.color.note_card_purple_light,
-    R.color.note_card_purple_alt,
-    R.color.note_card_blue_light,
-    R.color.note_card_blue_alt,
-    R.color.note_card_teal_light,
-    R.color.note_card_teal_alt,
-    R.color.note_card_green_reg,
-    R.color.note_card_green_alt,
-    R.color.note_card_yellow_dark,
-    R.color.note_card_yellow_light,
-    R.color.note_card_orange_light,
-    R.color.note_card_orange_alt,
-    R.color.note_card_red_dark
+    R.color.color_red_light,
+    R.color.color_red_alt,
+    R.color.color_fuschia,
+    R.color.color_purple_light,
+    R.color.color_purple_alt,
+    R.color.color_blue_light,
+    R.color.color_blue_alt,
+    R.color.color_teal_light,
+    R.color.color_teal_alt,
+    R.color.color_green_reg,
+    R.color.color_green_alt,
+    R.color.color_yellow_dark,
+    R.color.color_yellow_light,
+    R.color.color_orange_light,
+    R.color.color_orange_alt,
+    R.color.color_red_dark
 )
 
 val NoteColorUniversalIDs = listOf(

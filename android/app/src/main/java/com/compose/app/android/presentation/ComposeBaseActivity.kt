@@ -9,16 +9,20 @@ import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.theme.ComposeTheme
+import com.compose.app.android.theme.currentAppThemeState
+import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.view.*
 import com.compose.app.android.viewmodel.*
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 object NavigationDestination {
     const val WelcomeActivity = "welcome"
@@ -45,8 +49,19 @@ class ComposeBaseActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val preferences = getDefaultPreferences()
+        currentAppThemeState.value = preferences.getBoolean("STATE_DARK_MODE", false)
+
         setContent {
-            ComposeNavigationHost()
+            ComposeTheme {
+                val systemUIController = rememberSystemUiController()
+                systemUIController.setStatusBarColor(
+                    color = MaterialTheme.colors.background,
+                    darkIcons = MaterialTheme.colors.isLight
+                )
+                ComposeNavigationHost()
+            }
         }
     }
 
@@ -58,55 +73,53 @@ class ComposeBaseActivity : ComponentActivity() {
         } else {
             NavigationDestination.WelcomeActivity
         }
-        ComposeTheme {
-            AnimatedNavHost(
-                navController = navigationController,
-                startDestination = navigationStart,
-                builder = {
-                    composable(NavigationDestination.WelcomeActivity) {
-                        WelcomeView(
-                            context = this@ComposeBaseActivity,
-                            navController = navigationController
-                        )
-                    }
-                    composable(NavigationDestination.CreateAccountActivity) {
-                        CreateAccountView(
-                            context = this@ComposeBaseActivity,
-                            viewModel = createAccountViewModel,
-                            navController = navigationController
-                        )
-                    }
-                    composable(NavigationDestination.LogInActivity) {
-                        LogInView(
-                            context = this@ComposeBaseActivity,
-                            viewModel = logInViewModel,
-                            navController = navigationController
-                        )
-                    }
-                    composable(NavigationDestination.ProductivityActivity) {
-                        ProductivityView(
-                            context = this@ComposeBaseActivity,
-                            viewModel = productivityViewModel,
-                            navController = navigationController
-                        )
-                    }
-                    composable("""${NavigationDestination.NoteEditorActivity}/{noteID}""") { backStackEntry ->
-                        NoteEditorView(
-                            viewModel = noteEditorViewModel,
-                            navController = navigationController,
-                            documentID = backStackEntry.arguments!!.getString("noteID")!!
-                        )
-                    }
-                    composable("""${NavigationDestination.TaskEditorActivity}/{taskID}""") { backStackEntry ->
-                        TaskEditorView(
-                            navController = navigationController,
-                            documentID = backStackEntry.arguments!!.getString("taskID")!!,
-                            viewModel = taskEditorViewModel
-                        )
-                    }
+        AnimatedNavHost(
+            navController = navigationController,
+            startDestination = navigationStart,
+            builder = {
+                composable(NavigationDestination.WelcomeActivity) {
+                    WelcomeView(
+                        context = this@ComposeBaseActivity,
+                        navController = navigationController
+                    )
                 }
-            )
-        }
+                composable(NavigationDestination.CreateAccountActivity) {
+                    CreateAccountView(
+                        context = this@ComposeBaseActivity,
+                        viewModel = createAccountViewModel,
+                        navController = navigationController
+                    )
+                }
+                composable(NavigationDestination.LogInActivity) {
+                    LogInView(
+                        context = this@ComposeBaseActivity,
+                        viewModel = logInViewModel,
+                        navController = navigationController
+                    )
+                }
+                composable(NavigationDestination.ProductivityActivity) {
+                    ProductivityView(
+                        context = this@ComposeBaseActivity,
+                        viewModel = productivityViewModel,
+                        navController = navigationController
+                    )
+                }
+                composable("""${NavigationDestination.NoteEditorActivity}/{noteID}""") { backStackEntry ->
+                    NoteEditorView(
+                        viewModel = noteEditorViewModel,
+                        navController = navigationController,
+                        documentID = backStackEntry.arguments!!.getString("noteID")!!
+                    )
+                }
+                composable("""${NavigationDestination.TaskEditorActivity}/{taskID}""") { backStackEntry ->
+                    TaskEditorView(
+                        navController = navigationController,
+                        documentID = backStackEntry.arguments!!.getString("taskID")!!,
+                        viewModel = taskEditorViewModel
+                    )
+                }
+            }
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -1,8 +1,8 @@
 package com.compose.app.android.theme
 
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -25,67 +25,67 @@ fun typography() : Typography{
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Bold,
             fontSize = 40.sp,
-            color = colorResource(id = R.color.text_color_enabled)
+            color = MaterialTheme.colors.onBackground
         ),
         h2 = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Bold,
             fontSize = 36.sp,
-            color = colorResource(id = R.color.text_color_enabled)
+            color = MaterialTheme.colors.onBackground
         ),
         h4 = TextStyle(
             fontFamily = InterTypeface,
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
-            color = colorResource(id = R.color.text_color_enabled)
+            color = MaterialTheme.colors.onBackground
         ),
         h6 = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.SemiBold,
             fontSize = 19.sp,
-            color = colorResource(id = R.color.text_color_enabled)
+            color = MaterialTheme.colors.onBackground
         ),
         body1 = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
-            color = colorResource(id = R.color.text_color_enabled)
+            color = MaterialTheme.colors.onBackground
         ),
         body2 = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
-            color = colorResource(id = R.color.text_color_enabled)
+            color = MaterialTheme.colors.onBackground
         ),
         subtitle1 = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Normal,
             fontSize = 14.sp,
-            color = colorResource(id = R.color.text_color_disabled)
+            color = MaterialTheme.colors.onBackground.copy(0.7F)
         ),
         subtitle2 = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp,
-            color = colorResource(id = R.color.text_color_enabled)
+            color = MaterialTheme.colors.onBackground
         ),
         button = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
-            color = colorResource(id = R.color.text_color_enabled)
+            color = MaterialTheme.colors.onBackground
         ),
         overline = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
-            color = colorResource(id = R.color.text_color_enabled)
+            color = MaterialTheme.colors.onBackground
         ),
         caption = TextStyle(
             fontFamily = InterTypeface,
             fontWeight = FontWeight.Normal,
             fontSize = 12.sp,
-            color = colorResource(id = R.color.text_color_enabled)
+            color = MaterialTheme.colors.onBackground
         )
     )
 }

@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -20,11 +19,11 @@ import com.compose.app.android.R
 import com.compose.app.android.components.ExperimentalTextOnlyTextField
 import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.DocumentType
-import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
 import com.compose.app.android.viewmodel.NoteEditorViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
@@ -52,16 +51,19 @@ fun NoteEditorView(
     val contentTextValue = remember { viewModel.contentTextValue }
 
     val coroutineScope = rememberCoroutineScope()
+    val systemUiController = rememberSystemUiController()
 
     val bottomSheetScaffoldState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val mainScaffoldState = rememberScaffoldState()
 
-    (navController.context as ComposeBaseActivity).apply {
-        if (bottomSheetScaffoldState.isVisible) {
-            window.navigationBarColor = resources.getColor(R.color.neutral_gray)
-        } else {
-            window.navigationBarColor = resources.getColor(R.color.text_color_reverse)
-        }
+    if (bottomSheetScaffoldState.isVisible) {
+        systemUiController.setNavigationBarColor(
+            color = MaterialTheme.colors.primaryVariant
+        )
+    } else {
+        systemUiController.setNavigationBarColor(
+            color = MaterialTheme.colors.background
+        )
     }
 
     ComposeTheme {
@@ -77,11 +79,12 @@ fun NoteEditorView(
                 sheetContent = {
                     NoteColorPickerSheet(
                         currentNoteColor = viewModel.selectedNoteColorRes,
-                        currentColorCentral = viewModel.selectedNoteColorCentral
+                        currentColorCentral = viewModel.selectedNoteColorCentral,
+                        context = navController.context
                     )
                 },
                 sheetShape = RoundedCornerShape(8.dp),
-                sheetBackgroundColor = colorResource(id = R.color.neutral_gray),
+                sheetBackgroundColor = MaterialTheme.colors.primaryVariant,
                 sheetElevation = 0.dp,
                 scrimColor = MaterialTheme.colors.surface.copy(0.5F)
             ) {
@@ -178,7 +181,7 @@ fun NoteEditorView(
                             viewModel.getCurrentDate(),
                             viewModel.getCurrentTime()
                         ),
-                        color = colorResource(id = R.color.text_color_disabled),
+                        color = MaterialTheme.colors.onBackground.copy(0.7F),
                         modifier = Modifier.padding(top = 2.dp, start = 20.dp),
                         fontSize = 14.sp
                     )

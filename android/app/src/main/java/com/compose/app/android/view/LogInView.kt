@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -132,7 +131,7 @@ fun LogInView(
                             ) {
                                 TextOnlyButton(
                                     text = stringResource(id = R.string.log_in_activity_action_cancel),
-                                    color = colorResource(id = R.color.button_neutral_background_color),
+                                    color = MaterialTheme.colors.secondaryVariant,
                                     onClick = {
                                         navController.navigate(NavigationDestination.WelcomeActivity)
                                     }
@@ -145,7 +144,7 @@ fun LogInView(
                             ) {
                                 TextOnlyButton(
                                     text = stringResource(id = R.string.log_in_activity_action_proceed),
-                                    color = colorResource(id = R.color.deep_sea),
+                                    color = MaterialTheme.colors.primary,
                                     onClick = {
                                         (context as ComposeBaseActivity).window.setSoftInputMode(
                                             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN

@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -67,9 +66,9 @@ fun LargeTextInputField(
             )
         },
         colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = colorResource(id = com.compose.app.android.R.color.neutral_gray),
+            backgroundColor = MaterialTheme.colors.secondaryVariant,
             cursorColor = MaterialTheme.colors.onBackground,
-            disabledLabelColor = colorResource(id = com.compose.app.android.R.color.neutral_gray),
+            disabledLabelColor = MaterialTheme.colors.secondaryVariant,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         ),

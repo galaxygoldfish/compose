@@ -12,7 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -53,7 +52,7 @@ fun TaskOptionMenu(
                 taskDocument?.dueTime
             ),
             style = MaterialTheme.typography.body1,
-            color = colorResource(id = R.color.text_color_disabled),
+            color = MaterialTheme.colors.onBackground.copy(0.7F),
             modifier = Modifier.padding(start = 20.dp, top = 2.dp)
         )
         Column(

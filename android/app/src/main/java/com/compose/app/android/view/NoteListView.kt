@@ -31,6 +31,7 @@ import com.compose.app.android.model.NoteColorResourceIDs
 import com.compose.app.android.model.NoteColorUniversalIDs
 import com.compose.app.android.model.NoteDocument
 
+// @KindOfDeprecated
 @Composable
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -56,7 +57,8 @@ fun NoteListView(
                         index = index,
                         currentNote = currentNote,
                         onItemClick = onItemClick,
-                        onItemLongClick = onItemLongClick
+                        onItemLongClick = onItemLongClick,
+                        context = context
                     )
                 }
             )
@@ -89,7 +91,8 @@ fun ExperimentalNoteListView(
                                 index = index,
                                 currentNote = document,
                                 onItemClick = onItemClick,
-                                onItemLongClick = onItemLongClick
+                                onItemLongClick = onItemLongClick,
+                                context = context
                             )
                         }
                     }
@@ -124,18 +127,20 @@ fun NoteListCard(
     index: Int,
     currentNote: NoteDocument,
     onItemClick: (NoteDocument) -> Unit,
-    onItemLongClick: (NoteDocument) -> Unit
+    onItemLongClick: (NoteDocument) -> Unit,
+    context: Context
 ) {
+    val cardColor = NoteColorResourceIDs[NoteColorUniversalIDs.indexOf(currentNote.color)]
     Card(
         shape = RoundedCornerShape(7.dp),
-        backgroundColor = colorResource(id = NoteColorResourceIDs[
-                NoteColorUniversalIDs.indexOf(currentNote.color)
-        ]),
+        backgroundColor = if (MaterialTheme.colors.isLight) {
+            colorResource(id = cardColor).copy(0.7F)
+        } else {
+            colorResource(id = cardColor)
+        },
         elevation = 0.dp,
         modifier = Modifier
-            .padding(
-                4.dp
-            )
+            .padding(4.dp)
             .combinedClickable(
                 onClick = {
                     onItemClick.invoke(currentNote)

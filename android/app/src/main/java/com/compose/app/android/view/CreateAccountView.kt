@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -216,14 +215,14 @@ fun CreateAccountView(
                         ) {
                             TextOnlyButton(
                                 text = stringResource(id = R.string.create_account_cancel_button),
-                                color = colorResource(id = R.color.button_neutral_background_color),
+                                color = MaterialTheme.colors.primaryVariant,
                                 onClick = {
                                     navController.navigate(NavigationDestination.WelcomeActivity)
                                 }
                             )
                             TextOnlyButton(
                                 text = stringResource(id = R.string.create_account_continue_button),
-                                color = colorResource(id = R.color.deep_sea),
+                                color = MaterialTheme.colors.primary,
                                 onClick = {
                                     context.window.setSoftInputMode(
                                         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
