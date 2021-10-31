@@ -3,7 +3,6 @@ package com.compose.app.android.presentation
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -54,11 +53,9 @@ class ComposeBaseActivity : ComponentActivity() {
         val preferences = getDefaultPreferences()
         currentAppThemeState.value = preferences.getBoolean("STATE_DARK_MODE", false)
 
-        Log.e("TAG", currentAppThemeState.value.toString())
-
         setTheme(
             if (currentAppThemeState.value) {
-                window.statusBarColor = resources.getColor(R.color.black, theme)
+                window.statusBarColor = resources.getColor(R.color.black)
                 R.style.Theme_Compose_Dark
             } else {
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR

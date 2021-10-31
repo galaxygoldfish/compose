@@ -26,9 +26,6 @@ class FirebaseAccount {
     private val firebaseFirestore: FirebaseFirestore = Firebase.firestore
     private val firebaseStorage: FirebaseStorage = Firebase.storage
 
-    private val storageDocumentPath = firebaseFirestore.collection("METADATA").document("USERS")
-        .collection(firebaseAuth.currentUser!!.uid).document("QUOTA-MONITOR")
-
     /**
      * Check whether there is currently an authenticated user signed-in.
      * @return A boolean value indicating true if a user is logged in, and
@@ -230,6 +227,8 @@ class FirebaseAccount {
         val completableToken = CompletableDeferred<Boolean>()
         val avatarImagePath = firebaseStorage.reference.child("USER-AVATARS/${firebaseAuth.currentUser!!.uid}")
         val localImagePath = File("${filesDirPath}/avatar.png")
+        val storageDocumentPath = firebaseFirestore.collection("METADATA").document("USERS")
+            .collection(firebaseAuth.currentUser!!.uid).document("QUOTA-MONITOR")
         avatarImagePath.getFile(localImagePath).addOnSuccessListener {
             storageDocumentPath.set(mapOf("USER-AVATAR" to localImagePath.length()), SetOptions.merge())
             completableToken.complete(true)
