@@ -1,6 +1,7 @@
 package com.compose.app.android.view
 
 import android.content.Context
+import android.content.Intent
 import android.text.format.Formatter.formatFileSize
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -32,6 +33,7 @@ import com.compose.app.android.components.OptionListItem
 import com.compose.app.android.model.ExpandableFAB
 import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
+import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.getDefaultPreferences
@@ -154,6 +156,10 @@ fun ProductivityView(
     }
 }
 
+@ExperimentalMaterialApi
+@ExperimentalFoundationApi
+@ExperimentalAnimationApi
+@ExperimentalPagerApi
 @Composable
 fun ProfileContextMenu(
     navController: NavController,
@@ -250,9 +256,17 @@ fun ProfileContextMenu(
                         title = stringResource(id = R.string.profile_context_menu_switch_theme_title),
                         onClick = {
                             currentAppThemeState.value = !currentAppThemeState.value
-                            navController.context.getDefaultPreferences().edit().apply {
-                                putBoolean("STATE_DARK_MODE", currentAppThemeState.value)
-                                    .apply()
+                            navController.apply {
+                                context.getDefaultPreferences().edit().apply {
+                                    putBoolean("STATE_DARK_MODE", currentAppThemeState.value)
+                                        .commit()
+                                }
+                                context.startActivity(
+                                    Intent(
+                                        navController.context,
+                                        ComposeBaseActivity::class.java
+                                    )
+                                )
                             }
                         }
                     )

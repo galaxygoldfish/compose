@@ -3,15 +3,17 @@ package com.compose.app.android.presentation
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.theme.currentAppThemeState
@@ -22,7 +24,6 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 object NavigationDestination {
     const val WelcomeActivity = "welcome"
@@ -53,13 +54,20 @@ class ComposeBaseActivity : ComponentActivity() {
         val preferences = getDefaultPreferences()
         currentAppThemeState.value = preferences.getBoolean("STATE_DARK_MODE", false)
 
+        Log.e("TAG", currentAppThemeState.value.toString())
+
+        setTheme(
+            if (currentAppThemeState.value) {
+                window.statusBarColor = resources.getColor(R.color.black, theme)
+                R.style.Theme_Compose_Dark
+            } else {
+                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                R.style.Theme_Compose_Light
+            }
+        )
+
         setContent {
             ComposeTheme {
-                val systemUIController = rememberSystemUiController()
-                systemUIController.setStatusBarColor(
-                    color = MaterialTheme.colors.background,
-                    darkIcons = MaterialTheme.colors.isLight
-                )
                 ComposeNavigationHost()
             }
         }
