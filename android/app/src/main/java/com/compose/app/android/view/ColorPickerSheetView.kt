@@ -77,7 +77,7 @@ fun NoteColorPickerSheet(
                             .height(90.dp)
                             .padding(5.dp),
                         onClick = {
-                            currentNoteColor.value = context.getColor(NoteColorResourceIDs[index])
+                            currentNoteColor.value = context.resources.getColor(NoteColorResourceIDs[index])
                             currentColorCentral.value = NoteColorUniversalIDs[index]
                         }
                     ) {
@@ -85,7 +85,7 @@ fun NoteColorPickerSheet(
                             modifier = Modifier.fillMaxSize()
                         ) {
                             val stateNoteColor by currentNoteColor.observeAsState()
-                            if (stateNoteColor == context.getColor(NoteColorResourceIDs[index])) {
+                            if (stateNoteColor == context.resources.getColor(NoteColorResourceIDs[index])) {
                                 Icon(
                                     painter = painterResource(id = IconCheckMark),
                                     contentDescription = stringResource(id = R.string.check_mark_content_desc),

@@ -100,7 +100,7 @@ fun TaskEditorView(
                             .padding(start = 15.dp, top = 5.dp)
                             .size(30.dp),
                         onClick = {
-                            viewModel.saveTaskData()
+                            viewModel.saveTaskData(navController.context)
                             navController.navigate(NavigationDestination.ProductivityActivity)
                         },
                         content = @Composable {
@@ -132,7 +132,7 @@ fun TaskEditorView(
                                 .padding(end = 10.dp)
                                 .size(30.dp),
                             onClick = {
-                                viewModel.saveTaskData()
+                                viewModel.saveTaskData(navController.context)
                             },
                             content = @Composable {
                                 Icon(

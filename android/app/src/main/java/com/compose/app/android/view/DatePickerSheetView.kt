@@ -1,5 +1,7 @@
 package com.compose.app.android.view
 
+import android.os.Build
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,8 +41,8 @@ import java.time.YearMonth
 
 // TODO: Fix calendar grid so that each day is displayed under correct weekday
 
-// TODO: Handle selected date and send this data back to view host
-
+@ExperimentalAnimationApi
+@ExperimentalMaterialApi
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
 @Composable
@@ -153,6 +155,9 @@ fun DatePickerSheetView(
     }
 }
 
+@ExperimentalAnimationApi
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
 @ExperimentalFoundationApi
 @Composable
 fun CalendarDayPicker(
@@ -191,34 +196,36 @@ fun CalendarDayPicker(
                                 }
                             }
                         )
-                        items(
-                            YearMonth.of(
-                                viewModel.currentYear.value.replace(" ", "").toInt(),
-                                viewModel.monthIndex.value
-                            ).lengthOfMonth()
-                        ) { index ->
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .height(45.dp)
-                                    .padding(3.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(
-                                        if (viewModel.selectedDayIndex.value == index + 1) {
-                                            colorResource(id = R.color.deep_sea)
-                                        } else {
-                                            MaterialTheme.colors.primaryVariant
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            items(
+                                YearMonth.of(
+                                    viewModel.currentYear.value.replace(" ", "").toInt(),
+                                    viewModel.monthIndex.value
+                                ).lengthOfMonth()
+                            ) { index ->
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .height(45.dp)
+                                        .padding(3.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(
+                                            if (viewModel.selectedDayIndex.value == index + 1) {
+                                                colorResource(id = R.color.deep_sea)
+                                            } else {
+                                                MaterialTheme.colors.primaryVariant
+                                            }
+                                        )
+                                        .clickable {
+                                            viewModel.selectedDayIndex.value = index + 1
+                                            viewModel.interactionMonitor.value = true
                                         }
+                                ) {
+                                    Text(
+                                        text = (index + 1).toString(),
+                                        modifier = Modifier.align(Alignment.Center)
                                     )
-                                    .clickable {
-                                        viewModel.selectedDayIndex.value = index + 1
-                                        viewModel.interactionMonitor.value = true
-                                    }
-                            ) {
-                                Text(
-                                    text = (index + 1).toString(),
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
+                                }
                             }
                         }
                     }
@@ -228,6 +235,10 @@ fun CalendarDayPicker(
     }
 }
 
+@ExperimentalAnimationApi
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
+@ExperimentalFoundationApi
 @Composable
 fun TimeHourPicker(
     viewModel: TaskEditorViewModel

@@ -103,4 +103,9 @@
     <string name="profile_context_menu_switch_theme_title">Switch theme</string>
     <string name="profile_context_menu_storage_template">%1$s used of 5 MB</string>
 
+    <string name="notification_service_channel_desc">Get notified about tasks when they\'re due</string>
+    <string name="notification_service_channel_title">Task notifications</string>
+    <string name="notification_title_format">Heads up!</string>
+    <string name="notification_content_format">Your task \"%1$s\" is now due!</string>
+
 </resources>

@@ -1,6 +1,10 @@
 package com.compose.app.android.viewmodel
 
 import android.content.Context
+import android.os.Build
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +12,8 @@ import androidx.lifecycle.ViewModel
 import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.DocumentType
+import com.compose.app.android.notification.TaskNotificationManager
+import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,6 +22,10 @@ import java.text.SimpleDateFormat
 import java.time.Year
 import java.util.*
 
+@ExperimentalMaterialApi
+@ExperimentalFoundationApi
+@ExperimentalAnimationApi
+@ExperimentalPagerApi
 class TaskEditorViewModel : ViewModel() {
 
     val titleTextFieldValue = mutableStateOf(TextFieldValue(""))
@@ -70,7 +80,7 @@ class TaskEditorViewModel : ViewModel() {
             taskCompletionState.value = false
             monthIndex.value = calendar[Calendar.MONTH]
             currentMonth.value = context.resources.getStringArray(R.array.month_list)[monthIndex.value]
-            currentYear.value = Year.now().value.toString()
+            currentYear.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Year.now().value.toString() else "2021"
             selectedDayIndex.value = dayIndex
         }
         if (timeData != null) {
@@ -85,12 +95,14 @@ class TaskEditorViewModel : ViewModel() {
         }
     }
 
-    fun saveTaskData() {
+    fun saveTaskData(context: Context) {
         if (titleTextFieldValue.value.text.isNotEmpty()) {
             asynchronousScope.launch {
-                val dueTime = "${selectedHour.value}:${selectedMinute.value} ${if (selectionAMPM.value == 0) "AM" else "PM"}"
+                val dueTime =
+                    "${selectedHour.value}:${selectedMinute.value} ${if (selectionAMPM.value == 0) "AM" else "PM"}"
                 val baseTimeFormat = SimpleDateFormat("MMMM d h:mm a yyyy", Locale.ENGLISH)
-                val parsedDueDate = baseTimeFormat.parse("${currentMonth.value} ${selectedDayIndex.value} $dueTime ${currentYear.value}")
+                val parsedDueDate =
+                    baseTimeFormat.parse("${currentMonth.value} ${selectedDayIndex.value} $dueTime ${currentYear.value}")
                 val taskDataMap = mapOf(
                     "ID" to (currentDocumentID.value ?: UUID.randomUUID().toString()),
                     "TITLE" to titleTextFieldValue.value.text,
@@ -100,6 +112,18 @@ class TaskEditorViewModel : ViewModel() {
                     "DUE-DATE-HR" to "${currentMonth.value} ${selectedDayIndex.value}, ${currentYear.value}",
                     "DUE-DATE-TIME-UNIX" to (parsedDueDate?.time ?: 0)
                 )
+                if (Date().time >= parsedDueDate?.time ?: 0) {
+                    TaskNotificationManager.scheduleTaskNotification(
+                        context = context,
+                        taskID = currentDocumentID.value!!,
+                        content = String.format(
+                            context.getString(R.string.notification_content_format),
+                            titleTextFieldValue.value.text
+                        ),
+                        title = context.getString(R.string.notification_title_format),
+                        timeUnix = parsedDueDate?.time ?: 0
+                    )
+                }
                 FirebaseDocument().saveDocument(
                     documentID = currentDocumentID.value ?: UUID.randomUUID().toString(),
                     documentFields = taskDataMap,
