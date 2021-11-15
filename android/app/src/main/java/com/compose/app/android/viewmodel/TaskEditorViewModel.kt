@@ -29,7 +29,7 @@ import java.util.*
 class TaskEditorViewModel : ViewModel() {
 
     val titleTextFieldValue = mutableStateOf(TextFieldValue(""))
-    val contentTextFieldValue = mutableStateOf(TextFieldValue(""))
+    val locationTextFieldValue = mutableStateOf(TextFieldValue(""))
     val currentDocumentID = MutableLiveData<String?>(null)
     val previousDocumentID = MutableLiveData<String?>(null)
     val taskCompletionState = mutableStateOf(false)
@@ -56,8 +56,7 @@ class TaskEditorViewModel : ViewModel() {
             currentDocumentID.value?.let { id ->
                 FirebaseDocument().getDocumentByID(id, DocumentType.TASK).let { taskData ->
                     titleTextFieldValue.value = TextFieldValue(taskData["TITLE"] as String? ?: "")
-                    contentTextFieldValue.value =
-                        TextFieldValue(taskData["CONTENT"] as String? ?: "")
+                    locationTextFieldValue.value = TextFieldValue(taskData["LOCATION"] as String? ?: "")
                     taskCompletionState.value = taskData["COMPLETE"] as Boolean? ?: false
                     val dateData = taskData["DUE-DATE-HR"] as String?
                     val timeData = taskData["DUE-TIME-HR"] as String?
@@ -111,7 +110,7 @@ class TaskEditorViewModel : ViewModel() {
                 val taskDataMap = mapOf(
                     "ID" to (currentDocumentID.value ?: UUID.randomUUID().toString()),
                     "TITLE" to titleTextFieldValue.value.text,
-                    "CONTENT" to contentTextFieldValue.value.text,
+                    "LOCATION" to locationTextFieldValue.value.text,
                     "COMPLETE" to taskCompletionState.value,
                     "DUE-TIME-HR" to dueTime,
                     "DUE-DATE-HR" to "${currentMonth.value} ${selectedDayIndex.value}, ${currentYear.value}",

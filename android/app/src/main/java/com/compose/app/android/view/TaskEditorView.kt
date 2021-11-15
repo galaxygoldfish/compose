@@ -22,10 +22,7 @@ import com.compose.app.android.components.ExperimentalTextOnlyTextField
 import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.DocumentType
 import com.compose.app.android.presentation.NavigationDestination
-import com.compose.app.android.theme.IconBackArrow
-import com.compose.app.android.theme.IconNotification
-import com.compose.app.android.theme.IconSaveContent
-import com.compose.app.android.theme.IconTrashItem
+import com.compose.app.android.theme.*
 import com.compose.app.android.viewmodel.TaskEditorViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -63,7 +60,7 @@ fun TaskEditorView(
         currentDocumentID.value = documentID
         if (previousDocumentID.value != currentDocumentID.value) {
             titleTextFieldValue.value = TextFieldValue("")
-            contentTextFieldValue.value = TextFieldValue("")
+            locationTextFieldValue.value = TextFieldValue("")
             updateTaskContents(navController.context)
             viewModel.interactionMonitor.value = false
         }
@@ -90,7 +87,8 @@ fun TaskEditorView(
         ) {
             Column {
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(top = 20.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -122,11 +120,13 @@ fun TaskEditorView(
                                 )
                                 viewModel.taskCompletionState.value = it
                             },
-                            modifier = Modifier.size(30.dp)
+                            modifier = Modifier
+                                .size(30.dp)
                                 .padding(end = 10.dp)
                         )
                         IconButton(
-                            modifier = Modifier.padding(end = 10.dp)
+                            modifier = Modifier
+                                .padding(end = 10.dp)
                                 .size(30.dp),
                             onClick = {
                                 viewModel.saveTaskData(navController.context)
@@ -139,7 +139,8 @@ fun TaskEditorView(
                             }
                         )
                         IconButton(
-                            modifier = Modifier.padding(end = 10.dp)
+                            modifier = Modifier
+                                .padding(end = 10.dp)
                                 .size(30.dp),
                             onClick = {
                                 composeAsync.launch {
@@ -154,7 +155,8 @@ fun TaskEditorView(
                             }
                         )
                         IconButton(
-                            modifier = Modifier.padding(end = 10.dp)
+                            modifier = Modifier
+                                .padding(end = 10.dp)
                                 .size(30.dp),
                             onClick = {
                                 FirebaseDocument().deleteDocument(
@@ -206,15 +208,23 @@ fun TaskEditorView(
                         Orientation.Vertical
                     )
                 ) {
-                    ExperimentalTextOnlyTextField(
-                        textFieldValue = viewModel.contentTextFieldValue.value,
-                        hint = stringResource(id = R.string.task_editor_content_placeholder),
-                        onValueChange = { newValue ->
-                            viewModel.contentTextFieldValue.value = newValue
-                        },
-                        textStyle = MaterialTheme.typography.body2,
-                        modifier = Modifier.padding(start = 21.dp, top = 10.dp)
-                    )
+                    Row(modifier = Modifier.padding(top = 20.dp)) {
+                        Icon(
+                            painter = painterResource(id = IconLocation),
+                            contentDescription = null,
+                            modifier = Modifier.padding(start = 20.dp)
+                        )
+                        ExperimentalTextOnlyTextField(
+                            textFieldValue = viewModel.locationTextFieldValue.value,
+                            hint = stringResource(id = R.string.task_editor_location_placeholder),
+                            onValueChange = { newValue ->
+                                viewModel.locationTextFieldValue.value = newValue
+                            },
+                            textStyle = MaterialTheme.typography.body1,
+                            modifier = Modifier.padding(start = 15.dp)
+                        )
+                    }
+                    
                 }
             }
         }

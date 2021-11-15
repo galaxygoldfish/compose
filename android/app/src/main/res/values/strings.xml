@@ -87,7 +87,7 @@
     <string name="note_option_menu_list_item_delete">Delete note</string>
 
     <string name="task_editor_title_placeholder">Task name</string>
-    <string name="task_editor_content_placeholder">Extra details here</string>
+    <string name="task_editor_location_placeholder">Add a location</string>
     <string name="task_editor_due_date_null">Due date &amp; time not set. Tap to change</string>
     <string name="task_editor_due_date_template">Ends on %1$s at %2$s</string>
     <string name="task_editor_time_picker_type_hour">hour</string>

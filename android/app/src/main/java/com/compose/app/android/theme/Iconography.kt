@@ -38,3 +38,4 @@ const val IconCalendar = R.drawable.ic_duotone_calendar_empty
 
 const val IconCheckMark = R.drawable.ic_duotone_check
 const val IconShareMenu = R.drawable.ic_duotone_share
+const val IconLocation = R.drawable.ic_duotone_location

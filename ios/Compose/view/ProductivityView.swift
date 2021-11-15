@@ -11,7 +11,7 @@ struct ProductivityView: View {
     @State private var taskTabColor: Color = Color("NeutralGrayDisabled")
     
     @StateObject private var currentPage: Page = .first()
-    private var pagerItems: [() -> VStack<Content>] = [NoteListView, TaskListView]
+    
     
     var body: some View {
         
@@ -61,13 +61,7 @@ struct ProductivityView: View {
                 .padding(.leading, 18)
                 .padding(.trailing, 17)
                 .padding(.top, 10)
-                Pager(
-                    page: self.currentPage,
-                    data: self.pagerItems,
-                    id: \.self
-                ) { item in
-                    item.
-                }
+                
                 ZStack {
                     Color("NeutralGray")
                         .cornerRadius(10)
