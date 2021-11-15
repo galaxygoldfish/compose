@@ -10,12 +10,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,12 +21,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.chargemap.compose.numberpicker.NumberPicker
 import com.compose.app.android.R
 import com.compose.app.android.components.SheetHandle
-import com.compose.app.android.components.TextOnlyButton
-import com.compose.app.android.model.ClockType
 import com.compose.app.android.theme.IconLeftArrowSmall
 import com.compose.app.android.theme.IconRightArrowSmall
 import com.compose.app.android.viewmodel.TaskEditorViewModel
@@ -223,7 +220,8 @@ fun CalendarDayPicker(
                                 ) {
                                     Text(
                                         text = (index + 1).toString(),
-                                        modifier = Modifier.align(Alignment.Center)
+                                        modifier = Modifier.align(Alignment.Center),
+                                        color = MaterialTheme.colors.onBackground
                                     )
                                 }
                             }
@@ -243,221 +241,66 @@ fun CalendarDayPicker(
 fun TimeHourPicker(
     viewModel: TaskEditorViewModel
 ) {
-
-    val hourTextStrings = listOf(" 12 ", " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 ", " 10 ", " 11 ")
-    val minuteTextStrings = listOf("00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55")
-    val hourSelectionIndex = remember { mutableStateOf(0) }
-    val minuteSelectionIndex = remember { mutableStateOf(0) }
-
-    val currentClockRes = remember { mutableStateOf(hourTextStrings) }
-    val currentIndexRes = remember { mutableStateOf(hourSelectionIndex) }
-
-    val currentClockType = remember { mutableStateOf(ClockType.HourSelection) }
-    val asyncScope = rememberCoroutineScope()
-    val baseTextColor = MaterialTheme.colors.onBackground
-
-    @Composable
-    fun Modifier.clockTextExtras(text: String) : Modifier {
-        return this
-            .clip(RoundedCornerShape(8.dp))
-            .background(
-                if (currentClockRes.value.indexOf(text) != currentIndexRes.value.value) {
-                    Color.Transparent
-                } else {
-                    MaterialTheme.colors.primary
-                }
-            )
-            .clickable {
-                viewModel.interactionMonitor.value = true
-                asyncScope.launch {
-                    val editedText = text.replace(" ", "")
-                    when (currentClockType.value) {
-                        ClockType.HourSelection -> {
-                            viewModel.selectedHour.value = editedText
-                        }
-                        ClockType.MinuteSelection -> {
-                            viewModel.selectedMinute.value = editedText
-                        }
-                    }
-                    currentIndexRes.value.value = currentClockRes.value.indexOf(text)
-                }
-            }
-            .padding(10.dp)
-    }
-
-    currentClockRes.value = if (currentClockType.value == ClockType.HourSelection) {
-        hourTextStrings
-    } else {
-        minuteTextStrings
-    }
-
-    currentIndexRes.value = if (currentClockType.value == ClockType.HourSelection) {
-        hourSelectionIndex
-    } else {
-        minuteSelectionIndex
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 20.dp, end = 30.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column(
-            modifier = Modifier.align(Alignment.CenterVertically)
+    val colorFixedTextStyle = MaterialTheme.typography.body2.plus(
+        TextStyle(color = MaterialTheme.colors.onBackground, fontSize = 30.sp)
+    )
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(18.dp))
-                    .background(
-                        MaterialTheme.colors.background.copy(
-                            if (!MaterialTheme.colors.isLight) 0.3F else 0.9F
-                        )
-                    )
-                    .size(210.dp)
-                    .padding(10.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colors.onSurface)
-                        .size(3.dp)
-                )
+            NumberPicker(
+                value = viewModel.selectedHour.value.toInt(),
+                onValueChange = {
+                    viewModel.apply {
+                        selectedHour.value = it.toString()
+                        interactionMonitor.value = true
+                    }
+                },
+                range = 1..12,
+                dividersColor = Color.Transparent,
+                textStyle = colorFixedTextStyle,
+                modifier = Modifier.padding(end = 20.dp)
+            )
+            Text(
+                text = ":",
+                style = colorFixedTextStyle,
+                modifier = Modifier.padding(end = 20.dp)
+            )
+            NumberPicker(
+                value = viewModel.selectedMinute.value.toInt(),
+                onValueChange = {
+                    viewModel.apply {
+                        selectedMinute.value = it.toString()
+                        interactionMonitor.value = true
+                    }
+                },
+                range = 0..59,
+                dividersColor = Color.Transparent,
+                textStyle = colorFixedTextStyle,
+                modifier = Modifier.padding(end = 20.dp)
+            )
+            Column(modifier = Modifier.padding(start = 10.dp)) {
+                val textColorMain = MaterialTheme.colors.onBackground
                 Text(
-                    text = currentClockRes.value[0],
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .clockTextExtras(text = currentClockRes.value[0])
-                )
-                Text(
-                    text = currentClockRes.value[1],
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(start = 85.dp)
-                        .clockTextExtras(text = currentClockRes.value[1])
-                )
-                Text(
-                    text = currentClockRes.value[2],
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(bottom = 85.dp)
-                        .clockTextExtras(text = currentClockRes.value[2])
-                )
-                Text(
-                    text = currentClockRes.value[3],
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .clockTextExtras(text = currentClockRes.value[3])
-                )
-                Text(
-                    text = currentClockRes.value[4],
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(top = 85.dp)
-                        .clockTextExtras(text = currentClockRes.value[4])
-                )
-                Text(
-                    text = currentClockRes.value[5],
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(start = 85.dp)
-                        .clockTextExtras(text = currentClockRes.value[5])
-                )
-                Text(
-                    text = currentClockRes.value[6],
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .clockTextExtras(text = currentClockRes.value[6])
-                )
-                Text(
-                    text = currentClockRes.value[7],
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(end = 85.dp)
-                        .clockTextExtras(text = currentClockRes.value[7])
-                )
-                Text(
-                    text = currentClockRes.value[8],
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(top = 85.dp)
-                        .clockTextExtras(text = currentClockRes.value[8])
-                )
-                Text(
-                    text = currentClockRes.value[9],
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .clockTextExtras(text = currentClockRes.value[9])
-                )
-                Text(
-                    text = currentClockRes.value[10],
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(bottom = 85.dp)
-                        .clockTextExtras(text = currentClockRes.value[10])
-                )
-                Text(
-                    text = currentClockRes.value[11],
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(end = 85.dp)
-                        .clockTextExtras(text = currentClockRes.value[11])
-                )
-            }
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .width(210.dp)
-                    .padding(top = 15.dp)
-            ) {
-                Text(
-                    text = stringResource(id = R.string.task_editor_time_picker_type_hour),
-                    style = MaterialTheme.typography.subtitle2,
-                    color = if (currentClockType.value == ClockType.HourSelection)
-                        baseTextColor else baseTextColor.copy(0.5F),
+                    text = "AM",
+                    style = colorFixedTextStyle,
+                    color = if (viewModel.selectionAMPM.value == 0) textColorMain else textColorMain
+                        .copy(0.6F),
                     modifier = Modifier.clickable {
-                        currentClockType.value = ClockType.HourSelection
+                        viewModel.selectionAMPM.value = 0
                     }
                 )
                 Text(
-                    text = stringResource(id = R.string.task_editor_time_picker_type_minute),
-                    style = MaterialTheme.typography.subtitle2,
-                    color = if (currentClockType.value == ClockType.MinuteSelection)
-                        baseTextColor else baseTextColor.copy(0.5F),
+                    text = "PM",
+                    style = colorFixedTextStyle,
+                    color = if (viewModel.selectionAMPM.value == 1) textColorMain else textColorMain.copy(0.6F),
                     modifier = Modifier.clickable {
-                        currentClockType.value = ClockType.MinuteSelection
+                        viewModel.selectionAMPM.value = 1
                     }
                 )
             }
-        }
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .align(Alignment.CenterVertically)
-        ) {
-            TextOnlyButton(
-                text = "AM",
-                color = if (viewModel.selectionAMPM.value == 0) {
-                    MaterialTheme.colors.primary
-                } else {
-                    MaterialTheme.colors.secondaryVariant
-                },
-                onClick = {
-                    viewModel.selectionAMPM.value = 0
-                }
-            )
-            TextOnlyButton(
-                text = "PM",
-                color = if (viewModel.selectionAMPM.value == 1) {
-                    MaterialTheme.colors.primary
-                } else {
-                    MaterialTheme.colors.secondaryVariant
-                },
-                onClick = {
-                    viewModel.selectionAMPM.value = 1
-                }
-            )
         }
     }
 }

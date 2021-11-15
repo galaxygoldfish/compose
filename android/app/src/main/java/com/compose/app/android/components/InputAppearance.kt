@@ -141,7 +141,7 @@ fun ExperimentalTextOnlyTextField(
             onValueChange = { value ->
                 onValueChange(value)
             },
-            textStyle = textStyle,
+            textStyle = textStyle.plus(TextStyle(color = MaterialTheme.colors.onBackground)),
             cursorBrush = SolidColor(MaterialTheme.colors.onBackground)
         )
         // Hint when empty

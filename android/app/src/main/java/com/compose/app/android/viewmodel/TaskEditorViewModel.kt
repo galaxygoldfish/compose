@@ -38,14 +38,15 @@ class TaskEditorViewModel : ViewModel() {
     private val calendar: Calendar = Calendar.getInstance()
     private val dayIndex = calendar[Calendar.DAY_OF_MONTH]
     private val calendarMinute = calendar[Calendar.MINUTE]
-    private val editedMinute = if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute.toString()
+    private val editedMinute =
+        if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute.toString()
 
     var monthIndex = mutableStateOf(calendar[Calendar.MONTH])
     val currentMonth = mutableStateOf("")
     val currentYear = mutableStateOf("2021")
     val selectedDayIndex = mutableStateOf(0)
-    val selectedHour = mutableStateOf("")
-    val selectedMinute = mutableStateOf("")
+    val selectedHour = mutableStateOf("0")
+    val selectedMinute = mutableStateOf("00")
     val selectionAMPM = mutableStateOf(0)
 
     private val asynchronousScope = CoroutineScope(Dispatchers.IO + Job())
@@ -55,7 +56,8 @@ class TaskEditorViewModel : ViewModel() {
             currentDocumentID.value?.let { id ->
                 FirebaseDocument().getDocumentByID(id, DocumentType.TASK).let { taskData ->
                     titleTextFieldValue.value = TextFieldValue(taskData["TITLE"] as String? ?: "")
-                    contentTextFieldValue.value = TextFieldValue(taskData["CONTENT"] as String? ?: "")
+                    contentTextFieldValue.value =
+                        TextFieldValue(taskData["CONTENT"] as String? ?: "")
                     taskCompletionState.value = taskData["COMPLETE"] as Boolean? ?: false
                     val dateData = taskData["DUE-DATE-HR"] as String?
                     val timeData = taskData["DUE-TIME-HR"] as String?
@@ -74,7 +76,8 @@ class TaskEditorViewModel : ViewModel() {
             currentMonth.value = dateData.split(", ")[0].split(" ")[0]
             currentYear.value = dateData.split(", ")[1]
             selectedDayIndex.value = (dateData.split(",")[0].split(" ")[1]).toInt()
-            monthIndex.value = context.resources.getStringArray(R.array.month_list).indexOf(currentMonth.value)
+            monthIndex.value =
+                context.resources.getStringArray(R.array.month_list).indexOf(currentMonth.value)
             interactionMonitor.value = true
         } else {
             taskCompletionState.value = false
@@ -90,7 +93,9 @@ class TaskEditorViewModel : ViewModel() {
             interactionMonitor.value = true
         } else {
             selectedHour.value = (if (calendar[Calendar.HOUR] == 0) 12 else calendar[Calendar.HOUR]).toString()
-            selectedMinute.value = editedMinute
+            (5 * (editedMinute.toInt() / 5)).let {
+                selectedMinute.value = if (it == 5 || it == 0) "0$it" else it.toString()
+            }
             selectionAMPM.value = calendar[Calendar.AM_PM]
         }
     }

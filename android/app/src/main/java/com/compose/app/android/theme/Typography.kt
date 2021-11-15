@@ -53,7 +53,7 @@ fun typography() : Typography{
         ),
         body2 = TextStyle(
             fontFamily = InterTypeface,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp,
             color = MaterialTheme.colors.onBackground
         ),

@@ -90,8 +90,7 @@ fun TaskEditorView(
         ) {
             Column {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                         .padding(top = 20.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -123,13 +122,11 @@ fun TaskEditorView(
                                 )
                                 viewModel.taskCompletionState.value = it
                             },
-                            modifier = Modifier
-                                .size(30.dp)
+                            modifier = Modifier.size(30.dp)
                                 .padding(end = 10.dp)
                         )
                         IconButton(
-                            modifier = Modifier
-                                .padding(end = 10.dp)
+                            modifier = Modifier.padding(end = 10.dp)
                                 .size(30.dp),
                             onClick = {
                                 viewModel.saveTaskData(navController.context)
@@ -142,8 +139,7 @@ fun TaskEditorView(
                             }
                         )
                         IconButton(
-                            modifier = Modifier
-                                .padding(end = 10.dp)
+                            modifier = Modifier.padding(end = 10.dp)
                                 .size(30.dp),
                             onClick = {
                                 composeAsync.launch {
@@ -158,8 +154,7 @@ fun TaskEditorView(
                             }
                         )
                         IconButton(
-                            modifier = Modifier
-                                .padding(end = 10.dp)
+                            modifier = Modifier.padding(end = 10.dp)
                                 .size(30.dp),
                             onClick = {
                                 FirebaseDocument().deleteDocument(
