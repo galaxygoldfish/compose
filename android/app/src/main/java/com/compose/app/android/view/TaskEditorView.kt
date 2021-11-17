@@ -1,26 +1,34 @@
 package com.compose.app.android.view
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.ExperimentalTextOnlyTextField
 import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.DocumentType
+import com.compose.app.android.model.SubTaskDocument
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
 import com.compose.app.android.viewmodel.TaskEditorViewModel
@@ -221,10 +229,73 @@ fun TaskEditorView(
                                 viewModel.locationTextFieldValue.value = newValue
                             },
                             textStyle = MaterialTheme.typography.body1,
-                            modifier = Modifier.padding(start = 15.dp)
+                            modifier = Modifier.padding(start = 15.dp, bottom = 10.dp)
                         )
                     }
-                    
+                    AnimatedVisibility(
+                        visible = viewModel.subTaskItemList.value.isNotEmpty()
+                    ) {
+                        LazyColumn(
+                            content = {
+                                itemsIndexed(items = viewModel.subTaskItemList.value) { index, item ->
+                                    Row(modifier = Modifier.padding(top = 15.dp)) {
+                                        val currentItemComplete = remember { mutableStateOf(item.taskComplete) }
+                                        val currentItemText = remember { mutableStateOf(TextFieldValue(item.taskName ?: "")) }
+                                        Checkbox(
+                                            checked = currentItemComplete.value,
+                                            onCheckedChange = {
+                                                viewModel.subTaskItemList.value[index].taskComplete = it
+                                                currentItemComplete.value = it
+                                            }
+                                        )
+                                        ExperimentalTextOnlyTextField(
+                                            textFieldValue = currentItemText.value,
+                                            hint = stringResource(id = R.string.task_editor_sub_item_input_hint),
+                                            onValueChange = {
+                                                viewModel.subTaskItemList.value[index].taskName = it.text
+                                                currentItemText.value = it
+                                            },
+                                            textStyle = MaterialTheme.typography.body1,
+                                            modifier = Modifier.padding(start = 15.dp)
+                                        )
+                                    }
+                                }
+                            },
+                            modifier = Modifier.padding(start = 20.dp)
+                        )
+                    }
+                    // Since compose just absolutely refuses to update the list when button
+                    // is pressed, we use a dummy text view and a changing state to ensure
+                    // that it recomposes in a timely manner
+                    val dummyTextUpdate = remember { mutableStateOf(false) }
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 15.dp, start = 20.dp)
+                            .clickable {
+                                viewModel.subTaskItemList.value.add(
+                                    SubTaskDocument(taskName = null, taskComplete = false)
+                                )
+                                dummyTextUpdate.value = !dummyTextUpdate.value
+                            }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_duotone_plus_round),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.primary
+                        )
+                        Text(
+                            text = stringResource(id = R.string.task_editor_sub_item_button_text),
+                            style = MaterialTheme.typography.body2,
+                            color = MaterialTheme.colors.primary,
+                            modifier = Modifier.padding(start = 15.dp)
+                        )
+                        // Dummy text view, transparent and as small as possible
+                        Text(
+                            text = dummyTextUpdate.value.toString(),
+                            fontSize = 1.sp,
+                            color = Color.Transparent
+                        )
+                    }
                 }
             }
         }

@@ -90,8 +90,8 @@
     <string name="task_editor_location_placeholder">Add a location</string>
     <string name="task_editor_due_date_null">Due date &amp; time not set. Tap to change</string>
     <string name="task_editor_due_date_template">Ends on %1$s at %2$s</string>
-    <string name="task_editor_time_picker_type_hour">hour</string>
-    <string name="task_editor_time_picker_type_minute">minute</string>
+    <string name="task_editor_sub_item_button_text">Add sub-task</string>
+    <string name="task_editor_sub_item_input_hint">Sub-task name</string>
 
     <string name="task_option_menu_ends_on_template">Ends on %1$s at %2$s</string>
     <string name="task_option_menu_list_item_share">Share task</string>

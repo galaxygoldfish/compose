@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel
 import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.DocumentType
+import com.compose.app.android.model.SubTaskDocument
 import com.compose.app.android.notification.TaskNotificationManager
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.CoroutineScope
@@ -34,12 +35,12 @@ class TaskEditorViewModel : ViewModel() {
     val previousDocumentID = MutableLiveData<String?>(null)
     val taskCompletionState = mutableStateOf(false)
     val interactionMonitor = mutableStateOf(false)
+    val subTaskItemList = mutableStateOf(mutableListOf<SubTaskDocument>())
 
     private val calendar: Calendar = Calendar.getInstance()
     private val dayIndex = calendar[Calendar.DAY_OF_MONTH]
     private val calendarMinute = calendar[Calendar.MINUTE]
-    private val editedMinute =
-        if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute.toString()
+    private val editedMinute = if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute.toString()
 
     var monthIndex = mutableStateOf(calendar[Calendar.MONTH])
     val currentMonth = mutableStateOf("")
@@ -60,13 +61,14 @@ class TaskEditorViewModel : ViewModel() {
                     taskCompletionState.value = taskData["COMPLETE"] as Boolean? ?: false
                     val dateData = taskData["DUE-DATE-HR"] as String?
                     val timeData = taskData["DUE-TIME-HR"] as String?
-                    updateDateValues(timeData, dateData, context)
+                    updateDefaultValues(timeData, dateData, context)
+                    updateSubTaskContents(taskData["SUB-TASK-ITEMS"] as List<Map<String, Any>>?)
                 }
             }
         }
     }
 
-    private fun updateDateValues(
+    private fun updateDefaultValues(
         timeData: String?,
         dateData: String?,
         context: Context
@@ -75,8 +77,7 @@ class TaskEditorViewModel : ViewModel() {
             currentMonth.value = dateData.split(", ")[0].split(" ")[0]
             currentYear.value = dateData.split(", ")[1]
             selectedDayIndex.value = (dateData.split(",")[0].split(" ")[1]).toInt()
-            monthIndex.value =
-                context.resources.getStringArray(R.array.month_list).indexOf(currentMonth.value)
+            monthIndex.value = context.resources.getStringArray(R.array.month_list).indexOf(currentMonth.value)
             interactionMonitor.value = true
         } else {
             taskCompletionState.value = false
@@ -99,14 +100,37 @@ class TaskEditorViewModel : ViewModel() {
         }
     }
 
+    private fun updateSubTaskContents(subTaskList: List<Map<String, Any>>?) {
+        subTaskItemList.value = mutableListOf()
+        subTaskList?.forEach { map ->
+            subTaskItemList.value.add(
+                SubTaskDocument(
+                    map["SUB-TASK-NAME"] as String,
+                    map["SUB-TASK-COMPLETE"] as Boolean
+                )
+            )
+        }
+    }
+
+    private fun parseSubTaskList() : List<Map<String, Any>> {
+        val returnValue = mutableListOf<Map<String, Any>>()
+        subTaskItemList.value.forEach { document ->
+            returnValue.add(hashMapOf(
+                "SUB-TASK-NAME" to (document.taskName ?: ""),
+                "SUB-TASK-COMPLETE" to document.taskComplete
+            ))
+        }
+        return returnValue
+    }
+
     fun saveTaskData(context: Context) {
         if (titleTextFieldValue.value.text.isNotEmpty()) {
             asynchronousScope.launch {
-                val dueTime =
-                    "${selectedHour.value}:${selectedMinute.value} ${if (selectionAMPM.value == 0) "AM" else "PM"}"
+                val dueTime = "${selectedHour.value}:${selectedMinute.value} ${if (selectionAMPM.value == 0) "AM" else "PM"}"
                 val baseTimeFormat = SimpleDateFormat("MMMM d h:mm a yyyy", Locale.ENGLISH)
-                val parsedDueDate =
-                    baseTimeFormat.parse("${currentMonth.value} ${selectedDayIndex.value} $dueTime ${currentYear.value}")
+                val parsedDueDate = baseTimeFormat.parse(
+                    "${currentMonth.value} ${selectedDayIndex.value} $dueTime ${currentYear.value}"
+                )
                 val taskDataMap = mapOf(
                     "ID" to (currentDocumentID.value ?: UUID.randomUUID().toString()),
                     "TITLE" to titleTextFieldValue.value.text,
@@ -114,7 +138,8 @@ class TaskEditorViewModel : ViewModel() {
                     "COMPLETE" to taskCompletionState.value,
                     "DUE-TIME-HR" to dueTime,
                     "DUE-DATE-HR" to "${currentMonth.value} ${selectedDayIndex.value}, ${currentYear.value}",
-                    "DUE-DATE-TIME-UNIX" to (parsedDueDate?.time ?: 0)
+                    "DUE-DATE-TIME-UNIX" to (parsedDueDate?.time ?: 0),
+                    "SUB-TASK-ITEMS" to parseSubTaskList()
                 )
                 if (Date().time >= parsedDueDate?.time ?: 0) {
                     TaskNotificationManager.scheduleTaskNotification(
