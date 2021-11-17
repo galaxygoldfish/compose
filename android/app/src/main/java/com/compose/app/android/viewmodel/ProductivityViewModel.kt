@@ -74,6 +74,10 @@ class ProductivityViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Update the list of notes to the latest version available
+     * from Firebase.
+     */
     fun updateNoteList() {
         FirebaseDocument().getAllNotes(
             noteLiveList as MutableLiveData<MutableList<NoteDocument>>,
@@ -81,6 +85,9 @@ class ProductivityViewModel : ViewModel() {
         )
     }
 
+    /**
+     * Update the list of tasks to the most recent Firebase version.
+     */
     fun updateTaskList() {
         FirebaseDocument().getAllTasks(
             taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
@@ -88,6 +95,10 @@ class ProductivityViewModel : ViewModel() {
         )
     }
 
+    /**
+     * Fetch and calculate the current user's storage usage and save
+     * it as a state variable.
+     */
     fun updateStorageCount() {
         asyncScope.launch {
             userStorageSize.value = FirebaseUtils.calculateUserStorage()

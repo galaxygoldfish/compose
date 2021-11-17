@@ -28,6 +28,11 @@ class NoteEditorViewModel : ViewModel() {
     private val asynchronousScope = CoroutineScope(Dispatchers.IO + Job())
     private val synchronousScope = CoroutineScope(Dispatchers.Main + Job())
 
+    /**
+     * Fetch the current note's contents from the cloud or clear
+     * all text fields and customization values to leave the editor
+     * blank.
+     */
     fun updateNoteContents() {
         asynchronousScope.launch {
             noteDocumentID.value?.let {
@@ -45,6 +50,10 @@ class NoteEditorViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Upload note contents to firebase only if there is note content
+     * to save.
+     */
     fun saveNoteContents() {
         if (titleTextValue.value.text.isNotEmpty() || contentTextValue.value.text.isNotEmpty()) {
             val noteDocumentMap = mapOf<String, Any>(
@@ -57,24 +66,33 @@ class NoteEditorViewModel : ViewModel() {
             )
             asynchronousScope.launch {
                 FirebaseDocument().saveDocument(
-                    noteDocumentMap,
-                    noteDocumentID.value!!,
-                    DocumentType.NOTE
+                    documentFields = noteDocumentMap,
+                    documentID = noteDocumentID.value!!,
+                    type = DocumentType.NOTE
                 )
             }
         }
     }
 
+    /**
+     * Set all editor text fields to be blank
+     */
     fun clearTextFields() {
         contentTextValue = mutableStateOf(TextFieldValue(""))
         titleTextValue = mutableStateOf(TextFieldValue(""))
     }
 
+    /**
+     * Return a formatted string of the current date
+     */
     fun getCurrentDate() : String {
         val calendar = Calendar.getInstance()
         return """${calendar[Calendar.MONTH] + 1}/${calendar[Calendar.DATE]}"""
     }
 
+    /**
+     * Return a parsed string of the current time
+     */
     fun getCurrentTime() : String {
         val calendar = Calendar.getInstance()
         val calendarMinute = calendar[Calendar.MINUTE]

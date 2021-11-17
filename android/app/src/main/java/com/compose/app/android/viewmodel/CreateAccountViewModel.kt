@@ -119,6 +119,16 @@ class CreateAccountViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Process the result of the gallery or camera opening to
+     * capture an avatar image.
+     *
+     * @param data - The Intent object returned from onActivityResult
+     * @param requestCode - The code returned from the Intent used to
+     * determine the nature of it
+     * @param context - A context needed to parse the Bitmap returned
+     * from the gallery
+     */
     @ExperimentalAnimationApi
     fun processActivityResult(data: Intent?, requestCode: Int, context: ComposeBaseActivity) {
         data?.let {
@@ -131,7 +141,7 @@ class CreateAccountViewModel : ViewModel() {
                 CODE_INTENT_GALLERY -> {
                     avatarImageLive.value = MediaStore.Images.Media.getBitmap(context.contentResolver, it.data)
                 }
-                else -> Log.e("COMPOSE", "Unexpected exception occurred")
+                else -> Log.e("COMPOSE", "Unexpected intent : CreateAccountViewModel.kt > processActivityResult()")
             }
         }
     }

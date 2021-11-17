@@ -52,6 +52,11 @@ class TaskEditorViewModel : ViewModel() {
 
     private val asynchronousScope = CoroutineScope(Dispatchers.IO + Job())
 
+    /**
+     * Update the text fields to the current note's content or if
+     * it's a new note, set all fields to blank, date to the current
+     * one and the sub task list to be empty.
+     */
     fun updateTaskContents(context: Context) {
         asynchronousScope.launch {
             currentDocumentID.value?.let { id ->
@@ -68,6 +73,13 @@ class TaskEditorViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Initialize the date variables to their saved values, or set
+     * them to the current date's values if they are null.
+     *
+     * @param timeData - The saved task due time, or null
+     * @param dateData - The save task due date, or null
+     */
     private fun updateDefaultValues(
         timeData: String?,
         dateData: String?,
@@ -100,6 +112,12 @@ class TaskEditorViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Refresh the list of sub-tasks to the most recent version
+     * available.
+     *
+     * @param subTaskList - The list of sub-tasks from Firebase
+     */
     private fun updateSubTaskContents(subTaskList: List<Map<String, Any>>?) {
         subTaskItemList.value = mutableListOf()
         subTaskList?.forEach { map ->
@@ -112,17 +130,31 @@ class TaskEditorViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Parse the list of sub-tasks from a list of SubTaskDocuments
+     * to a list of maps containing their respective values, suitable
+     * for Firebase.
+     *
+     * @return - The parsed sub-task list
+     */
     private fun parseSubTaskList() : List<Map<String, Any>> {
         val returnValue = mutableListOf<Map<String, Any>>()
         subTaskItemList.value.forEach { document ->
-            returnValue.add(hashMapOf(
-                "SUB-TASK-NAME" to (document.taskName ?: ""),
-                "SUB-TASK-COMPLETE" to document.taskComplete
-            ))
+            returnValue.add(
+                hashMapOf(
+                    "SUB-TASK-NAME" to (document.taskName ?: ""),
+                    "SUB-TASK-COMPLETE" to document.taskComplete
+                )
+            )
         }
         return returnValue
     }
 
+    /**
+     * Save and upload the current task's data to Firebase,
+     * and if a time was selected, schedule a notification for
+     * that time.
+     */
     fun saveTaskData(context: Context) {
         if (titleTextFieldValue.value.text.isNotEmpty()) {
             asynchronousScope.launch {
