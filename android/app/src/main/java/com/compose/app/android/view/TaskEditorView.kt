@@ -20,7 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -248,6 +250,7 @@ fun TaskEditorView(
                                                 currentItemComplete.value = it
                                             }
                                         )
+                                        val textStyle = MaterialTheme.typography.body1
                                         ExperimentalTextOnlyTextField(
                                             textFieldValue = currentItemText.value,
                                             hint = stringResource(id = R.string.task_editor_sub_item_input_hint),
@@ -255,7 +258,16 @@ fun TaskEditorView(
                                                 viewModel.subTaskItemList.value[index].taskName = it.text
                                                 currentItemText.value = it
                                             },
-                                            textStyle = MaterialTheme.typography.body1,
+                                            textStyle = if (currentItemComplete.value) {
+                                                textStyle.plus(
+                                                    TextStyle(
+                                                        textDecoration = TextDecoration.LineThrough,
+                                                        color = MaterialTheme.colors.onBackground.copy(0.5F)
+                                                    )
+                                                )
+                                            } else {
+                                                textStyle
+                                            },
                                             modifier = Modifier.padding(start = 15.dp)
                                         )
                                     }

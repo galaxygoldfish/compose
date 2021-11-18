@@ -25,14 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.AddNoteTaskMenuFAB
 import com.compose.app.android.components.OptionListItem
 import com.compose.app.android.model.ExpandableFAB
-import com.compose.app.android.model.NoteDocument
-import com.compose.app.android.model.TaskDocument
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
@@ -412,12 +409,15 @@ fun NoteTaskPager(
                 SwipeRefresh(
                     state = viewModel.isUpdatingNoteList,
                     onRefresh = {
-                        viewModel.updateNoteList()
+                        viewModel.apply {
+                            noteLiveList.value = mutableListOf()
+                            updateNoteList()
+                        }
                     },
                     modifier = Modifier.fillMaxSize(),
                     content = @Composable {
                         ExperimentalNoteListView(
-                            noteItemList = viewModel.noteLiveList as MutableLiveData<MutableList<NoteDocument>>,
+                            noteItemList = viewModel.noteLiveList,
                             context = navController.context,
                             onItemLongClick = { note ->
                                 viewModel.apply {
@@ -438,13 +438,16 @@ fun NoteTaskPager(
                 SwipeRefresh(
                     state = viewModel.isUpdatingTaskList,
                     onRefresh = {
-                        viewModel.updateTaskList()
+                        viewModel.apply {
+                            taskLiveList.value = mutableListOf()
+                            updateTaskList()
+                        }
                     },
                     modifier = Modifier.fillMaxSize(),
                     content = @Composable {
                         TaskListView(
                             context = navController.context,
-                            taskList = viewModel.taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
+                            taskList = viewModel.taskLiveList,
                             onItemClick = { task ->
                                 navController.navigate("""${NavigationDestination.TaskEditorActivity}/${task.taskID}""")
                             },

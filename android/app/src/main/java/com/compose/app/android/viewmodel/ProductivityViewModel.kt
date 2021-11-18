@@ -8,7 +8,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.compose.app.android.firebase.FirebaseAccount
@@ -30,10 +29,10 @@ class ProductivityViewModel : ViewModel() {
     val bottomSheetNoteDocument: MutableLiveData<NoteDocument> = MutableLiveData()
     val bottomSheetTaskDocument: MutableLiveData<TaskDocument> = MutableLiveData()
 
-    val noteLiveList: LiveData<MutableList<NoteDocument>> = MutableLiveData(mutableListOf())
+    val noteLiveList: MutableLiveData<MutableList<NoteDocument>> = MutableLiveData(mutableListOf())
     val isUpdatingNoteList = SwipeRefreshState(false)
 
-    val taskLiveList: LiveData<MutableList<TaskDocument>> = MutableLiveData(mutableListOf())
+    val taskLiveList: MutableLiveData<MutableList<TaskDocument>> = MutableLiveData(mutableListOf())
     val isUpdatingTaskList = SwipeRefreshState(false)
 
     val avatarImageStore: MutableState<Bitmap?> = mutableStateOf(null)

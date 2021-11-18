@@ -17,6 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
@@ -86,6 +88,25 @@ fun TaskListCard(
     onItemLongClick: (TaskDocument) -> Unit
 ) {
     val taskCheckboxState = remember { mutableStateOf(item.isComplete) }
+
+    /**
+     * If the task is complete, cross off the text and dim it's
+     * color, otherwise fall back to the default style.
+     */
+    @Composable
+    fun getVariableTextStyle(defaultStyle: TextStyle) : TextStyle {
+        return if (taskCheckboxState.value) {
+            defaultStyle.plus(
+                TextStyle(
+                    textDecoration = TextDecoration.LineThrough,
+                    color = MaterialTheme.colors.onBackground.copy(0.5F)
+                )
+            )
+        } else {
+            defaultStyle
+        }
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -126,7 +147,7 @@ fun TaskListCard(
                     Text(
                         maxLines = 2,
                         text = item.taskTitle,
-                        style = MaterialTheme.typography.h6,
+                        style = getVariableTextStyle(defaultStyle = MaterialTheme.typography.h6),
                         fontSize = 17.sp,
                         modifier = Modifier
                             .wrapContentWidth()
@@ -147,7 +168,7 @@ fun TaskListCard(
                     )
                     Text(
                         text = item.dueDate.split(",")[0],
-                        style = MaterialTheme.typography.body1,
+                        style = getVariableTextStyle(defaultStyle = MaterialTheme.typography.body1),
                         fontSize = 15.sp,
                         color = MaterialTheme.colors.onBackground.copy(0.7F),
                         modifier = Modifier.padding(start = 5.dp, end = 15.dp)
@@ -160,7 +181,7 @@ fun TaskListCard(
                     )
                     Text(
                         text = item.dueTime,
-                        style = MaterialTheme.typography.body1,
+                        style = getVariableTextStyle(defaultStyle = MaterialTheme.typography.body1),
                         fontSize = 15.sp,
                         color = MaterialTheme.colors.onBackground.copy(0.7F),
                         modifier = Modifier.padding(start = 5.dp)
