@@ -3,6 +3,7 @@ package com.compose.app.android.view
 import android.content.Context
 import android.content.Intent
 import android.text.format.Formatter.formatFileSize
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -45,8 +46,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 
-@ExperimentalAnimationApi
 @Composable
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @ExperimentalPagerApi
@@ -140,12 +141,10 @@ fun ProductivityView(
                             navController = navController,
                             modifier = Modifier.align(Alignment.BottomCenter)
                         )
-                        if (viewModel.showProfileContextDialog.value) {
-                            ProfileContextMenu(
-                                navController = navController,
-                                viewModel = viewModel
-                            )
-                        }
+                        ProfileContextMenu(
+                            navController = navController,
+                            viewModel = viewModel
+                        )
                     }
                 }
             }
@@ -162,123 +161,127 @@ fun ProfileContextMenu(
     navController: NavController,
     viewModel: ProductivityViewModel
 ) {
-    val dataStore = navController.context.getDefaultPreferences()
-    Dialog(
-        onDismissRequest = {
-            viewModel.showProfileContextDialog.value = false
-        },
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        ),
-        content = {
-            Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colors.primaryVariant)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(top = 30.dp, start = 25.dp)
-                    ) {
-                        Text(
-                            text = dataStore.getString(
-                                "IDENTITY_USER_NAME_FIRST",
-                                "Error"
-                            )!!,
-                            style = MaterialTheme.typography.h4,
-                            modifier = Modifier.padding()
-                        )
-                        Text(
-                            text = dataStore.getString(
-                                "IDENTITY_USER_NAME_LAST",
-                                "Error"
-                            )!!,
-                            style = MaterialTheme.typography.h4,
-                            fontWeight = FontWeight.Normal,
-                            modifier = Modifier.padding()
-                        )
-                        Text(
-                            text = String.format(
-                                stringResource(id = R.string.profile_context_menu_storage_template),
-                                formatFileSize(
-                                    navController.context,
-                                    viewModel.userStorageSize.value.toLong()
-                                )
-                            ),
-                            fontSize = 13.sp,
-                            color = MaterialTheme.colors.onBackground.copy(0.7F)
-                        )
-                    }
-                    viewModel.avatarImageStore.value?.let {
-                        Image(
-                            bitmap = it.asImageBitmap(),
-                            contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
-                            modifier = Modifier
-                                .padding(end = 20.dp, top = 20.dp)
-                                .clip(CircleShape)
-                                .size(90.dp)
-                                .aspectRatio(1F)
-                                .align(Alignment.CenterVertically)
-                        )
-                    }
-                }
+    AnimatedVisibility(
+        visible = viewModel.showProfileContextDialog.value
+    ) {
+        val dataStore = navController.context.getDefaultPreferences()
+        Dialog(
+            onDismissRequest = {
+                viewModel.showProfileContextDialog.value = false
+            },
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true
+            ),
+            content = {
                 Column(
-                    modifier = Modifier.padding(top = 25.dp, bottom = 15.dp)
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(MaterialTheme.colors.primaryVariant)
                 ) {
-                    OptionListItem(
-                        icon = IconSettings,
-                        contentDescription = stringResource(id = R.string.settings_icon_content_desc),
-                        title = stringResource(id = R.string.profile_context_menu_settings_title),
-                        onClick = {
-
-                        }
-                    )
-                    OptionListItem(
-                        icon = IconPersonGroup,
-                        contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
-                        title = stringResource(id = R.string.profile_context_menu_account_settings_title),
-                        onClick = {
-
-                        }
-                    )
-                    OptionListItem(
-                        icon = IconThemeColor,
-                        contentDescription = stringResource(id = R.string.theme_switch_icon_content_desc),
-                        title = stringResource(id = R.string.profile_context_menu_switch_theme_title),
-                        onClick = {
-                            currentAppThemeState.value = !currentAppThemeState.value
-                            navController.apply {
-                                context.getDefaultPreferences().edit().apply {
-                                    putBoolean("STATE_DARK_MODE", currentAppThemeState.value)
-                                        .commit()
-                                }
-                                context.startActivity(
-                                    Intent(
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(top = 30.dp, start = 25.dp)
+                        ) {
+                            Text(
+                                text = dataStore.getString(
+                                    "IDENTITY_USER_NAME_FIRST",
+                                    "Error"
+                                )!!,
+                                style = MaterialTheme.typography.h4,
+                                modifier = Modifier.padding()
+                            )
+                            Text(
+                                text = dataStore.getString(
+                                    "IDENTITY_USER_NAME_LAST",
+                                    "Error"
+                                )!!,
+                                style = MaterialTheme.typography.h4,
+                                fontWeight = FontWeight.Normal,
+                                modifier = Modifier.padding()
+                            )
+                            Text(
+                                text = String.format(
+                                    stringResource(id = R.string.profile_context_menu_storage_template),
+                                    formatFileSize(
                                         navController.context,
-                                        ComposeBaseActivity::class.java
+                                        viewModel.userStorageSize.value.toLong()
                                     )
-                                )
-                            }
+                                ),
+                                fontSize = 13.sp,
+                                color = MaterialTheme.colors.onBackground.copy(0.7F)
+                            )
                         }
-                    )
-                    OptionListItem(
-                        icon = IconLogIn,
-                        contentDescription = stringResource(id = R.string.sign_out_content_desc),
-                        title = stringResource(id = R.string.profile_context_menu_sign_out_title),
-                        onClick = {
+                        viewModel.avatarImageStore.value?.let {
+                            Image(
+                                bitmap = it.asImageBitmap(),
+                                contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
+                                modifier = Modifier
+                                    .padding(end = 20.dp, top = 20.dp)
+                                    .clip(CircleShape)
+                                    .size(90.dp)
+                                    .aspectRatio(1F)
+                                    .align(Alignment.CenterVertically)
+                            )
+                        }
+                    }
+                    Column(
+                        modifier = Modifier.padding(top = 25.dp, bottom = 15.dp)
+                    ) {
+                        OptionListItem(
+                            icon = IconSettings,
+                            contentDescription = stringResource(id = R.string.settings_icon_content_desc),
+                            title = stringResource(id = R.string.profile_context_menu_settings_title),
+                            onClick = {
 
-                        }
-                    )
+                            }
+                        )
+                        OptionListItem(
+                            icon = IconPersonGroup,
+                            contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
+                            title = stringResource(id = R.string.profile_context_menu_account_settings_title),
+                            onClick = {
+
+                            }
+                        )
+                        OptionListItem(
+                            icon = IconThemeColor,
+                            contentDescription = stringResource(id = R.string.theme_switch_icon_content_desc),
+                            title = stringResource(id = R.string.profile_context_menu_switch_theme_title),
+                            onClick = {
+                                currentAppThemeState.value = !currentAppThemeState.value
+                                navController.apply {
+                                    context.getDefaultPreferences().edit().apply {
+                                        putBoolean("STATE_DARK_MODE", currentAppThemeState.value)
+                                            .commit()
+                                    }
+                                    context.startActivity(
+                                        Intent(
+                                            navController.context,
+                                            ComposeBaseActivity::class.java
+                                        )
+                                    )
+                                }
+                            }
+                        )
+                        OptionListItem(
+                            icon = IconLogIn,
+                            contentDescription = stringResource(id = R.string.sign_out_content_desc),
+                            title = stringResource(id = R.string.profile_context_menu_sign_out_title),
+                            onClick = {
+
+                            }
+                        )
+                    }
                 }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
@@ -389,6 +392,7 @@ fun TopAppBar(
     }
 }
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
@@ -417,8 +421,7 @@ fun NoteTaskPager(
                     modifier = Modifier.fillMaxSize(),
                     content = @Composable {
                         ExperimentalNoteListView(
-                            noteItemList = viewModel.noteLiveList,
-                            context = navController.context,
+                            viewModel = viewModel,
                             onItemLongClick = { note ->
                                 viewModel.apply {
                                     bottomSheetNoteDocument.value = note
@@ -446,8 +449,7 @@ fun NoteTaskPager(
                     modifier = Modifier.fillMaxSize(),
                     content = @Composable {
                         TaskListView(
-                            context = navController.context,
-                            taskList = viewModel.taskLiveList,
+                            viewModel = viewModel,
                             onItemClick = { task ->
                                 navController.navigate("""${NavigationDestination.TaskEditorActivity}/${task.taskID}""")
                             },
