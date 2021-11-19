@@ -35,8 +35,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
 
-
-
 @ExperimentalAnimationApi
 @Composable
 @ExperimentalFoundationApi
@@ -69,7 +67,8 @@ fun NoteOptionMenu(
         LazyRow(
             modifier = Modifier.padding(start = 20.dp, top = 15.dp, end = 10.dp),
             content = {
-                val selectedIndex = mutableStateOf(NoteColorUniversalIDs.indexOf(noteDocument?.color))
+                val selectedIndex =
+                    mutableStateOf(NoteColorUniversalIDs.indexOf(noteDocument?.color))
                 items(NoteColorResourceIDs.size) { index ->
                     val selectedItem = mutableStateOf(index == selectedIndex.value)
                     Card(

@@ -13,7 +13,7 @@ fun ComposeTheme(
 ) {
 
     val colors = if (darkTheme) {
-       getDarkColorPalette()
+        getDarkColorPalette()
     } else {
         getLightColorPalette()
     }

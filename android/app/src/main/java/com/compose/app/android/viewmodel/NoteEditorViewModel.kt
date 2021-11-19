@@ -40,9 +40,12 @@ class NoteEditorViewModel : ViewModel() {
                     titleTextValue.value = TextFieldValue(noteData["TITLE"] as String? ?: "")
                     contentTextValue.value = TextFieldValue(noteData["CONTENT"] as String? ?: "")
                     synchronousScope.launch {
-                        selectedNoteColorCentral.value = (noteData["COLOR"] as Long? ?: CardColorBlueAlt).toInt()
+                        selectedNoteColorCentral.value =
+                            (noteData["COLOR"] as Long? ?: CardColorBlueAlt).toInt()
                         selectedNoteColorRes.value = NoteColorResourceIDs[
-                            NoteColorUniversalIDs.indexOf((noteData["COLOR"] as Long? ?: CardColorBlueAlt).toInt())
+                                NoteColorUniversalIDs.indexOf(
+                                    (noteData["COLOR"] as Long? ?: CardColorBlueAlt).toInt()
+                                )
                         ]
                     }
                 }
@@ -85,7 +88,7 @@ class NoteEditorViewModel : ViewModel() {
     /**
      * Return a formatted string of the current date
      */
-    fun getCurrentDate() : String {
+    fun getCurrentDate(): String {
         val calendar = Calendar.getInstance()
         return """${calendar[Calendar.MONTH] + 1}/${calendar[Calendar.DATE]}"""
     }
@@ -93,10 +96,11 @@ class NoteEditorViewModel : ViewModel() {
     /**
      * Return a parsed string of the current time
      */
-    fun getCurrentTime() : String {
+    fun getCurrentTime(): String {
         val calendar = Calendar.getInstance()
         val calendarMinute = calendar[Calendar.MINUTE]
-        val editedMinute = if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute
+        val editedMinute =
+            if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute
         return """${calendar[Calendar.HOUR]}:${editedMinute}"""
     }
 }

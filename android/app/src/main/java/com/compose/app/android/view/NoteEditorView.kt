@@ -53,7 +53,8 @@ fun NoteEditorView(
     val coroutineScope = rememberCoroutineScope()
     val systemUiController = rememberSystemUiController()
 
-    val bottomSheetScaffoldState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val bottomSheetScaffoldState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val mainScaffoldState = rememberScaffoldState()
 
     if (bottomSheetScaffoldState.isVisible) {

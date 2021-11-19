@@ -113,7 +113,7 @@ fun TaskListCard(
      * color, otherwise fall back to the default style.
      */
     @Composable
-    fun getVariableTextStyle(defaultStyle: TextStyle) : TextStyle {
+    fun getVariableTextStyle(defaultStyle: TextStyle): TextStyle {
         return if (taskCheckboxState.value) {
             defaultStyle.plus(
                 TextStyle(

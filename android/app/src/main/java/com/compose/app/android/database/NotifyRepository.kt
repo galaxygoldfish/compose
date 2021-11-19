@@ -46,7 +46,7 @@ class NotifyRepository {
          * @return - A list of NotifyDatabaseEntity containing details
          * for each scheduled notification
          */
-        suspend fun getStoredNotifications(context: Context) : List<NotifyDatabaseEntity> {
+        suspend fun getStoredNotifications(context: Context): List<NotifyDatabaseEntity> {
             val database = gainDatabaseAccess(context)
             return database.getAllStoredNotifications()
         }
@@ -57,7 +57,7 @@ class NotifyRepository {
          *
          * @param context - A context used to build the database instance
          */
-        private fun gainDatabaseAccess(context: Context) : NotifyDatabaseDAO {
+        private fun gainDatabaseAccess(context: Context): NotifyDatabaseDAO {
             return Room.databaseBuilder(
                 context, NotifyDatabase::class.java, DATABASE_NAME
             ).build().getDao()

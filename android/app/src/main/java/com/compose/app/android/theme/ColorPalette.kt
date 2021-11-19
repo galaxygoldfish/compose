@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun getDarkColorPalette() : Colors {
+fun getDarkColorPalette(): Colors {
     return darkColors(
         primary = DeepSeaAccent,
         primaryVariant = NeutralColorDark,
@@ -23,7 +23,7 @@ fun getDarkColorPalette() : Colors {
 }
 
 @Composable
-fun getLightColorPalette() : Colors {
+fun getLightColorPalette(): Colors {
     return lightColors(
         primary = DeepSeaAccent,
         primaryVariant = NeutralColorLight,

@@ -10,7 +10,7 @@ import androidx.preference.PreferenceManager
  * @return The value of the string resource
  * @param id - The string resource to be retrieved (R.string....)
  */
-fun Context.rawStringResource(@StringRes id: Int) : String {
+fun Context.rawStringResource(@StringRes id: Int): String {
     return resources.getString(id)
 }
 
@@ -18,6 +18,6 @@ fun Context.rawStringResource(@StringRes id: Int) : String {
  * Get the SharedPreferences used by the whole app
  * @return The SharedPreferences instance needed
  */
-fun Context.getDefaultPreferences() : SharedPreferences {
+fun Context.getDefaultPreferences(): SharedPreferences {
     return PreferenceManager.getDefaultSharedPreferences(this)
 }

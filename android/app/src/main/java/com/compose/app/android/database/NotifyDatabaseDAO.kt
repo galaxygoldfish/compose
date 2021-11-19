@@ -8,7 +8,7 @@ import androidx.room.Query
 interface NotifyDatabaseDAO {
 
     @Query("SELECT * FROM notifications")
-    fun getAllStoredNotifications() : List<NotifyDatabaseEntity>
+    fun getAllStoredNotifications(): List<NotifyDatabaseEntity>
 
     @Query("DELETE FROM notifications WHERE itemID = :notificationID")
     fun deleteNotificationByID(notificationID: Int)

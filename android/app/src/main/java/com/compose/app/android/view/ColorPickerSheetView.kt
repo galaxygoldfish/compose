@@ -33,8 +33,9 @@ fun NoteColorPickerSheet(
     currentColorCentral: MutableLiveData<Int>,
     context: Context
 ) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
     ) {
         SheetHandle()
         Row(
@@ -77,7 +78,8 @@ fun NoteColorPickerSheet(
                             .height(90.dp)
                             .padding(5.dp),
                         onClick = {
-                            currentNoteColor.value = context.resources.getColor(NoteColorResourceIDs[index])
+                            currentNoteColor.value =
+                                context.resources.getColor(NoteColorResourceIDs[index])
                             currentColorCentral.value = NoteColorUniversalIDs[index]
                         }
                     ) {

@@ -19,7 +19,7 @@ val InterTypeface = FontFamily(
 )
 
 @Composable
-fun typography() : Typography{
+fun typography(): Typography {
     return Typography(
         h1 = TextStyle(
             fontFamily = InterTypeface,

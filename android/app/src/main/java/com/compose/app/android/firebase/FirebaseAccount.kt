@@ -31,7 +31,7 @@ class FirebaseAccount {
      * @return A boolean value indicating true if a user is logged in, and
      * false if there are no users logged in.
      */
-    fun determineIfUserExists() : Boolean {
+    fun determineIfUserExists(): Boolean {
         return firebaseAuth.currentUser != null
     }
 
@@ -51,11 +51,13 @@ class FirebaseAccount {
         email: String,
         password: String,
         context: Context
-    ) : Boolean {
+    ): Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
         val sharedPreferences = context.getDefaultPreferences()
-        if (email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches() && password.isNotEmpty()) {
+        if (email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email)
+                .matches() && password.isNotEmpty()
+        ) {
             firebaseAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
                 asyncScope.launch {
                     getUserMetadata().let {
@@ -103,27 +105,29 @@ class FirebaseAccount {
         lastName: String,
         profileImage: Bitmap,
         context: Context,
-    ) : String {
+    ): String {
         val completableToken = CompletableDeferred<String>()
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
         val sharedPreferences = context.getDefaultPreferences()
         if (email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             if (password.isNotEmpty() && password.length >= 3) {
                 if (firstName.isNotEmpty() && lastName.isNotEmpty()) {
-                    firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
-                        val userdataMap = hashMapOf("FIRST-NAME" to firstName, "LAST-NAME" to lastName)
-                        asyncScope.launch {
-                            if (uploadNewUserMetadata(userdataMap)) {
-                                sharedPreferences.edit().apply {
-                                    putString("IDENTITY_USER_NAME_FIRST", firstName)
-                                    putString("IDENTITY_USER_NAME_LAST", lastName)
-                                }.apply()
-                                if (uploadNewProfileImage(profileImage, context)) {
-                                    completableToken.complete("true")
+                    firebaseAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnSuccessListener {
+                            val userdataMap =
+                                hashMapOf("FIRST-NAME" to firstName, "LAST-NAME" to lastName)
+                            asyncScope.launch {
+                                if (uploadNewUserMetadata(userdataMap)) {
+                                    sharedPreferences.edit().apply {
+                                        putString("IDENTITY_USER_NAME_FIRST", firstName)
+                                        putString("IDENTITY_USER_NAME_LAST", lastName)
+                                    }.apply()
+                                    if (uploadNewProfileImage(profileImage, context)) {
+                                        completableToken.complete("true")
+                                    } else completableToken.complete(context.rawStringResource(R.string.create_account_failure_generic))
                                 } else completableToken.complete(context.rawStringResource(R.string.create_account_failure_generic))
-                            } else completableToken.complete(context.rawStringResource(R.string.create_account_failure_generic))
-                        }
-                    }.addOnFailureListener {
+                            }
+                        }.addOnFailureListener {
                         completableToken.complete(context.rawStringResource(R.string.create_account_failure_generic))
                     }
                 } else completableToken.complete(context.rawStringResource(R.string.create_account_failure_name))
@@ -142,7 +146,7 @@ class FirebaseAccount {
      */
     suspend fun uploadNewUserMetadata(
         mapData: Map<String, String>
-    ) : Boolean {
+    ): Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val userMetadataPath = firebaseFirestore.collection("METADATA")
             .document("USERS").collection(firebaseAuth.currentUser!!.uid)
@@ -169,10 +173,11 @@ class FirebaseAccount {
     suspend fun uploadNewProfileImage(
         avatarImage: Bitmap,
         context: Context,
-    ) : Boolean {
+    ): Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
-        val avatarImagePath = firebaseStorage.reference.child("USER-AVATARS/${firebaseAuth.currentUser!!.uid}")
+        val avatarImagePath =
+            firebaseStorage.reference.child("USER-AVATARS/${firebaseAuth.currentUser!!.uid}")
         val avatarImageLocal = File(context.filesDir, "avatar.png")
         asyncScope.launch {
             val fileOutputStream = FileOutputStream(avatarImageLocal)
@@ -196,7 +201,7 @@ class FirebaseAccount {
      * @return A map containing two key-value pairs, including firstName
      * and lastName, as strings.
      */
-    suspend fun getUserMetadata() : Map<*, *> {
+    suspend fun getUserMetadata(): Map<*, *> {
         val completableToken = CompletableDeferred<Map<*, *>>()
         val userMetadataPath = firebaseFirestore.collection("METADATA")
             .document("USERS").collection(firebaseAuth.currentUser!!.uid)
@@ -223,14 +228,18 @@ class FirebaseAccount {
      */
     suspend fun sendProfileImageToFile(
         filesDirPath: String
-    ) : Boolean {
+    ): Boolean {
         val completableToken = CompletableDeferred<Boolean>()
-        val avatarImagePath = firebaseStorage.reference.child("USER-AVATARS/${firebaseAuth.currentUser!!.uid}")
+        val avatarImagePath =
+            firebaseStorage.reference.child("USER-AVATARS/${firebaseAuth.currentUser!!.uid}")
         val localImagePath = File("${filesDirPath}/avatar.png")
         val storageDocumentPath = firebaseFirestore.collection("METADATA").document("USERS")
             .collection(firebaseAuth.currentUser!!.uid).document("QUOTA-MONITOR")
         avatarImagePath.getFile(localImagePath).addOnSuccessListener {
-            storageDocumentPath.set(mapOf("USER-AVATAR" to localImagePath.length()), SetOptions.merge())
+            storageDocumentPath.set(
+                mapOf("USER-AVATAR" to localImagePath.length()),
+                SetOptions.merge()
+            )
             completableToken.complete(true)
         }.addOnFailureListener {
             completableToken.complete(false)

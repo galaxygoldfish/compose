@@ -87,7 +87,7 @@ class ComposeBaseActivity : ComponentActivity() {
         }
 
         val animatedEnter: (
-            AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> EnterTransition
+        AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> EnterTransition
         ) = { _: NavBackStackEntry, _: NavBackStackEntry ->
             expandIn(
                 expandFrom = Alignment.TopCenter,
@@ -97,7 +97,7 @@ class ComposeBaseActivity : ComponentActivity() {
             )
         }
         val animatedExit: (
-            AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> ExitTransition
+        AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> ExitTransition
         ) = { _: NavBackStackEntry, _: NavBackStackEntry ->
             slideOutOfContainer(
                 towards = AnimatedContentScope.SlideDirection.Down,

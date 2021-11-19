@@ -68,7 +68,8 @@ fun ProductivityView(
 
     val scaffoldState = rememberScaffoldState()
     val systemUiController = rememberSystemUiController()
-    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val bottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val viewPagerState = rememberPagerState(
         pageCount = 2,
         initialPage = 0,

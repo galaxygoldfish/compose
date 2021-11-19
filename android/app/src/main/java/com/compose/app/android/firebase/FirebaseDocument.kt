@@ -47,9 +47,14 @@ class FirebaseDocument {
                 val noteData = documentSnapshot.data
                 noteData?.let { document ->
                     val liveDataTemp = liveData.value!!
-                    val noteModel = NoteDocument(document["ID"] as String, (document["COLOR"] as Long).toInt(),
-                        document["CONTENT"] as String, document["TITLE"] as String, document["DATE"] as String,
-                        document["TIME"] as String)
+                    val noteModel = NoteDocument(
+                        document["ID"] as String,
+                        (document["COLOR"] as Long).toInt(),
+                        document["CONTENT"] as String,
+                        document["TITLE"] as String,
+                        document["DATE"] as String,
+                        document["TIME"] as String
+                    )
                     liveDataTemp.add(noteModel)
                     liveData.value = liveDataTemp
                     isUpdating.isRefreshing = false
@@ -65,7 +70,7 @@ class FirebaseDocument {
      * @param documentType - Specify whether the document is a note
      * or a task using the DocumentType enum.
      */
-    suspend fun getDocumentByID(documentID: String, documentType: DocumentType) : Map<String, Any> {
+    suspend fun getDocumentByID(documentID: String, documentType: DocumentType): Map<String, Any> {
         val completableToken = CompletableDeferred<Map<String, Any>>()
         val currentDocumentPath = userdataBasePath.collection(
             if (documentType == DocumentType.NOTE) "NOTE-DATA" else "TASK-DATA"
@@ -108,9 +113,12 @@ class FirebaseDocument {
                     val tempTaskList = liveData.value!!
                     tempTaskList.add(
                         TaskDocument(
-                            document["ID"] as String, document["TITLE"] as String,
-                            document["LOCATION"] as String? ?: "", document["DUE-DATE-HR"] as String,
-                            document["DUE-TIME-HR"] as String, document["COMPLETE"] as Boolean,
+                            document["ID"] as String,
+                            document["TITLE"] as String,
+                            document["LOCATION"] as String? ?: "",
+                            document["DUE-DATE-HR"] as String,
+                            document["DUE-TIME-HR"] as String,
+                            document["COMPLETE"] as Boolean,
                             (document["DUE-DATE-TIME-UNIX"] as Long).toDouble()
                         )
                     )
@@ -160,7 +168,10 @@ class FirebaseDocument {
             .document(firebaseAuth.currentUser!!.uid).collection(noteOrTask).document(documentID)
         val documentSize = FirebaseUtils.calculateDocumentSize(documentPath)
         documentPath.set(documentFields)
-        storageDocumentPath.set(mapOf("${noteOrTask}-${documentID}" to documentSize), SetOptions.merge())
+        storageDocumentPath.set(
+            mapOf("${noteOrTask}-${documentID}" to documentSize),
+            SetOptions.merge()
+        )
     }
 
     /**

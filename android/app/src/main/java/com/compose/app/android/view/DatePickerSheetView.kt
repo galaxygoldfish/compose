@@ -52,7 +52,7 @@ fun DatePickerSheetView(
 
 
     val composeAsync = rememberCoroutineScope()
-    val textColorDefault =  MaterialTheme.colors.onBackground
+    val textColorDefault = MaterialTheme.colors.onBackground
 
     val viewPagerState = rememberPagerState(pageCount = 2)
 
@@ -72,7 +72,7 @@ fun DatePickerSheetView(
                 Text(
                     text = "${viewModel.currentMonth.value} ${viewModel.selectedDayIndex.value}, ${viewModel.currentYear.value}",
                     style = MaterialTheme.typography.h6,
-                    color =  if (viewPagerState.currentPage == 0) {
+                    color = if (viewPagerState.currentPage == 0) {
                         textColorDefault
                     } else {
                         textColorDefault.copy(0.5F)
@@ -103,10 +103,12 @@ fun DatePickerSheetView(
                     onClick = {
                         if (monthArrayResource.indexOf(viewModel.currentMonth.value) == 0) {
                             viewModel.currentMonth.value = monthArrayResource[11]
-                            viewModel.currentYear.value = (viewModel.currentYear.value.toInt() - 1).toString()
+                            viewModel.currentYear.value =
+                                (viewModel.currentYear.value.toInt() - 1).toString()
                         } else {
                             val oldMonth = viewModel.currentMonth.value
-                            viewModel.currentMonth.value = monthArrayResource[monthArrayResource.indexOf(oldMonth) - 1]
+                            viewModel.currentMonth.value =
+                                monthArrayResource[monthArrayResource.indexOf(oldMonth) - 1]
                         }
                     },
                     content = @Composable {
@@ -123,7 +125,8 @@ fun DatePickerSheetView(
                             viewModel.currentMonth.value = monthArrayResource[0]
                             viewModel.currentYear.value = (oldYearValue + 1).toString()
                         } else {
-                            viewModel.currentMonth.value = monthArrayResource[monthArrayResource.indexOf(viewModel.currentMonth.value) + 1]
+                            viewModel.currentMonth.value =
+                                monthArrayResource[monthArrayResource.indexOf(viewModel.currentMonth.value) + 1]
                         }
                     },
                     content = @Composable {
@@ -295,7 +298,8 @@ fun TimeHourPicker(
                 Text(
                     text = "PM",
                     style = colorFixedTextStyle,
-                    color = if (viewModel.selectionAMPM.value == 1) textColorMain else textColorMain.copy(0.6F),
+                    color = if (viewModel.selectionAMPM.value == 1) textColorMain else textColorMain
+                        .copy(0.6F),
                     modifier = Modifier.clickable {
                         viewModel.selectionAMPM.value = 1
                     }

@@ -45,7 +45,8 @@ fun LogInView(
     val scaffoldState = rememberScaffoldState()
 
     val snackbarIconState = remember { mutableStateOf(IconAlert) }
-    val snackbarIconDescription = remember { mutableStateOf(context.rawStringResource(R.string.warning_icon_content_desc)) }
+    val snackbarIconDescription =
+        remember { mutableStateOf(context.rawStringResource(R.string.warning_icon_content_desc)) }
 
     fun showSnackbar(@StringRes stringID: Int) {
         viewModel.asyncScope.launch {
@@ -117,7 +118,12 @@ fun LogInView(
                         )
                         BasicSnackbar(
                             hostState = scaffoldState.snackbarHostState,
-                            modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 5.dp, top = 15.dp),
+                            modifier = Modifier.padding(
+                                start = 20.dp,
+                                end = 20.dp,
+                                bottom = 5.dp,
+                                top = 15.dp
+                            ),
                             icon = painterResource(id = snackbarIconState.value),
                             contentDescription = snackbarIconDescription.value
                         )
@@ -157,12 +163,14 @@ fun LogInView(
                                                 navController.navigate(NavigationDestination.ProductivityActivity)
                                             },
                                             onFailure = {
-                                                snackbarIconDescription.value = context.rawStringResource(R.string.warning_icon_content_desc)
+                                                snackbarIconDescription.value =
+                                                    context.rawStringResource(R.string.warning_icon_content_desc)
                                                 snackbarIconState.value = IconAlert
                                                 showSnackbar(R.string.log_in_failure_message)
                                             },
                                             onPreLaunch = {
-                                                snackbarIconDescription.value = context.rawStringResource(R.string.account_tree_icon_content_desc)
+                                                snackbarIconDescription.value =
+                                                    context.rawStringResource(R.string.account_tree_icon_content_desc)
                                                 snackbarIconState.value = IconPersonSingle
                                                 showSnackbar(R.string.log_in_progress_message)
                                             }

@@ -204,7 +204,8 @@ fun AddNoteTaskMenuFAB(
                         tint = MaterialTheme.colors.background
                     )
                 },
-                modifier = Modifier.padding(bottom = if (index % 2 == 0) 12.dp else 20.dp)
+                modifier = Modifier
+                    .padding(bottom = if (index % 2 == 0) 12.dp else 20.dp)
                     .size(scaleTransition.value.dp),
                 backgroundColor = MaterialTheme.colors.onBackground,
                 elevation = FloatingActionButtonDefaults.elevation(10.dp),

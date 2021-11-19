@@ -68,14 +68,15 @@ fun SheetHandle() {
         modifier = Modifier.fillMaxWidth()
     ) {
         Card(
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
                 .padding(top = 15.dp)
                 .width(100.dp)
                 .height(4.dp),
             shape = RoundedCornerShape(8.dp),
             backgroundColor = colorResource(id = R.color.bottom_sheet_handle_color), // TODO - Don't use colorResource to fix weird jetpack compose dark/light theme switching
             elevation = 0.dp
-        ) {  }
+        ) { }
     }
 }
 

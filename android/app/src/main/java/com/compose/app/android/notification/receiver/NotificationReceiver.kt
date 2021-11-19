@@ -20,7 +20,10 @@ class NotificationReceiver : BroadcastReceiver() {
             val intentService = Intent(this, NotificationIntentService::class.java).apply {
                 putExtra("NOTIFICATION_EXTRA_ID", intent!!.getStringExtra("SERVICE_EXTRA_ID"))
                 putExtra("NOTIFICATION_EXTRA_TITLE", intent.getStringExtra("SERVICE_EXTRA_TITLE"))
-                putExtra("NOTIFICATION_EXTRA_CONTENT", intent.getStringExtra("SERVICE_EXTRA_CONTENT"))
+                putExtra(
+                    "NOTIFICATION_EXTRA_CONTENT",
+                    intent.getStringExtra("SERVICE_EXTRA_CONTENT")
+                )
             }
             startService(intentService)
         }

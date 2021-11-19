@@ -57,8 +57,16 @@ fun CreateAccountView(
 
     val scaffoldState = rememberScaffoldState()
     val snackbarIconState = remember { mutableStateOf(IconAlert) }
-    val snackbarIconDescription = remember { mutableStateOf(context.rawStringResource(R.string.warning_icon_content_desc)) }
-    val avatarImageState = remember { mutableStateOf(BitmapFactory.decodeResource(context.resources, R.drawable.default_avatar_image)) }
+    val snackbarIconDescription =
+        remember { mutableStateOf(context.rawStringResource(R.string.warning_icon_content_desc)) }
+    val avatarImageState = remember {
+        mutableStateOf(
+            BitmapFactory.decodeResource(
+                context.resources,
+                R.drawable.default_avatar_image
+            )
+        )
+    }
 
     val avatarImageUpdater = Observer<Bitmap> { avatar ->
         avatarImageState.value = avatar
@@ -152,7 +160,8 @@ fun CreateAccountView(
                             passwordType = false
                         )
                         Row(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
                                 .padding(bottom = viewModel.avatarRowPadding.value),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
@@ -201,8 +210,14 @@ fun CreateAccountView(
                         Box {
                             BasicSnackbar(
                                 hostState = scaffoldState.snackbarHostState,
-                                modifier = Modifier.align(Alignment.BottomCenter)
-                                    .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp),
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(
+                                        start = 20.dp,
+                                        end = 20.dp,
+                                        top = 10.dp,
+                                        bottom = 10.dp
+                                    ),
                                 icon = painterResource(id = snackbarIconState.value),
                                 contentDescription = snackbarIconDescription.value
                             )

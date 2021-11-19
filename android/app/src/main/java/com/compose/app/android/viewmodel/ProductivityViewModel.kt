@@ -65,7 +65,7 @@ class ProductivityViewModel : ViewModel() {
      * @return A Color value to be set to the icon.
      */
     @Composable
-    fun getIconColor(state: MutableState<Boolean>) : Color {
+    fun getIconColor(state: MutableState<Boolean>): Color {
         return if (state.value) {
             MaterialTheme.colors.onBackground
         } else {
@@ -79,7 +79,7 @@ class ProductivityViewModel : ViewModel() {
      */
     fun updateNoteList() {
         FirebaseDocument().getAllNotes(
-            noteLiveList as MutableLiveData<MutableList<NoteDocument>>,
+            noteLiveList,
             isUpdatingNoteList
         )
     }
@@ -89,7 +89,7 @@ class ProductivityViewModel : ViewModel() {
      */
     fun updateTaskList() {
         FirebaseDocument().getAllTasks(
-            taskLiveList as MutableLiveData<MutableList<TaskDocument>>,
+            taskLiveList,
             isUpdatingTaskList
         )
     }

@@ -6,6 +6,6 @@ import androidx.room.RoomDatabase
 @Database(entities = [NotifyDatabaseEntity::class], version = 1)
 abstract class NotifyDatabase : RoomDatabase() {
 
-    abstract fun getDao() : NotifyDatabaseDAO
+    abstract fun getDao(): NotifyDatabaseDAO
 
 }

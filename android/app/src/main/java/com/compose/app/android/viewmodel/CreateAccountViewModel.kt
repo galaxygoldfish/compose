@@ -95,7 +95,8 @@ class CreateAccountViewModel : ViewModel() {
         val synchronousScope = CoroutineScope(Dispatchers.Main + Job())
         asyncScope.launch {
             iconState.value = IconPersonSingle
-            descriptionState.value = context.rawStringResource(R.string.account_tree_icon_content_desc)
+            descriptionState.value =
+                context.rawStringResource(R.string.account_tree_icon_content_desc)
             avatarRowPadding.value = 5.dp
             snackbarState.showSnackbar(message = context.rawStringResource(R.string.create_account_queue_text))
             val avatar: Bitmap = if (avatarImageLive.value == null) {
@@ -113,7 +114,8 @@ class CreateAccountViewModel : ViewModel() {
                 }
             } else {
                 iconState.value = IconAlert
-                descriptionState.value = context.rawStringResource(R.string.warning_icon_content_desc)
+                descriptionState.value =
+                    context.rawStringResource(R.string.warning_icon_content_desc)
                 snackbarState.showSnackbar(accountResult, duration = SnackbarDuration.Indefinite)
             }
         }
@@ -139,9 +141,13 @@ class CreateAccountViewModel : ViewModel() {
                     }
                 }
                 CODE_INTENT_GALLERY -> {
-                    avatarImageLive.value = MediaStore.Images.Media.getBitmap(context.contentResolver, it.data)
+                    avatarImageLive.value =
+                        MediaStore.Images.Media.getBitmap(context.contentResolver, it.data)
                 }
-                else -> Log.e("COMPOSE", "Unexpected intent : CreateAccountViewModel.kt > processActivityResult()")
+                else -> Log.e(
+                    "COMPOSE",
+                    "Unexpected intent : CreateAccountViewModel.kt > processActivityResult()"
+                )
             }
         }
     }

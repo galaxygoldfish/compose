@@ -16,7 +16,7 @@ class FirebaseUtils {
          * @param document - The target DocumentReference to be analyzed
          * for it's size
          */
-        suspend fun calculateDocumentSize(document: DocumentReference) : Int {
+        suspend fun calculateDocumentSize(document: DocumentReference): Int {
             val completableToken = CompletableDeferred<Int>()
             var totalDocumentSize = 32
             totalDocumentSize += document.path.length + 17 // keeping the "/" separator as it can count as the + 1 extra byte per string
@@ -49,7 +49,7 @@ class FirebaseUtils {
          * the user has used in total, containing the profile picture,
          * and all notes and tasks.
          */
-        suspend fun calculateUserStorage() : Int {
+        suspend fun calculateUserStorage(): Int {
             val quotaDocument = Firebase.firestore.collection("METADATA").document("USERS")
                 .collection(Firebase.auth.currentUser!!.uid).document("QUOTA-MONITOR")
             val completableToken = CompletableDeferred<Int>()
