@@ -8,10 +8,13 @@ import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseAccount
@@ -75,12 +78,35 @@ class ComposeBaseActivity : ComponentActivity() {
 
     @Composable
     fun ComposeNavigationHost(intent: Intent) {
+
         navigationController = rememberAnimatedNavController()
         val navigationStart = if (FirebaseAccount().determineIfUserExists()) {
             NavigationDestination.ProductivityActivity
         } else {
             NavigationDestination.WelcomeActivity
         }
+
+        val animatedEnter: (
+            AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> EnterTransition
+        ) = { _: NavBackStackEntry, _: NavBackStackEntry ->
+            expandIn(
+                expandFrom = Alignment.TopCenter,
+                animationSpec = tween(200)
+            ) + fadeIn(
+                animationSpec = tween(300)
+            )
+        }
+        val animatedExit: (
+            AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> ExitTransition
+        ) = { _: NavBackStackEntry, _: NavBackStackEntry ->
+            slideOutOfContainer(
+                towards = AnimatedContentScope.SlideDirection.Down,
+                animationSpec = tween(300)
+            ) + fadeOut(
+                animationSpec = tween(300)
+            )
+        }
+
         AnimatedNavHost(
             navController = navigationController,
             startDestination = navigationStart,
@@ -112,14 +138,22 @@ class ComposeBaseActivity : ComponentActivity() {
                         navController = navigationController
                     )
                 }
-                composable("""${NavigationDestination.NoteEditorActivity}/{noteID}""") { backStackEntry ->
+                composable(
+                    route = """${NavigationDestination.NoteEditorActivity}/{noteID}""",
+                    exitTransition = animatedExit,
+                    enterTransition = animatedEnter
+                ) { backStackEntry ->
                     NoteEditorView(
                         viewModel = noteEditorViewModel,
                         navController = navigationController,
                         documentID = backStackEntry.arguments!!.getString("noteID")!!
                     )
                 }
-                composable("""${NavigationDestination.TaskEditorActivity}/{taskID}""") { backStackEntry ->
+                composable(
+                    route = """${NavigationDestination.TaskEditorActivity}/{taskID}""",
+                    exitTransition = animatedExit,
+                    enterTransition = animatedEnter
+                ) { backStackEntry ->
                     TaskEditorView(
                         navController = navigationController,
                         documentID = backStackEntry.arguments!!.getString("taskID")!!,

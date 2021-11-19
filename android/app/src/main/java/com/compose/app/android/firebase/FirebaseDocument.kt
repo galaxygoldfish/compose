@@ -109,7 +109,7 @@ class FirebaseDocument {
                     tempTaskList.add(
                         TaskDocument(
                             document["ID"] as String, document["TITLE"] as String,
-                            document["LOCATION"] as String, document["DUE-DATE-HR"] as String,
+                            document["LOCATION"] as String? ?: "", document["DUE-DATE-HR"] as String,
                             document["DUE-TIME-HR"] as String, document["COMPLETE"] as Boolean,
                             (document["DUE-DATE-TIME-UNIX"] as Long).toDouble()
                         )

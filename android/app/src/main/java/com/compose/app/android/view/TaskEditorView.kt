@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -276,7 +277,7 @@ fun TaskEditorView(
                             modifier = Modifier.padding(start = 20.dp)
                         )
                     }
-                    // Since compose just absolutely refuses to update the list when button
+                    // Since compose just *absolutely* refuses to update the list when button
                     // is pressed, we use a dummy text view and a changing state to ensure
                     // that it recomposes in a timely manner
                     val dummyTextUpdate = remember { mutableStateOf(false) }
@@ -298,6 +299,7 @@ fun TaskEditorView(
                         Text(
                             text = stringResource(id = R.string.task_editor_sub_item_button_text),
                             style = MaterialTheme.typography.body2,
+                            fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colors.primary,
                             modifier = Modifier.padding(start = 15.dp)
                         )
