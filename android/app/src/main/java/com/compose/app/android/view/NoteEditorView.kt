@@ -89,83 +89,11 @@ fun NoteEditorView(
                 scrimColor = MaterialTheme.colors.surface.copy(0.5F)
             ) {
                 Column {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 20.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        IconButton(
-                            modifier = Modifier
-                                .padding(start = 15.dp, top = 5.dp)
-                                .size(30.dp),
-                            onClick = {
-                                viewModel.saveNoteContents()
-                                viewModel.clearTextFields()
-                                navController.navigate(NavigationDestination.ProductivityActivity)
-                            },
-                            content = @Composable {
-                                Icon(
-                                    painter = painterResource(id = IconBackArrow),
-                                    contentDescription = stringResource(id = R.string.back_button_content_desc)
-                                )
-                            }
-                        )
-                        Row(
-                            horizontalArrangement = Arrangement.End,
-                            modifier = Modifier.padding(end = 5.dp)
-                        ) {
-                            IconButton(
-                                modifier = Modifier
-                                    .padding(end = 10.dp)
-                                    .size(30.dp),
-                                onClick = {
-                                    viewModel.saveNoteContents()
-                                },
-                                content = @Composable {
-                                    Icon(
-                                        painter = painterResource(id = IconSaveContent),
-                                        contentDescription = stringResource(id = R.string.save_button_content_desc)
-                                    )
-                                }
-                            )
-                            IconButton(
-                                modifier = Modifier
-                                    .padding(end = 10.dp)
-                                    .size(30.dp),
-                                onClick = {
-                                    coroutineScope.launch {
-                                        bottomSheetScaffoldState.show()
-                                    }
-                                },
-                                content = @Composable {
-                                    Icon(
-                                        painter = painterResource(id = IconThemeColor),
-                                        contentDescription = stringResource(id = R.string.palette_icon_content_desc)
-                                    )
-                                }
-                            )
-                            IconButton(
-                                modifier = Modifier
-                                    .padding(end = 10.dp)
-                                    .size(30.dp),
-                                onClick = {
-                                    FirebaseDocument().deleteDocument(
-                                        viewModel.noteDocumentID.value!!,
-                                        DocumentType.NOTE
-                                    )
-                                    viewModel.clearTextFields()
-                                    navController.navigate(NavigationDestination.ProductivityActivity)
-                                },
-                                content = @Composable {
-                                    Icon(
-                                        painter = painterResource(id = IconTrashItem),
-                                        contentDescription = stringResource(id = R.string.delete_icon_content_desc)
-                                    )
-                                }
-                            )
-                        }
-                    }
+                    NoteActionBar(
+                        viewModel = viewModel,
+                        navController = navController,
+                        bottomSheetScaffoldState = bottomSheetScaffoldState
+                    )
                     ExperimentalTextOnlyTextField(
                         textFieldValue = titleTextValue.value,
                         hint = stringResource(id = R.string.note_editor_title_placeholder),
@@ -196,6 +124,96 @@ fun NoteEditorView(
                     )
                 }
             }
+        }
+    }
+}
+
+@ExperimentalPagerApi
+@ExperimentalAnimationApi
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
+@Composable
+fun NoteActionBar(
+    viewModel: NoteEditorViewModel,
+    navController: NavController,
+    bottomSheetScaffoldState: ModalBottomSheetState
+) {
+    val coroutineScope = rememberCoroutineScope()
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        IconButton(
+            modifier = Modifier
+                .padding(start = 15.dp, top = 5.dp)
+                .size(30.dp),
+            onClick = {
+                viewModel.saveNoteContents()
+                viewModel.clearTextFields()
+                navController.navigate(NavigationDestination.ProductivityActivity)
+            },
+            content = @Composable {
+                Icon(
+                    painter = painterResource(id = IconBackArrow),
+                    contentDescription = stringResource(id = R.string.back_button_content_desc)
+                )
+            }
+        )
+        Row(
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.padding(end = 5.dp)
+        ) {
+            IconButton(
+                modifier = Modifier
+                    .padding(end = 10.dp)
+                    .size(30.dp),
+                onClick = {
+                    viewModel.saveNoteContents()
+                },
+                content = @Composable {
+                    Icon(
+                        painter = painterResource(id = IconSaveContent),
+                        contentDescription = stringResource(id = R.string.save_button_content_desc)
+                    )
+                }
+            )
+            IconButton(
+                modifier = Modifier
+                    .padding(end = 10.dp)
+                    .size(30.dp),
+                onClick = {
+                    coroutineScope.launch {
+                        bottomSheetScaffoldState.show()
+                    }
+                },
+                content = @Composable {
+                    Icon(
+                        painter = painterResource(id = IconThemeColor),
+                        contentDescription = stringResource(id = R.string.palette_icon_content_desc)
+                    )
+                }
+            )
+            IconButton(
+                modifier = Modifier
+                    .padding(end = 10.dp)
+                    .size(30.dp),
+                onClick = {
+                    FirebaseDocument().deleteDocument(
+                        viewModel.noteDocumentID.value!!,
+                        DocumentType.NOTE
+                    )
+                    viewModel.clearTextFields()
+                    navController.navigate(NavigationDestination.ProductivityActivity)
+                },
+                content = @Composable {
+                    Icon(
+                        painter = painterResource(id = IconTrashItem),
+                        contentDescription = stringResource(id = R.string.delete_icon_content_desc)
+                    )
+                }
+            )
         }
     }
 }
