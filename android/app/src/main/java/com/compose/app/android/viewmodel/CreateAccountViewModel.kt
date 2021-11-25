@@ -13,6 +13,7 @@ import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -47,6 +48,7 @@ class CreateAccountViewModel : ViewModel() {
      * Opens the device's default gallery app expecting an image
      * as a result.
      */
+    @ExperimentalComposeUiApi
     @ExperimentalAnimationApi
     fun openGalleryForResult(context: ComposeBaseActivity) {
         val galleryIntent = Intent(Intent.ACTION_GET_CONTENT)
@@ -58,6 +60,7 @@ class CreateAccountViewModel : ViewModel() {
      * Opens the device's default camera app expecting an image
      * in return.
      */
+    @ExperimentalComposeUiApi
     @ExperimentalAnimationApi
     fun openCameraForResult(context: ComposeBaseActivity) {
         val pictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -131,6 +134,7 @@ class CreateAccountViewModel : ViewModel() {
      * @param context - A context needed to parse the Bitmap returned
      * from the gallery
      */
+    @ExperimentalComposeUiApi
     @ExperimentalAnimationApi
     fun processActivityResult(data: Intent?, requestCode: Int, context: ComposeBaseActivity) {
         data?.let {

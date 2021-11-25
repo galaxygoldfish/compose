@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.ui.ExperimentalComposeUiApi
 import com.compose.app.android.R
 import com.compose.app.android.notification.TaskNotificationManager
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -15,6 +16,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @ExperimentalPagerApi
 class NotificationIntentService : IntentService("Task Notifications") {
 
+    @ExperimentalComposeUiApi
     override fun onHandleIntent(intent: Intent?) {
         val context = this
         intent?.let { it ->

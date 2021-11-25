@@ -13,6 +13,7 @@ import android.os.Build
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.compose.app.android.R
@@ -91,6 +92,7 @@ class TaskNotificationManager {
          * @param taskID - The ID of the task, to be used when clicking on
          * the notification to open the task editor
          */
+        @ExperimentalComposeUiApi
         fun sendTaskNotification(
             context: Context,
             title: String,

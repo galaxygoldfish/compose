@@ -45,3 +45,10 @@ val NeutralButtonColorDark = Color(0X54C3C3C3)
 val NeutralColorLight = Color(0XFFEDEDED)
 val NeutralColorDark = Color(0XFF202020)
 
+val TextColorRed = Color(0XFFF06292)
+val TextColorOrange = Color(0XFFFFB74D)
+val TextColorYellow = Color(0XFFFFF176)
+val TextColorGreen = Color(0XFF81C784)
+val TextColorBlue = Color(0XFF64B5F6)
+val TextColorPurple = Color(0XFF9575CD)
+

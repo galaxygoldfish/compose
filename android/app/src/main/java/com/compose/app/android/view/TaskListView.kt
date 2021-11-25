@@ -153,7 +153,7 @@ fun TaskListCard(
             elevation = 0.dp
         ) {
             Row(
-                modifier = Modifier.padding(start = 15.dp)
+                modifier = Modifier.padding(start = 10.dp)
             ) {
                 Checkbox(
                     checked = taskCheckboxState.value,
@@ -161,9 +161,7 @@ fun TaskListCard(
                         FirebaseDocument().updateTaskCompletion(checked, item.taskID)
                         taskCheckboxState.value = checked
                     },
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .align(Alignment.CenterVertically)
+                    modifier = Modifier.align(Alignment.CenterVertically)
                 )
                 Column(
                     modifier = Modifier.fillMaxWidth()

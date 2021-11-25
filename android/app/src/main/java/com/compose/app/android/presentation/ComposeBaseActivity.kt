@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -14,6 +16,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.compose.app.android.R
@@ -37,6 +40,7 @@ object NavigationDestination {
     const val TaskEditorActivity = "taskEditor"
 }
 
+@ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
@@ -112,12 +116,14 @@ class ComposeBaseActivity : ComponentActivity() {
             startDestination = navigationStart,
             builder = {
                 composable(NavigationDestination.WelcomeActivity) {
+                    keyboardPop(false)
                     WelcomeView(
                         context = this@ComposeBaseActivity,
                         navController = navigationController
                     )
                 }
                 composable(NavigationDestination.CreateAccountActivity) {
+                    keyboardPop(true)
                     CreateAccountView(
                         context = this@ComposeBaseActivity,
                         viewModel = createAccountViewModel,
@@ -125,6 +131,7 @@ class ComposeBaseActivity : ComponentActivity() {
                     )
                 }
                 composable(NavigationDestination.LogInActivity) {
+                    keyboardPop(true)
                     LogInView(
                         context = this@ComposeBaseActivity,
                         viewModel = logInViewModel,
@@ -132,6 +139,7 @@ class ComposeBaseActivity : ComponentActivity() {
                     )
                 }
                 composable(NavigationDestination.ProductivityActivity) {
+                    keyboardPop(false)
                     ProductivityView(
                         context = this@ComposeBaseActivity,
                         viewModel = productivityViewModel,
@@ -143,6 +151,7 @@ class ComposeBaseActivity : ComponentActivity() {
                     exitTransition = animatedExit,
                     enterTransition = animatedEnter
                 ) { backStackEntry ->
+                    keyboardPop(true)
                     NoteEditorView(
                         viewModel = noteEditorViewModel,
                         navController = navigationController,
@@ -154,6 +163,7 @@ class ComposeBaseActivity : ComponentActivity() {
                     exitTransition = animatedExit,
                     enterTransition = animatedEnter
                 ) { backStackEntry ->
+                    keyboardPop(true)
                     TaskEditorView(
                         navController = navigationController,
                         documentID = backStackEntry.arguments!!.getString("taskID")!!,
@@ -165,6 +175,22 @@ class ComposeBaseActivity : ComponentActivity() {
         intent.getStringExtra("TASK_ID_NOTIFICATION")?.let { idExtra ->
             navigationController.navigate("""${NavigationDestination.TaskEditorActivity}/$idExtra""")
         }
+    }
+
+    /**
+     * Set flag to determine whether to resize the view layout
+     * dynamically with the keyboard or to ignore it.
+     *
+     * @param enable - Set to true if layout should resize with
+     * the keyboard or IME
+     */
+    private fun keyboardPop(enable: Boolean) {
+        window.setSoftInputMode(
+            when (enable) {
+                true -> SOFT_INPUT_ADJUST_RESIZE
+                false -> SOFT_INPUT_ADJUST_NOTHING
+            }
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

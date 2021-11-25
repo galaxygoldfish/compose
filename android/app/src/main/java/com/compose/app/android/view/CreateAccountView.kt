@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
@@ -38,6 +39,7 @@ import com.compose.app.android.utilities.rawStringResource
 import com.compose.app.android.viewmodel.CreateAccountViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @Composable
 @ExperimentalPagerApi

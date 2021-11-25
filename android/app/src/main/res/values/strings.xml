@@ -80,6 +80,8 @@
     <string name="note_editor_content_placeholder">Content here</string>
     <string name="note_editor_color_picker_title">Note card color</string>
     <string name="note_editor_color_picker_subtitle">Select a color to be displayed on this note\'s card</string>
+    <string name="note_editor_format_dialog_title_color">Select text color</string>
+    <string name="note_editor_format_dialog_title_size">Select text size</string>
 
     <string name="note_option_menu_last_edited">Last edited %1$s at %2$s</string>
     <string name="note_option_menu_list_item_edit">View &amp; edit</string>

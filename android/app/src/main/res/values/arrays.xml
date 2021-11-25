@@ -44,4 +44,21 @@
         <item>December</item>
     </string-array>
 
+    <string-array name="format_text_size">
+        <item>15 sp</item>
+        <item>20 sp</item>
+        <item>25 sp</item>
+        <item>30 sp</item>
+        <item>35 sp</item>
+    </string-array>
+
+    <string-array name="format_text_color">
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Yellow</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Purple</item>
+    </string-array>
+
 </resources>
