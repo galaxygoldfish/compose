@@ -314,6 +314,11 @@ fun SearchBar(
         ),
         onValueChange = {
             viewModel.searchFieldValue.value = it
+            when (viewModel.noteSelectedState.value) {
+                true -> viewModel.updateNoteList(it.text)
+                false -> viewModel.updateTaskList(it.text)
+            }
+
         },
         shape = RoundedCornerShape(8.dp),
         singleLine = true,
@@ -419,7 +424,7 @@ fun NoteTaskPager(
                     onRefresh = {
                         viewModel.apply {
                             noteLiveList.value = mutableListOf()
-                            updateNoteList()
+                            updateNoteList(null)
                         }
                     },
                     modifier = Modifier.fillMaxSize(),

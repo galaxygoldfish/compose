@@ -34,7 +34,8 @@ class FirebaseDocument {
      */
     fun getAllNotes(
         liveData: MutableLiveData<MutableList<NoteDocument>>,
-        isUpdating: SwipeRefreshState
+        isUpdating: SwipeRefreshState,
+        query: String? = null
     ) {
         isUpdating.isRefreshing = true
         val noteCollectionPath = userdataBasePath.collection("NOTE-DATA")
@@ -46,18 +47,25 @@ class FirebaseDocument {
             result.documents.forEach { documentSnapshot ->
                 val noteData = documentSnapshot.data
                 noteData?.let { document ->
-                    val liveDataTemp = liveData.value!!
-                    val noteModel = NoteDocument(
-                        document["ID"] as String,
-                        (document["COLOR"] as Long).toInt(),
-                        document["CONTENT"] as String,
-                        document["TITLE"] as String,
-                        document["DATE"] as String,
-                        document["TIME"] as String
-                    )
-                    liveDataTemp.add(noteModel)
-                    liveData.value = liveDataTemp
-                    isUpdating.isRefreshing = false
+                    fun addNoteData() {
+                        val liveDataTemp = liveData.value!!
+                        val noteModel = NoteDocument(
+                            document["ID"] as String,
+                            (document["COLOR"] as Long).toInt(),
+                            document["CONTENT"] as String,
+                            document["TITLE"] as String,
+                            document["DATE"] as String,
+                            document["TIME"] as String
+                        )
+                        liveDataTemp.add(noteModel)
+                        liveData.value = liveDataTemp
+                        isUpdating.isRefreshing = false
+                    }
+                    if (query != null) {
+                        if ((document["TITLE"] as String).contains(query, true) ||
+                            (document["CONTENT"] as String).contains(query, true)
+                        ) { addNoteData() }
+                    } else { addNoteData() }
                 }
             }
         }
@@ -99,7 +107,8 @@ class FirebaseDocument {
      */
     fun getAllTasks(
         liveData: MutableLiveData<MutableList<TaskDocument>>,
-        isUpdating: SwipeRefreshState
+        isUpdating: SwipeRefreshState,
+        query: String? = null
     ) {
         isUpdating.isRefreshing = true
         val taskCollectionPath = userdataBasePath.collection("TASK-DATA")
@@ -111,19 +120,26 @@ class FirebaseDocument {
             result.documents.forEach { document ->
                 document.data?.let {
                     val tempTaskList = liveData.value!!
-                    tempTaskList.add(
-                        TaskDocument(
-                            document["ID"] as String,
-                            document["TITLE"] as String,
-                            document["LOCATION"] as String? ?: "",
-                            document["DUE-DATE-HR"] as String,
-                            document["DUE-TIME-HR"] as String,
-                            document["COMPLETE"] as Boolean,
-                            (document["DUE-DATE-TIME-UNIX"] as Long).toDouble()
+                    fun addTaskData() {
+                        tempTaskList.add(
+                            TaskDocument(
+                                document["ID"] as String,
+                                document["TITLE"] as String,
+                                document["LOCATION"] as String? ?: "",
+                                document["DUE-DATE-HR"] as String,
+                                document["DUE-TIME-HR"] as String,
+                                document["COMPLETE"] as Boolean,
+                                (document["DUE-DATE-TIME-UNIX"] as Long).toDouble()
+                            )
                         )
-                    )
-                    liveData.value = tempTaskList
-                    isUpdating.isRefreshing = false
+                        liveData.value = tempTaskList
+                        isUpdating.isRefreshing = false
+                    }
+                    if (query != null) {
+                        if ((document["TITLE"] as String).contains(query, true) ||
+                            (document["LOCATION"] as String).contains(query, true)
+                        ) { addTaskData() }
+                    } else { addTaskData() }
                 }
             }
         }

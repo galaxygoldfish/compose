@@ -77,20 +77,22 @@ class ProductivityViewModel : ViewModel() {
      * Update the list of notes to the latest version available
      * from Firebase.
      */
-    fun updateNoteList() {
+    fun updateNoteList(query: String? = null) {
         FirebaseDocument().getAllNotes(
             noteLiveList,
-            isUpdatingNoteList
+            isUpdatingNoteList,
+            query
         )
     }
 
     /**
      * Update the list of tasks to the most recent Firebase version.
      */
-    fun updateTaskList() {
+    fun updateTaskList(query: String? = null) {
         FirebaseDocument().getAllTasks(
             taskLiveList,
-            isUpdatingTaskList
+            isUpdatingTaskList,
+            query
         )
     }
 
