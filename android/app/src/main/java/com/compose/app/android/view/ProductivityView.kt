@@ -242,7 +242,8 @@ fun ProfileContextMenu(
                             contentDescription = stringResource(id = R.string.settings_icon_content_desc),
                             title = stringResource(id = R.string.profile_context_menu_settings_title),
                             onClick = {
-
+                                viewModel.showProfileContextDialog.value = false
+                                navController.navigate(NavigationDestination.SettingsViewHome)
                             }
                         )
                         OptionListItem(

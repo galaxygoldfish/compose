@@ -38,6 +38,7 @@ object NavigationDestination {
     const val ProductivityActivity = "productivity"
     const val NoteEditorActivity = "noteEditor"
     const val TaskEditorActivity = "taskEditor"
+    const val SettingsViewHome = "settings"
 }
 
 @ExperimentalComposeUiApi
@@ -52,6 +53,7 @@ class ComposeBaseActivity : ComponentActivity() {
     private val productivityViewModel: ProductivityViewModel by viewModels()
     private val noteEditorViewModel: NoteEditorViewModel by viewModels()
     private val taskEditorViewModel: TaskEditorViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
 
     private lateinit var navigationController: NavHostController
 
@@ -170,8 +172,19 @@ class ComposeBaseActivity : ComponentActivity() {
                         viewModel = taskEditorViewModel
                     )
                 }
+                composable(
+                    route = NavigationDestination.SettingsViewHome,
+                    enterTransition = { _ , _ -> slideInHorizontally() },
+                    exitTransition = { _, _ -> slideOutOfContainer(AnimatedContentScope.SlideDirection.Left) }
+                ) {
+                    SettingsHomePage(
+                        viewModel = settingsViewModel,
+                        navController = navigationController
+                    )
+                }
             }
         )
+        // If coming from notification tap action
         intent.getStringExtra("TASK_ID_NOTIFICATION")?.let { idExtra ->
             navigationController.navigate("""${NavigationDestination.TaskEditorActivity}/$idExtra""")
         }

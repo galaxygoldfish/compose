@@ -33,6 +33,12 @@ fun typography(): Typography {
             fontSize = 36.sp,
             color = MaterialTheme.colors.onBackground
         ),
+        h3 = TextStyle(
+            fontFamily = InterTypeface,
+            fontWeight = FontWeight.Bold,
+            fontSize = 33.sp,
+            color = MaterialTheme.colors.onBackground
+        ),
         h4 = TextStyle(
             fontFamily = InterTypeface,
             fontSize = 26.sp,
