@@ -78,6 +78,9 @@ fun BasicSnackbar(
     )
 }
 
+/**
+ * Handle view used on the top of bottom sheet views
+ */
 @Composable
 fun SheetHandle() {
     Column(

@@ -79,7 +79,7 @@ fun TaskOptionMenu(
                 contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                 title = stringResource(id = R.string.note_option_menu_list_item_edit),
                 onClick = {
-                    navController.navigate("""${NavigationDestination.TaskEditorActivity}/${taskDocument?.taskID}""")
+                    navController.navigate("""${NavigationDestination.TaskEditorView}/${taskDocument?.taskID}""")
                 },
             )
             OptionListItem(

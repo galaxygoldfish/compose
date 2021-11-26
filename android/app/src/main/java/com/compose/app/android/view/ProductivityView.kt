@@ -214,6 +214,7 @@ fun ProfileContextMenu(
                                     "Error"
                                 )!!,
                                 style = MaterialTheme.typography.h4,
+                                fontWeight = FontWeight.Normal,
                                 modifier = Modifier.padding()
                             )
                             Text(
@@ -457,7 +458,7 @@ fun NoteTaskPager(
                                 }
                             },
                             onItemClick = { note ->
-                                navController.navigate("""${NavigationDestination.NoteEditorActivity}/${note.noteID}""")
+                                navController.navigate("""${NavigationDestination.NoteEditorView}/${note.noteID}""")
                             }
                         )
                     }
@@ -477,7 +478,7 @@ fun NoteTaskPager(
                         TaskListView(
                             viewModel = viewModel,
                             onItemClick = { task ->
-                                navController.navigate("""${NavigationDestination.TaskEditorActivity}/${task.taskID}""")
+                                navController.navigate("""${NavigationDestination.TaskEditorView}/${task.taskID}""")
                             },
                             onItemLongClick = { task ->
                                 viewModel.apply {
@@ -580,7 +581,7 @@ fun BottomNavigationBar(
                     contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                     label = stringResource(id = R.string.productivity_menu_notes),
                     onClick = {
-                        navController.navigate("""${NavigationDestination.NoteEditorActivity}/${UUID.randomUUID()}""")
+                        navController.navigate("""${NavigationDestination.NoteEditorView}/${UUID.randomUUID()}""")
                     }
                 ),
                 ExpandableFAB(
@@ -588,7 +589,7 @@ fun BottomNavigationBar(
                     contentDescription = stringResource(id = R.string.edit_icon_content_desc),
                     label = stringResource(id = R.string.productivity_menu_task),
                     onClick = {
-                        navController.navigate("""${NavigationDestination.TaskEditorActivity}/${UUID.randomUUID()}""")
+                        navController.navigate("""${NavigationDestination.TaskEditorView}/${UUID.randomUUID()}""")
                     }
                 ),
             )

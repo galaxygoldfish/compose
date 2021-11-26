@@ -129,7 +129,7 @@ class CreateAccountViewModel : ViewModel() {
             )
             if (accountResult == "true") {
                 synchronousScope.launch {
-                    navController.navigate(NavigationDestination.ProductivityActivity)
+                    navController.navigate(NavigationDestination.ProductivityView)
                 }
             } else {
                 iconState.value = IconAlert

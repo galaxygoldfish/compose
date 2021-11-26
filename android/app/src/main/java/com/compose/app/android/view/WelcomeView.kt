@@ -78,7 +78,7 @@ fun WelcomeView(context: Context, navController: NavController) {
                     contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
                     color = colorResource(id = R.color.deep_sea),
                     onClick = {
-                        navController.navigate(NavigationDestination.LogInActivity)
+                        navController.navigate(NavigationDestination.LogInView)
                     }
                 )
                 FullWidthButton(
@@ -87,7 +87,7 @@ fun WelcomeView(context: Context, navController: NavController) {
                     contentDescription = stringResource(id = R.string.welcome_create_account_button_content_desc),
                     color = colorResource(id = R.color.button_neutral_background_color),
                     onClick = {
-                        navController.navigate(NavigationDestination.CreateAccountActivity)
+                        navController.navigate(NavigationDestination.CreateAccountView)
                     }
                 )
             }

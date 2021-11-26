@@ -143,7 +143,7 @@ fun NoteOptionMenu(
                 contentDescription = stringResource(id = com.compose.app.android.R.string.edit_icon_content_desc),
                 title = stringResource(id = com.compose.app.android.R.string.note_option_menu_list_item_edit),
                 onClick = {
-                    navController.navigate("""${NavigationDestination.NoteEditorActivity}/${noteDocument?.noteID}""")
+                    navController.navigate("""${NavigationDestination.NoteEditorView}/${noteDocument?.noteID}""")
                 }
             )
             OptionListItem(

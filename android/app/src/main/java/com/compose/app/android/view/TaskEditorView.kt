@@ -192,7 +192,7 @@ fun TaskActionBar(
                 .size(30.dp),
             onClick = {
                 viewModel.saveTaskData(navController.context)
-                navController.navigate(NavigationDestination.ProductivityActivity)
+                navController.navigate(NavigationDestination.ProductivityView)
             },
             content = @Composable {
                 Icon(

@@ -109,7 +109,7 @@ fun CreateAccountView(
                     ) {
                         IconButton(
                             onClick = {
-                                navController.navigate(NavigationDestination.WelcomeActivity)
+                                navController.navigate(NavigationDestination.WelcomeView)
                             },
                             modifier = Modifier.padding(top = 15.dp, start = 10.dp),
                             content = @Composable {
@@ -250,7 +250,7 @@ fun CreateAccountView(
                                 text = stringResource(id = R.string.create_account_cancel_button),
                                 color = MaterialTheme.colors.primaryVariant,
                                 onClick = {
-                                    navController.navigate(NavigationDestination.WelcomeActivity)
+                                    navController.navigate(NavigationDestination.WelcomeView)
                                 }
                             )
                             TextOnlyButton(

@@ -41,6 +41,7 @@ import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.theme.currentAppThemeState
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.view.*
+import com.compose.app.android.view.settings.*
 import com.compose.app.android.viewmodel.*
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -48,13 +49,20 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 object NavigationDestination {
-    const val WelcomeActivity = "welcome"
-    const val LogInActivity = "login"
-    const val CreateAccountActivity = "createAccount"
-    const val ProductivityActivity = "productivity"
-    const val NoteEditorActivity = "noteEditor"
-    const val TaskEditorActivity = "taskEditor"
+    const val WelcomeView = "welcome"
+    const val LogInView = "login"
+    const val CreateAccountView = "createAccount"
+    const val ProductivityView = "productivity"
+    const val NoteEditorView = "noteEditor"
+    const val TaskEditorView = "taskEditor"
     const val SettingsViewHome = "settings"
+    const val CustomizationSettings = "customizationSettings"
+    const val AccountSettings = "accountSettings"
+    const val SecurityPrivacySettings = "securityPrivacySettings"
+    const val NotificationSettings = "notificationSettings"
+    const val AboutAppSettings = "aboutAppSettings"
+    const val AccessibilitySettings = "accessibilitySettings"
+    const val HelpFeedbackSettings = "helpFeedbackSettings"
 }
 
 @ExperimentalComposeUiApi
@@ -103,13 +111,13 @@ class ComposeBaseActivity : ComponentActivity() {
 
         navigationController = rememberAnimatedNavController()
         val navigationStart = if (FirebaseAccount().determineIfUserExists()) {
-            NavigationDestination.ProductivityActivity
+            NavigationDestination.ProductivityView
         } else {
-            NavigationDestination.WelcomeActivity
+            NavigationDestination.WelcomeView
         }
 
-        val animatedEnter: (
-        AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> EnterTransition
+        val animatedEnterZoom: (
+            AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> EnterTransition
         ) = { _: NavBackStackEntry, _: NavBackStackEntry ->
             expandIn(
                 expandFrom = Alignment.TopCenter,
@@ -118,8 +126,8 @@ class ComposeBaseActivity : ComponentActivity() {
                 animationSpec = tween(300)
             )
         }
-        val animatedExit: (
-        AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> ExitTransition
+        val animatedExitSlide: (
+            AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> ExitTransition
         ) = { _: NavBackStackEntry, _: NavBackStackEntry ->
             slideOutOfContainer(
                 towards = AnimatedContentScope.SlideDirection.Down,
@@ -128,19 +136,24 @@ class ComposeBaseActivity : ComponentActivity() {
                 animationSpec = tween(300)
             )
         }
+        val animatedEnterSlide: (
+        AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> EnterTransition
+        ) = { _: NavBackStackEntry, _: NavBackStackEntry ->
+            slideInHorizontally(animationSpec = tween(300))
+        }
 
         AnimatedNavHost(
             navController = navigationController,
             startDestination = navigationStart,
             builder = {
-                composable(NavigationDestination.WelcomeActivity) {
+                composable(NavigationDestination.WelcomeView) {
                     keyboardPop(false)
                     WelcomeView(
                         context = this@ComposeBaseActivity,
                         navController = navigationController
                     )
                 }
-                composable(NavigationDestination.CreateAccountActivity) {
+                composable(NavigationDestination.CreateAccountView) {
                     keyboardPop(true)
                     CreateAccountView(
                         context = this@ComposeBaseActivity,
@@ -148,7 +161,7 @@ class ComposeBaseActivity : ComponentActivity() {
                         navController = navigationController
                     )
                 }
-                composable(NavigationDestination.LogInActivity) {
+                composable(NavigationDestination.LogInView) {
                     keyboardPop(true)
                     LogInView(
                         context = this@ComposeBaseActivity,
@@ -156,7 +169,7 @@ class ComposeBaseActivity : ComponentActivity() {
                         navController = navigationController
                     )
                 }
-                composable(NavigationDestination.ProductivityActivity) {
+                composable(NavigationDestination.ProductivityView) {
                     keyboardPop(false)
                     ProductivityView(
                         context = this@ComposeBaseActivity,
@@ -165,9 +178,9 @@ class ComposeBaseActivity : ComponentActivity() {
                     )
                 }
                 composable(
-                    route = """${NavigationDestination.NoteEditorActivity}/{noteID}""",
-                    exitTransition = animatedExit,
-                    enterTransition = animatedEnter
+                    route = """${NavigationDestination.NoteEditorView}/{noteID}""",
+                    exitTransition = animatedExitSlide,
+                    enterTransition = animatedEnterZoom
                 ) { backStackEntry ->
                     keyboardPop(true)
                     NoteEditorView(
@@ -177,9 +190,9 @@ class ComposeBaseActivity : ComponentActivity() {
                     )
                 }
                 composable(
-                    route = """${NavigationDestination.TaskEditorActivity}/{taskID}""",
-                    exitTransition = animatedExit,
-                    enterTransition = animatedEnter
+                    route = """${NavigationDestination.TaskEditorView}/{taskID}""",
+                    exitTransition = animatedExitSlide,
+                    enterTransition = animatedEnterZoom
                 ) { backStackEntry ->
                     keyboardPop(true)
                     TaskEditorView(
@@ -188,12 +201,85 @@ class ComposeBaseActivity : ComponentActivity() {
                         viewModel = taskEditorViewModel
                     )
                 }
+                /**
+                 * Preference view composables
+                 */
                 composable(
                     route = NavigationDestination.SettingsViewHome,
-                    enterTransition = { _ , _ -> slideInHorizontally() },
-                    exitTransition = { _, _ -> slideOutOfContainer(AnimatedContentScope.SlideDirection.Left) }
+                    enterTransition = animatedEnterSlide,
+                    exitTransition = animatedExitSlide
                 ) {
                     SettingsHomePage(
+                        viewModel = settingsViewModel,
+                        navController = navigationController
+                    )
+                }
+                composable(
+                    route = NavigationDestination.CustomizationSettings,
+                    enterTransition = animatedEnterSlide,
+                    exitTransition = animatedExitSlide
+                ) {
+                    UICustomizationSettings(
+                        viewModel = settingsViewModel,
+                        navController = navigationController
+                    )
+                }
+                composable(
+                    route = NavigationDestination.AccountSettings,
+                    enterTransition = animatedEnterSlide,
+                    exitTransition = animatedExitSlide
+                ) {
+                    AccountSettings(
+                        viewModel = settingsViewModel,
+                        navController = navigationController
+                    )
+                }
+                composable(
+                    route = NavigationDestination.SecurityPrivacySettings,
+                    enterTransition = animatedEnterSlide,
+                    exitTransition = animatedExitSlide
+                ) {
+                    SecurityPrivacySettings(
+                        viewModel = settingsViewModel,
+                        navController = navigationController
+                    )
+                }
+                composable(
+                    route = NavigationDestination.NotificationSettings,
+                    enterTransition = animatedEnterSlide,
+                    exitTransition = animatedExitSlide
+                ) {
+                    NotificationSettings(
+                        viewModel = settingsViewModel,
+                        navController = navigationController
+                    )
+                }
+                composable(
+                    route = NavigationDestination.AboutAppSettings,
+                    enterTransition = animatedEnterSlide,
+                    exitTransition = animatedExitSlide
+                ) {
+                    AboutAppSettings(
+                        viewModel = settingsViewModel,
+                        navController = navigationController
+                    )
+                }
+                composable(
+                    route = NavigationDestination.AccessibilitySettings,
+                    enterTransition = animatedEnterSlide,
+                    exitTransition = animatedExitSlide
+                ) {
+                    UICustomizationSettings(
+                        viewModel = settingsViewModel,
+                        navController = navigationController
+                    )
+                }
+                composable(
+                    route = NavigationDestination.HelpFeedbackSettings,
+                    enterTransition = animatedEnterSlide,
+                    exitTransition = animatedExitSlide
+                ) {
+                    HelpFeedbackSettings(
                         viewModel = settingsViewModel,
                         navController = navigationController
                     )
@@ -202,7 +288,7 @@ class ComposeBaseActivity : ComponentActivity() {
         )
         // If coming from notification tap action
         intent.getStringExtra("TASK_ID_NOTIFICATION")?.let { idExtra ->
-            navigationController.navigate("""${NavigationDestination.TaskEditorActivity}/$idExtra""")
+            navigationController.navigate("""${NavigationDestination.TaskEditorView}/$idExtra""")
         }
     }
 

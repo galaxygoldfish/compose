@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.compose.app.android.R
+import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.viewmodel.SettingsViewModel
@@ -135,43 +136,43 @@ fun SettingsHomePage(
                     title = stringResource(id = R.string.settings_ui_customization_tag),
                     icon = painterResource(id = R.drawable.ic_duotone_theme_color),
                     background = TextColorRed,
-                    onClick = {}
+                    onClick = { navController.navigate(NavigationDestination.CustomizationSettings) }
                 )
                 HomeSettingsItem(
                     title = stringResource(id = R.string.settings_account_tag),
                     icon = painterResource(id = R.drawable.ic_duotone_user_group),
                     background = TextColorPurple,
-                    onClick = {}
+                    onClick = { navController.navigate(NavigationDestination.AccountSettings) }
                 )
                 HomeSettingsItem(
                     title = stringResource(id = R.string.settings_security_privacy_tag),
                     icon = painterResource(id = R.drawable.ic_duotone_lock_closed),
                     background = TextColorBlue,
-                    onClick = {}
+                    onClick = { navController.navigate(NavigationDestination.SecurityPrivacySettings) }
                 )
                 HomeSettingsItem(
                     title = stringResource(id = R.string.settings_notifications_tag),
                     icon = painterResource(id = R.drawable.ic_duotone_notification_bell),
                     background = TextColorGreen,
-                    onClick = {}
+                    onClick = { navController.navigate(NavigationDestination.NotificationSettings) }
                 )
                 HomeSettingsItem(
                     title = stringResource(id = R.string.settings_about_tag),
                     icon = painterResource(id = R.drawable.ic_duotone_info_circle),
                     background = TextColorYellow,
-                    onClick = {}
+                    onClick = { navController.navigate(NavigationDestination.AboutAppSettings) }
                 )
                 HomeSettingsItem(
                     title = stringResource(id = R.string.settings_accessibility_tag),
                     icon = painterResource(id = R.drawable.ic_duotone_eye_open),
                     background = TextColorRed,
-                    onClick = {}
+                    onClick = { navController.navigate(NavigationDestination.AccessibilitySettings) }
                 )
                 HomeSettingsItem(
                     title = stringResource(id = R.string.settings_help_feedback_tag),
                     icon = painterResource(id = R.drawable.ic_duotone_flag),
                     background = TextColorPurple,
-                    onClick = {}
+                    onClick = { navController.navigate(NavigationDestination.HelpFeedbackSettings) }
                 )
             }
         }

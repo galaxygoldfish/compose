@@ -216,7 +216,7 @@ fun NoteActionBar(
             onClick = {
                 viewModel.saveNoteContents()
                 viewModel.clearTextFields()
-                navController.navigate(NavigationDestination.ProductivityActivity)
+                navController.navigate(NavigationDestination.ProductivityView)
             },
             content = @Composable {
                 Icon(
@@ -269,7 +269,7 @@ fun NoteActionBar(
                         DocumentType.NOTE
                     )
                     viewModel.clearTextFields()
-                    navController.navigate(NavigationDestination.ProductivityActivity)
+                    navController.navigate(NavigationDestination.ProductivityView)
                 },
                 content = @Composable {
                     Icon(

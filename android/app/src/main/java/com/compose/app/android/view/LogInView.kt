@@ -90,7 +90,7 @@ fun LogInView(
                     ) {
                         IconButton(
                             onClick = {
-                                navController.navigate(NavigationDestination.WelcomeActivity)
+                                navController.navigate(NavigationDestination.WelcomeView)
                             },
                             content = @Composable {
                                 Icon(
@@ -157,7 +157,7 @@ fun LogInView(
                                     text = stringResource(id = R.string.log_in_activity_action_cancel),
                                     color = MaterialTheme.colors.secondaryVariant,
                                     onClick = {
-                                        navController.navigate(NavigationDestination.WelcomeActivity)
+                                        navController.navigate(NavigationDestination.WelcomeView)
                                     }
                                 )
                             }
@@ -178,7 +178,7 @@ fun LogInView(
                                             passwordValue.value,
                                             context,
                                             onSuccess = {
-                                                navController.navigate(NavigationDestination.ProductivityActivity)
+                                                navController.navigate(NavigationDestination.ProductivityView)
                                             },
                                             onFailure = {
                                                 snackbarIconDescription.value =
