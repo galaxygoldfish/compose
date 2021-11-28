@@ -208,9 +208,11 @@ fun TaskActionBar(
             Checkbox(
                 checked = viewModel.taskCompletionState.value,
                 onCheckedChange = {
-                    FirebaseDocument().updateTaskCompletion(
+                    FirebaseDocument().updateSpecificValue(
+                        key = "COMPLETE",
                         newValue = it,
-                        taskID = viewModel.currentDocumentID.value!!
+                        documentID = viewModel.currentDocumentID.value,
+                        documentType = DocumentType.TASK
                     )
                     viewModel.taskCompletionState.value = it
                 },

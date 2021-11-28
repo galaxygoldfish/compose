@@ -22,5 +22,5 @@ package com.compose.app.android.model
  * @see FirebaseDocument
  */
 enum class DocumentType {
-    NOTE, TASK
+    NOTE, TASK, PREFERENCE
 }

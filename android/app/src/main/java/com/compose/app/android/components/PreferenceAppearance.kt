@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.theme.IconBackArrow
 import com.compose.app.android.theme.currentAppThemeState
-import com.compose.app.android.utilities.getDefaultPreferences
+import com.compose.app.android.utilities.getCloudPreferences
 
 /**
  * "Link preference" used only on the settings home page,
@@ -132,9 +132,9 @@ fun Context.SwitchPreference(
     changeState: MutableState<Boolean>,
     key: String
 ) {
-    val dataStore = this.getDefaultPreferences()
+    val cloudPreferences = this.getCloudPreferences()
     val onClickAction = { newVal: Boolean ->
-        dataStore.edit().putBoolean(key, newVal).commit()
+        cloudPreferences.putBoolean(key, newVal)
         onAction.invoke(newVal)
     }
     Row(

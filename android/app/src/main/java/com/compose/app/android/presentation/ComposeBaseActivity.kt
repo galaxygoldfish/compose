@@ -39,7 +39,7 @@ import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.theme.currentAppThemeState
-import com.compose.app.android.utilities.getDefaultPreferences
+import com.compose.app.android.utilities.getCloudPreferences
 import com.compose.app.android.view.*
 import com.compose.app.android.view.settings.*
 import com.compose.app.android.viewmodel.*
@@ -86,7 +86,8 @@ class ComposeBaseActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val preferences = getDefaultPreferences()
+        val preferences = getCloudPreferences()
+        preferences.synchronizeLocal()
         currentAppThemeState.value = preferences.getBoolean("STATE_DARK_MODE", false)
 
         setTheme(

@@ -22,6 +22,7 @@ import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -34,8 +35,10 @@ class FirebaseDocument {
 
     private val userdataBasePath = firebaseFirestore.collection("USERDATA")
         .document(firebaseAuth.currentUser!!.uid)
-    private val storageDocumentPath = firebaseFirestore.collection("METADATA").document("USERS")
-        .collection(firebaseAuth.currentUser!!.uid).document("QUOTA-MONITOR")
+    private val userMetadataBase = Firebase.firestore.collection("METADATA").document("USERS")
+        .collection(Firebase.auth.currentUser!!.uid)
+    private val storageDocumentPath = userMetadataBase.document("QUOTA-MONITOR")
+    private val preferenceDocumentPath = userMetadataBase.document("PREFERENCES")
 
     /**
      * Fetch all notes in the current user's note folder, updating
@@ -111,6 +114,19 @@ class FirebaseDocument {
         return completableToken.await()
     }
 
+    suspend fun getPreferenceMap() : Map<String, Any> {
+        val completableToken = CompletableDeferred<Map<String, Any>>()
+        preferenceDocumentPath.get()
+            .addOnSuccessListener { document ->
+                document.data?.let {
+                    completableToken.complete(it)
+                }
+            }.addOnFailureListener {
+                completableToken.complete(mapOf())
+            }
+        return completableToken.await()
+    }
+
     /**
      * Fetch all tasks in the user's current task folder, updating
      * the LiveData value with all the tasks found once they have
@@ -162,23 +178,47 @@ class FirebaseDocument {
     }
 
     /**
-     * Update the state of a task's 'isComplete' value, which
-     * indicates whether the task is done or not.
-     * @param newValue - The new value of the task's complete
-     * state to send to Firebase
-     * @param taskID - The document ID of the task to be updated.
+     * Update a single key-value pair in a firebase document, leaving
+     * all other fields untouched.
+     *
+     * @param key - The key of the item in the map that you wish to
+     * update
+     * @param newValue - The new value to be associated with the key
+     * @param documentID - The ID of the document to update, if not
+     * the preference document
+     * @param documentType - The type of document to update, so that
+     * the method knows which path to look through
      */
-    fun updateTaskCompletion(
-        newValue: Boolean,
-        taskID: String
+    fun updateSpecificValue(
+        key: String,
+        newValue: Any,
+        documentID: String? = "",
+        documentType: DocumentType
     ) {
-        val taskItemPath = userdataBasePath.collection("TASK-DATA").document(taskID)
-        taskItemPath.get().addOnSuccessListener { document ->
-            val documentTemp = document.data!!
-            documentTemp.let {
-                it["COMPLETE"] = newValue
+        var itemPath: DocumentReference?
+        userdataBasePath.apply {
+            itemPath = when (documentType) {
+                DocumentType.NOTE -> collection("NOTE-DATA").document(documentID!!)
+                DocumentType.TASK -> collection("TASK-DATA").document(documentID!!)
+                DocumentType.PREFERENCE -> preferenceDocumentPath
             }
-            taskItemPath.set(documentTemp, SetOptions.merge())
+        }
+        itemPath?.let { path ->
+            path.get().addOnCompleteListener { document ->
+                document.result?.let { it ->
+                    if (it.exists()) {
+                        val documentTemp = it.data
+                        documentTemp.let { map ->
+                            map?.let {
+                                it.set(key, newValue)
+                                path.set(it, SetOptions.merge())
+                            }
+                        }
+                    } else {
+                        path.set(hashMapOf(key to newValue), SetOptions.merge())
+                    }
+                }
+            }
         }
     }
 

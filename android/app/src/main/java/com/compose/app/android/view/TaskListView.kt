@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseDocument
+import com.compose.app.android.model.DocumentType
 import com.compose.app.android.model.TaskDocument
 import com.compose.app.android.theme.IconCalendar
 import com.compose.app.android.theme.IconNotification
@@ -174,7 +175,12 @@ fun TaskListCard(
                 Checkbox(
                     checked = taskCheckboxState.value,
                     onCheckedChange = { checked ->
-                        FirebaseDocument().updateTaskCompletion(checked, item.taskID)
+                        FirebaseDocument().updateSpecificValue(
+                            key = "COMPLETE",
+                            newValue = checked,
+                            documentID = item.taskID,
+                            documentType = DocumentType.TASK
+                        )
                         taskCheckboxState.value = checked
                     },
                     modifier = Modifier.align(Alignment.CenterVertically)

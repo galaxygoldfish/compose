@@ -51,6 +51,7 @@ import com.compose.app.android.model.ExpandableFAB
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
+import com.compose.app.android.utilities.getCloudPreferences
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.viewmodel.ProductivityViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -277,15 +278,11 @@ fun ProfileContextMenu(
                             onClick = {
                                 currentAppThemeState.value = !currentAppThemeState.value
                                 navController.apply {
-                                    context.getDefaultPreferences().edit().apply {
+                                    context.getCloudPreferences().apply {
                                         putBoolean("STATE_DARK_MODE", currentAppThemeState.value)
-                                            .commit()
                                     }
                                     context.startActivity(
-                                        Intent(
-                                            navController.context,
-                                            ComposeBaseActivity::class.java
-                                        )
+                                        Intent(navController.context, ComposeBaseActivity::class.java)
                                     )
                                 }
                             }
