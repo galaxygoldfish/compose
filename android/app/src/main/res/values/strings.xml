@@ -132,6 +132,17 @@
     <string name="settings_customization_theme_subtitle">Use darker backgrounds to save battery.</string>
 
     <string name="settings_account_tag">Account</string>
+    <string name="settings_account_type_temp">Free account</string>
+    <string name="settings_account_storage_header">Storage usage</string>
+    <string name="settings_account_email_header">E-mail address</string>
+    <string name="settings_account_password_header">Password</string>
+    <string name="settings_account_edit_header">Edit details</string>
+    <string name="settings_account_edit_body">Change name and profile picture.</string>
+    <string name="settings_account_log_out_header">Log out</string>
+    <string name="settings_account_log_out_body">Sign out of this device.</string>
+    <string name="settings_account_delete_header">Delete account</string>
+    <string name="settings_account_delete_body">Disable account and remove all associated data.</string>
+
     <string name="settings_security_privacy_tag">Security &amp; Privacy</string>
     <string name="settings_notifications_tag">Notifications</string>
 

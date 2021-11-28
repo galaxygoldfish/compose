@@ -81,6 +81,7 @@ class FirebaseAccount {
                             sharedPreferences.edit().apply {
                                 putString("IDENTITY_USER_NAME_FIRST", it["FIRST-NAME"] as String?)
                                 putString("IDENTITY_USER_NAME_LAST", it["LAST-NAME"] as String?)
+                                putString("IDENTITY_USER_AUTHENTICATOR", password)
                             }.apply()
                             completableToken.complete(true)
                         } else {
@@ -137,6 +138,7 @@ class FirebaseAccount {
                                     sharedPreferences.edit().apply {
                                         putString("IDENTITY_USER_NAME_FIRST", firstName)
                                         putString("IDENTITY_USER_NAME_LAST", lastName)
+                                        putString("IDENTITY_USER_AUTHENTICATOR", password)
                                     }.apply()
                                     if (uploadNewProfileImage(profileImage, context)) {
                                         completableToken.complete("true")

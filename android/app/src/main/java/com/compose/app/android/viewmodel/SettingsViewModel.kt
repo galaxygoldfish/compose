@@ -35,6 +35,8 @@ class SettingsViewModel : ViewModel() {
 
     private val asyncScope = CoroutineScope(Dispatchers.IO + Job())
 
+    init { updateUserStorageUsage() }
+
     /**
      * Fetch the latest version of the user's avatar image from
      * Firebase and set the local image to the newest one.

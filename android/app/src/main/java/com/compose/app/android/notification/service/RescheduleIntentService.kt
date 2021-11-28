@@ -18,12 +18,9 @@ package com.compose.app.android.notification.service
 
 import android.app.IntentService
 import android.content.Intent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.ExperimentalMaterialApi
+import android.util.Log
 import com.compose.app.android.database.NotifyRepository
 import com.compose.app.android.notification.TaskNotificationManager
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,6 +28,7 @@ import kotlinx.coroutines.launch
 class RescheduleIntentService : IntentService("Compose Notification Rescheduler") {
 
     override fun onHandleIntent(intent: Intent?) {
+        Log.e("COMPOSE", "RescheduleIntentService#onHandleIntent")
         val context = this
         CoroutineScope(Dispatchers.IO).launch {
             val notificationList = NotifyRepository.getStoredNotifications(context)

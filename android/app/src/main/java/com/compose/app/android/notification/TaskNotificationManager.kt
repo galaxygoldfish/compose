@@ -26,17 +26,13 @@ import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.ui.ExperimentalComposeUiApi
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.compose.app.android.R
 import com.compose.app.android.database.NotifyRepository
 import com.compose.app.android.notification.receiver.NotificationReceiver
 import com.compose.app.android.presentation.ComposeBaseActivity
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -69,6 +65,7 @@ class TaskNotificationManager {
             content: String,
             timeUnix: Long
         ) {
+            Log.e("COMPOSE", "TaskNotificationManager#scheduleTaskNotification")
             val notifyIntent = Intent(context, NotificationReceiver::class.java).apply {
                 putExtra("SERVICE_EXTRA_ID", taskID)
                 putExtra("SERVICE_EXTRA_TITLE", title)
@@ -104,13 +101,13 @@ class TaskNotificationManager {
          * @param taskID - The ID of the task, to be used when clicking on
          * the notification to open the task editor
          */
-        @ExperimentalComposeUiApi
         fun sendTaskNotification(
             context: Context,
             title: String,
             content: String,
             taskID: String
         ) {
+            Log.e("COMPOSE", "TaskNotificationManager#sendTaskNotification")
             val intent = Intent(context, ComposeBaseActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 putExtra("TASK_ID_NOTIFICATION", taskID)
@@ -146,6 +143,7 @@ class TaskNotificationManager {
          * @param context - A context needed to access the system service
          */
         fun createNotificationChannel(description: String, name: String, context: Context) {
+            Log.e("COMPOSE", "TaskNotificationManager#createNotificationChannel")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val importance = NotificationManager.IMPORTANCE_HIGH
                 val channel = NotificationChannel(TASK_CHANNEL_ID, name, importance).apply {

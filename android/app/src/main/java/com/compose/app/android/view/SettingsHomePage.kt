@@ -18,6 +18,7 @@ package com.compose.app.android.view
 
 import android.text.format.Formatter
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -70,7 +71,10 @@ fun SettingsHomePage(
         ) {
             Card(
                 modifier = Modifier
-                    .padding(end = 20.dp, start = 20.dp, top = 15.dp),
+                    .padding(end = 20.dp, start = 20.dp, top = 15.dp)
+                    .clickable {
+                        navController.navigate(NavigationDestination.AccountSettings)
+                    },
                 shape = RoundedCornerShape(10.dp),
                 backgroundColor = MaterialTheme.colors.primaryVariant,
                 elevation = 0.dp

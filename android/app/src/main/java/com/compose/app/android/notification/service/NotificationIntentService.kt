@@ -18,18 +18,14 @@ package com.compose.app.android.notification.service
 
 import android.app.IntentService
 import android.content.Intent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.ui.ExperimentalComposeUiApi
+import android.util.Log
 import com.compose.app.android.R
 import com.compose.app.android.notification.TaskNotificationManager
-import com.google.accompanist.pager.ExperimentalPagerApi
 
 class NotificationIntentService : IntentService("Task Notifications") {
 
-    @ExperimentalComposeUiApi
     override fun onHandleIntent(intent: Intent?) {
+        Log.e("COMPOSE", "NotificationIntentService#onHandleIntent")
         val context = this
         intent?.let { it ->
             val title = it.getStringExtra("NOTIFICATION_EXTRA_TITLE")!!
