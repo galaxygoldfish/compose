@@ -39,10 +39,6 @@ import java.text.SimpleDateFormat
 import java.time.Year
 import java.util.*
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalAnimationApi
-@ExperimentalPagerApi
 class TaskEditorViewModel : ViewModel() {
 
     val titleTextFieldValue = mutableStateOf(TextFieldValue(""))

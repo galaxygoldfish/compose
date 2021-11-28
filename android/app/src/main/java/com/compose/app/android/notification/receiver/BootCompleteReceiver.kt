@@ -25,10 +25,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import com.compose.app.android.notification.service.RescheduleIntentService
 import com.google.accompanist.pager.ExperimentalPagerApi
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalAnimationApi
-@ExperimentalPagerApi
 class BootCompleteReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {

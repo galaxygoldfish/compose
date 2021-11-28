@@ -20,8 +20,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.WindowManager
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -32,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
@@ -53,14 +50,8 @@ import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.rawStringResource
 import com.compose.app.android.viewmodel.CreateAccountViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
 
-@ExperimentalComposeUiApi
-@ExperimentalAnimationApi
 @Composable
-@ExperimentalPagerApi
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 fun CreateAccountView(
     context: Context,
     viewModel: CreateAccountViewModel,

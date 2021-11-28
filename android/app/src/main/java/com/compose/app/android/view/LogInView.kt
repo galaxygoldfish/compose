@@ -46,11 +46,6 @@ import com.compose.app.android.viewmodel.LogInViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
-@ExperimentalComposeUiApi
-@ExperimentalAnimationApi
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
 @Composable
 fun LogInView(
     context: Context,

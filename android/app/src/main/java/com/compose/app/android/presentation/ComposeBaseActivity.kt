@@ -65,11 +65,13 @@ object NavigationDestination {
     const val HelpFeedbackSettings = "helpFeedbackSettings"
 }
 
-@ExperimentalComposeUiApi
-@ExperimentalPagerApi
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
+@OptIn(
+    ExperimentalComposeUiApi::class,
+    ExperimentalPagerApi::class,
+    ExperimentalAnimationApi::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterialApi::class
+)
 class ComposeBaseActivity : ComponentActivity() {
 
     private val createAccountViewModel: CreateAccountViewModel by viewModels()
@@ -139,7 +141,11 @@ class ComposeBaseActivity : ComponentActivity() {
         val animatedEnterSlide: (
         AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> EnterTransition
         ) = { _: NavBackStackEntry, _: NavBackStackEntry ->
-            slideInHorizontally(animationSpec = tween(300))
+            slideInHorizontally(
+                animationSpec = tween(100)
+            ) + fadeIn(
+                animationSpec = tween(100)
+            )
         }
 
         AnimatedNavHost(
@@ -289,6 +295,12 @@ class ComposeBaseActivity : ComponentActivity() {
         // If coming from notification tap action
         intent.getStringExtra("TASK_ID_NOTIFICATION")?.let { idExtra ->
             navigationController.navigate("""${NavigationDestination.TaskEditorView}/$idExtra""")
+        }
+        // If coming from settings - dark theme switch
+        // TODO - Make separate destination that doesn't include fade animation
+        //  to avoid faded parts of ProductivityView from appearing
+        intent.extras?.get("SETTINGS_THEME_APPLY")?.let {
+            navigationController.navigate(NavigationDestination.CustomizationSettings)
         }
     }
 

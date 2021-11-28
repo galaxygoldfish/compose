@@ -42,10 +42,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalAnimationApi
-@ExperimentalPagerApi
 class TaskNotificationManager {
 
     companion object {

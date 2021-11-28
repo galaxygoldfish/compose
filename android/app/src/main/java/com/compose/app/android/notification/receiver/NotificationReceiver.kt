@@ -25,10 +25,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import com.compose.app.android.notification.service.NotificationIntentService
 import com.google.accompanist.pager.ExperimentalPagerApi
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalAnimationApi
-@ExperimentalPagerApi
 class NotificationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {

@@ -16,8 +16,19 @@
  **/
 package com.compose.app.android.view.settings
 
+import android.content.Intent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.compose.app.android.R
+import com.compose.app.android.components.SettingsActionBar
+import com.compose.app.android.components.SwitchPreference
+import com.compose.app.android.presentation.ComposeBaseActivity
+import com.compose.app.android.theme.IconThemeColor
+import com.compose.app.android.theme.currentAppThemeState
 import com.compose.app.android.viewmodel.SettingsViewModel
 
 @Composable
@@ -25,5 +36,26 @@ fun UICustomizationSettings(
     viewModel: SettingsViewModel,
     navController: NavController
 ) {
-
+    Column {
+        SettingsActionBar(
+            title = stringResource(id = R.string.settings_ui_customization_tag),
+            navController = navController
+        )
+        LocalContext.current.apply {
+            SwitchPreference(
+                title = stringResource(id = R.string.settings_customization_theme_title),
+                subtitle = stringResource(id = R.string.settings_customization_theme_subtitle),
+                icon = painterResource(id = IconThemeColor),
+                onAction = {
+                    currentAppThemeState.value = it
+                    startActivity(
+                        Intent(this, ComposeBaseActivity::class.java)
+                            .putExtra("SETTINGS_THEME_APPLY", true)
+                    )
+                },
+                changeState = currentAppThemeState,
+                key = "STATE_DARK_MODE"
+            )
+        }
+    }
 }

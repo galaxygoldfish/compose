@@ -17,8 +17,6 @@
 package com.compose.app.android.view
 
 import android.content.Intent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
@@ -47,15 +45,11 @@ import com.compose.app.android.theme.IconEditPen
 import com.compose.app.android.theme.IconShareMenu
 import com.compose.app.android.theme.IconTrashItem
 import com.compose.app.android.viewmodel.ProductivityViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
 
-@ExperimentalAnimationApi
-@Composable
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
 @ExperimentalMaterialApi
+@Composable
 fun NoteOptionMenu(
     viewModel: ProductivityViewModel,
     navController: NavController,

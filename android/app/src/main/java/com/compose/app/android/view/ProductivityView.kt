@@ -63,12 +63,12 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 
-@ExperimentalComposeUiApi
-@Composable
-@ExperimentalAnimationApi
-@ExperimentalMaterialApi
 @ExperimentalFoundationApi
+@ExperimentalAnimationApi
+@ExperimentalComposeUiApi
 @ExperimentalPagerApi
+@ExperimentalMaterialApi
+@Composable
 fun ProductivityView(
     context: Context,
     viewModel: ProductivityViewModel,
@@ -86,8 +86,7 @@ fun ProductivityView(
 
     val scaffoldState = rememberScaffoldState()
     val systemUiController = rememberSystemUiController()
-    val bottomSheetState =
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val viewPagerState = rememberPagerState(
         pageCount = 2,
         initialPage = 0,

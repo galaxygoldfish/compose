@@ -22,14 +22,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.provider.MediaStore
 import android.util.Log
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,15 +37,11 @@ import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.IconAlert
 import com.compose.app.android.theme.IconPersonSingle
 import com.compose.app.android.utilities.rawStringResource
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalPagerApi
 class CreateAccountViewModel : ViewModel() {
 
     companion object {
@@ -64,8 +56,6 @@ class CreateAccountViewModel : ViewModel() {
      * Opens the device's default gallery app expecting an image
      * as a result.
      */
-    @ExperimentalComposeUiApi
-    @ExperimentalAnimationApi
     fun openGalleryForResult(context: ComposeBaseActivity) {
         val galleryIntent = Intent(Intent.ACTION_GET_CONTENT)
         galleryIntent.type = "image/*"
@@ -76,8 +66,6 @@ class CreateAccountViewModel : ViewModel() {
      * Opens the device's default camera app expecting an image
      * in return.
      */
-    @ExperimentalComposeUiApi
-    @ExperimentalAnimationApi
     fun openCameraForResult(context: ComposeBaseActivity) {
         val pictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         context.startActivityForResult(pictureIntent, CODE_INTENT_CAMERA)
@@ -150,8 +138,6 @@ class CreateAccountViewModel : ViewModel() {
      * @param context - A context needed to parse the Bitmap returned
      * from the gallery
      */
-    @ExperimentalComposeUiApi
-    @ExperimentalAnimationApi
     fun processActivityResult(data: Intent?, requestCode: Int, context: ComposeBaseActivity) {
         data?.let {
             when (requestCode) {

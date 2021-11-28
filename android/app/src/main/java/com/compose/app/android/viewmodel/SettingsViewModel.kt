@@ -40,10 +40,12 @@ class SettingsViewModel : ViewModel() {
      * Firebase and set the local image to the newest one.
      * @param filesDir - App-specific file directory path (context.filesDir)
      */
-    fun updateToNewestAvatar(filesDir: String) {
-        asyncScope.launch {
-            FirebaseAccount().sendProfileImageToFile(filesDir)
-            avatarImageStore.value = BitmapFactory.decodeFile("${filesDir}/avatar.png")
+    fun setAvatarImage(filesDir: String) {
+        if (avatarImageStore.value == null) {
+            asyncScope.launch {
+                FirebaseAccount().sendProfileImageToFile(filesDir)
+                avatarImageStore.value = BitmapFactory.decodeFile("${filesDir}/avatar.png")
+            }
         }
     }
 

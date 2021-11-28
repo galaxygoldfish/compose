@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -45,9 +44,8 @@ import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.viewmodel.ProductivityViewModel
 import kotlinx.coroutines.delay
 
-@ExperimentalAnimationApi
-@ExperimentalMaterialApi
 @ExperimentalFoundationApi
+@ExperimentalAnimationApi
 @Composable
 fun ExperimentalNoteListView(
     viewModel: ProductivityViewModel,
@@ -109,10 +107,9 @@ fun ExperimentalNoteListView(
     }
 }
 
-@ExperimentalAnimationApi
 @ExperimentalFoundationApi
+@ExperimentalAnimationApi
 @Composable
-@ExperimentalMaterialApi
 fun NoteListCard(
     index: Int,
     currentNote: NoteDocument,

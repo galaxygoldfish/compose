@@ -26,10 +26,6 @@ import com.compose.app.android.R
 import com.compose.app.android.notification.TaskNotificationManager
 import com.google.accompanist.pager.ExperimentalPagerApi
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalAnimationApi
-@ExperimentalPagerApi
 class NotificationIntentService : IntentService("Task Notifications") {
 
     @ExperimentalComposeUiApi

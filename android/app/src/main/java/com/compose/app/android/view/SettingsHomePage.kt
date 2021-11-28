@@ -17,26 +17,30 @@
 package com.compose.app.android.view
 
 import android.text.format.Formatter
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.compose.app.android.R
+import com.compose.app.android.components.HomeSettingsItem
+import com.compose.app.android.components.SettingsActionBar
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.getDefaultPreferences
@@ -48,34 +52,22 @@ fun SettingsHomePage(
     navController: NavController
 ) {
     viewModel.apply {
-        updateToNewestAvatar(LocalContext.current.filesDir.path)
+        setAvatarImage(LocalContext.current.filesDir.path)
         updateUserStorageUsage()
     }
     val dataStore = LocalContext.current.getDefaultPreferences()
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        IconButton(
-            onClick = { navController.popBackStack() },
-            modifier = Modifier.padding(start = 10.dp, top = 20.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = IconBackArrow),
-                contentDescription = stringResource(id = R.string.back_button_content_desc),
-                tint = MaterialTheme.colors.onBackground
-            )
-        }
+        SettingsActionBar(
+            title = stringResource(id = R.string.settings_home_page_title),
+            navController = navController
+        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = stringResource(id = R.string.settings_home_page_title),
-                style = MaterialTheme.typography.h3,
-                modifier = Modifier.padding(start = 23.dp),
-                color = MaterialTheme.colors.onBackground
-            )
             Card(
                 modifier = Modifier
                     .padding(end = 20.dp, start = 20.dp, top = 15.dp),
@@ -176,43 +168,5 @@ fun SettingsHomePage(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun HomeSettingsItem(
-    title: String,
-    icon: Painter,
-    background: Color,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick.invoke() }
-            .padding(vertical = 5.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(start = 20.dp, top = 10.dp, bottom = 10.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(background.copy(if (currentAppThemeState.value) 0.9F else 0.5F))
-        ) {
-            Icon(
-                painter = icon,
-                contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(10.dp),
-            )
-        }
-        Text(
-            text = title,
-            style = MaterialTheme.typography.h6,
-            modifier = Modifier.padding(start = 20.dp),
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colors.onBackground
-        )
     }
 }

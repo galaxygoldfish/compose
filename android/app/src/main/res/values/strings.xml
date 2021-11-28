@@ -126,12 +126,19 @@
     <string name="notification_content_format">Your task \"%1$s\" is now due!</string>
 
     <string name="settings_home_page_title">Preferences</string>
+
     <string name="settings_ui_customization_tag">UI &amp; Customization</string>
+    <string name="settings_customization_theme_title">Enable dark theme</string>
+    <string name="settings_customization_theme_subtitle">Use darker backgrounds to save battery.</string>
+
     <string name="settings_account_tag">Account</string>
     <string name="settings_security_privacy_tag">Security &amp; Privacy</string>
     <string name="settings_notifications_tag">Notifications</string>
-    <string name="settings_about_tag">About</string>
+
     <string name="settings_accessibility_tag">Accessibility</string>
     <string name="settings_help_feedback_tag">Help &amp; Feedback</string>
+
+    <string name="settings_about_tag">About app</string>
+    <string name="settings_about_version_format">version %1$s</string>
 
 </resources>

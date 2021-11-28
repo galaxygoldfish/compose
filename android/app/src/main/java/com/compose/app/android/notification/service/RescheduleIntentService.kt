@@ -28,10 +28,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@ExperimentalMaterialApi
-@ExperimentalFoundationApi
-@ExperimentalAnimationApi
-@ExperimentalPagerApi
 class RescheduleIntentService : IntentService("Compose Notification Rescheduler") {
 
     override fun onHandleIntent(intent: Intent?) {
