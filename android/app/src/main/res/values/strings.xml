@@ -152,4 +152,9 @@
     <string name="settings_about_tag">About app</string>
     <string name="settings_about_version_format">version %1$s</string>
 
+    <string name="dialog_log_out_header">Sign out</string>
+    <string name="dialog_log_out_body_text">Are you sure that you wish to sign out of your account?</string>
+    <string name="dialog_log_out_button_positive">Log out</string>
+    <string name="dialog_log_out_button_negative">Stay logged in</string>
+
 </resources>

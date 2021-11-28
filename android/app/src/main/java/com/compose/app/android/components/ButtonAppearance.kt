@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.compose.app.android.model.ExpandableFAB
@@ -52,6 +53,7 @@ fun FullWidthButton(
     text: String,
     icon: Painter,
     contentDescription: String,
+    textStyle: TextStyle? = TextStyle(),
     color: Color,
     onClick: () -> Unit
 ) {
@@ -73,15 +75,15 @@ fun FullWidthButton(
             Icon(
                 painter = icon,
                 contentDescription = contentDescription,
-                tint = Color.Black
+                tint = MaterialTheme.colors.onBackground
             )
             Text(
                 text = text,
-                style = MaterialTheme.typography.button,
+                style = textStyle ?: MaterialTheme.typography.button,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 1.dp, start = 24.dp),
-                color = Color.Black,
+                color = MaterialTheme.colors.onBackground,
             )
         }
     }

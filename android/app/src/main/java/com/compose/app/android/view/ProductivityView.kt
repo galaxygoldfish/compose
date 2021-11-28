@@ -53,6 +53,7 @@ import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.getCloudPreferences
 import com.compose.app.android.utilities.getDefaultPreferences
+import com.compose.app.android.view.settings.LogOutAccountDialog
 import com.compose.app.android.viewmodel.ProductivityViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -164,6 +165,10 @@ fun ProductivityView(
                             navController = navController,
                             viewModel = viewModel
                         )
+                        LogOutAccountDialog(
+                            navController = navController,
+                            showingDialog = viewModel.showingLogOutDialog
+                        )
                     }
                 }
             }
@@ -268,7 +273,7 @@ fun ProfileContextMenu(
                             contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
                             title = stringResource(id = R.string.profile_context_menu_account_settings_title),
                             onClick = {
-
+                                navController.navigate(NavigationDestination.AccountSettings)
                             }
                         )
                         OptionListItem(
@@ -292,7 +297,10 @@ fun ProfileContextMenu(
                             contentDescription = stringResource(id = R.string.sign_out_content_desc),
                             title = stringResource(id = R.string.profile_context_menu_sign_out_title),
                             onClick = {
-
+                                viewModel.apply {
+                                    showProfileContextDialog.value = false
+                                    showingLogOutDialog.value = true
+                                }
                             }
                         )
                     }

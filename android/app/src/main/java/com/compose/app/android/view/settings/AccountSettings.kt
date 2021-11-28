@@ -17,14 +17,14 @@
 package com.compose.app.android.view.settings
 
 import android.text.format.Formatter
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,15 +37,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.compose.app.android.R
+import com.compose.app.android.components.FullWidthButton
 import com.compose.app.android.components.SettingsActionBar
+import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.viewmodel.SettingsViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
+@ExperimentalAnimationApi
 @Composable
 fun AccountSettings(
     viewModel: SettingsViewModel,
@@ -168,7 +172,7 @@ fun AccountSettings(
             AccountSettingsItem(
                 icon = painterResource(id = IconEditPen),
                 title = stringResource(id = R.string.settings_account_edit_header),
-                onClick = null,
+                onClick = { /** edit account view or dialog? fullscreen dialog? **/},
                 paddingTop = 20.dp
             ) {
                 Text(
@@ -180,7 +184,7 @@ fun AccountSettings(
             AccountSettingsItem(
                 icon = painterResource(id = IconLogIn),
                 title = stringResource(id = R.string.settings_account_log_out_header),
-                onClick = { /** open log out dialog, same as productivity view **/ },
+                onClick = { viewModel.showingLogOutDialog.value = true },
                 paddingTop = 20.dp
             ) {
                 Text(
@@ -202,6 +206,10 @@ fun AccountSettings(
                 )
             }
         }
+        LogOutAccountDialog(
+            navController = navController,
+            showingDialog = viewModel.showingLogOutDialog
+        )
     }
 }
 
@@ -240,6 +248,72 @@ fun AccountSettingsItem(
                     modifier = Modifier.padding(top = 10.dp)
                 )
                 content.invoke()
+            }
+        }
+    }
+}
+
+@ExperimentalAnimationApi
+@Composable
+fun LogOutAccountDialog(
+    navController: NavController,
+    showingDialog: MutableState<Boolean>
+) {
+    AnimatedVisibility(
+        visible = showingDialog.value
+    ) {
+        Dialog(
+            onDismissRequest = { showingDialog.value = false }
+        ) {
+            Column(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colors.primaryVariant)
+            ) {
+                Icon(
+                    painter = painterResource(id = IconPassword),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(top = 20.dp, start = 18.dp)
+                        .size(30.dp),
+                    tint = MaterialTheme.colors.onBackground
+                )
+                Text(
+                    text = stringResource(id = R.string.dialog_log_out_header),
+                    style = MaterialTheme.typography.h4,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(start = 20.dp, top = 5.dp),
+                    color = MaterialTheme.colors.onBackground
+                )
+                Text(
+                    text = stringResource(id = R.string.dialog_log_out_body_text),
+                    modifier = Modifier.padding(start = 20.dp, top = 5.dp, end = 15.dp),
+                    color = MaterialTheme.colors.onBackground
+                )
+                Column(
+                    modifier = Modifier.padding(bottom = 15.dp, top = 20.dp)
+                ) {
+                    LocalContext.current.let { context ->
+                        FullWidthButton(
+                            text = stringResource(id = R.string.dialog_log_out_button_positive),
+                            icon = painterResource(id = IconCheckMark),
+                            contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
+                            color = MaterialTheme.colors.secondaryVariant,
+                            textStyle = MaterialTheme.typography.body2
+                        ) {
+                            FirebaseAccount().signOutUser(context)
+                        }
+                        FullWidthButton(
+                            text = stringResource(id = R.string.dialog_log_out_button_negative),
+                            icon = painterResource(id = IconBackArrow),
+                            contentDescription = stringResource(id = R.string.back_button_content_desc),
+                            color = MaterialTheme.colors.secondaryVariant,
+                            textStyle = MaterialTheme.typography.body2
+                        ) {
+                            showingDialog.value = false
+                        }
+                    }
+                }
             }
         }
     }

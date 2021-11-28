@@ -265,4 +265,8 @@ class FirebaseAccount {
         return completableToken.await()
     }
 
+    fun signOutUser(context: Context) {
+
+    }
+
 }

@@ -33,6 +33,8 @@ class SettingsViewModel : ViewModel() {
     val avatarImageStore: MutableState<Bitmap?> = mutableStateOf(null)
     val userStorageUsage = mutableStateOf(0)
 
+    val showingLogOutDialog = mutableStateOf(false)
+
     private val asyncScope = CoroutineScope(Dispatchers.IO + Job())
 
     init { updateUserStorageUsage() }
