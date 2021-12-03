@@ -55,6 +55,7 @@ fun FullWidthButton(
     contentDescription: String,
     textStyle: TextStyle? = TextStyle(),
     color: Color,
+    contentColor: Color? = LocalContentColor.current,
     onClick: () -> Unit
 ) {
     Button(
@@ -75,7 +76,7 @@ fun FullWidthButton(
             Icon(
                 painter = icon,
                 contentDescription = contentDescription,
-                tint = MaterialTheme.colors.onBackground
+                tint = contentColor!!
             )
             Text(
                 text = text,
@@ -83,7 +84,7 @@ fun FullWidthButton(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 1.dp, start = 24.dp),
-                color = MaterialTheme.colors.onBackground,
+                color = contentColor,
             )
         }
     }

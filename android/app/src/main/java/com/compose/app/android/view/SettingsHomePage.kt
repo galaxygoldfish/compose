@@ -17,13 +17,10 @@
 package com.compose.app.android.view
 
 import android.text.format.Formatter
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -44,6 +41,7 @@ import com.compose.app.android.components.HomeSettingsItem
 import com.compose.app.android.components.SettingsActionBar
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
+import com.compose.app.android.utilities.createSquareImage
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.viewmodel.SettingsViewModel
 
@@ -57,119 +55,122 @@ fun SettingsHomePage(
         updateUserStorageUsage()
     }
     val dataStore = LocalContext.current.getDefaultPreferences()
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        SettingsActionBar(
-            title = stringResource(id = R.string.settings_home_page_title),
-            navController = navController
-        )
+    ComposeTheme {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .background(MaterialTheme.colors.background)
         ) {
-            Card(
+            SettingsActionBar(
+                title = stringResource(id = R.string.settings_home_page_title),
+                navController = navController
+            )
+            Column(
                 modifier = Modifier
-                    .padding(end = 20.dp, start = 20.dp, top = 15.dp)
-                    .clickable {
-                        navController.navigate(NavigationDestination.AccountSettings)
-                    },
-                shape = RoundedCornerShape(10.dp),
-                backgroundColor = MaterialTheme.colors.primaryVariant,
-                elevation = 0.dp
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically
+                Card(
+                    modifier = Modifier
+                        .padding(end = 20.dp, start = 20.dp, top = 15.dp)
+                        .clickable {
+                            navController.navigate(NavigationDestination.AccountSettings)
+                        },
+                    shape = RoundedCornerShape(10.dp),
+                    backgroundColor = MaterialTheme.colors.primaryVariant,
+                    elevation = 0.dp
                 ) {
-                    viewModel.avatarImageStore.value?.let {
-                        Image(
-                            bitmap = it.asImageBitmap(),
-                            contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
-                            modifier = Modifier
-                                .padding(15.dp)
-                                .clip(CircleShape)
-                                .size(80.dp)
-                                .aspectRatio(1F)
-                                .align(Alignment.CenterVertically)
-                        )
-                    }
-                    Column {
-                        dataStore.apply {
-                            Text(
-                                text = """${getString("IDENTITY_USER_NAME_FIRST", "Error")!!} ${
-                                    getString("IDENTITY_USER_NAME_LAST", "Error")
-                                }""",
-                                style = MaterialTheme.typography.h6,
-                                color = MaterialTheme.colors.onBackground
-                            )
-                            LinearProgressIndicator(
-                                progress = (viewModel.userStorageUsage.value / 5000000).toFloat(), // kind of broken lol
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        viewModel.avatarImageStore.value?.let {
+                            Image(
+                                bitmap = it.createSquareImage().asImageBitmap(),
+                                contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
                                 modifier = Modifier
-                                    .padding(end = 20.dp, top = 10.dp, bottom = 6.dp)
-                                    .clip(RoundedCornerShape(10.dp))
+                                    .padding(15.dp)
+                                    .size(80.dp)
+                                    .clip(CircleShape)
+                                    .align(Alignment.CenterVertically)
                             )
-                            Text(
-                                text = String.format(
-                                    stringResource(id = R.string.profile_context_menu_storage_template),
-                                    Formatter.formatFileSize(
-                                        navController.context,
-                                        viewModel.userStorageUsage.value.toLong()
-                                    )
-                                ),
-                                fontSize = 13.sp,
-                                color = MaterialTheme.colors.onBackground.copy(0.7F)
-                            )
+                        }
+                        Column {
+                            dataStore.apply {
+                                Text(
+                                    text = """${getString("IDENTITY_USER_NAME_FIRST", "Error")!!} ${
+                                        getString("IDENTITY_USER_NAME_LAST", "Error")
+                                    }""",
+                                    style = MaterialTheme.typography.h6,
+                                    color = MaterialTheme.colors.onBackground
+                                )
+                                LinearProgressIndicator(
+                                    progress = (viewModel.userStorageUsage.value / 5000000).toFloat(), // kind of broken lol
+                                    modifier = Modifier
+                                        .padding(end = 20.dp, top = 10.dp, bottom = 6.dp)
+                                        .clip(RoundedCornerShape(10.dp))
+                                )
+                                Text(
+                                    text = String.format(
+                                        stringResource(id = R.string.profile_context_menu_storage_template),
+                                        Formatter.formatFileSize(
+                                            navController.context,
+                                            viewModel.userStorageUsage.value.toLong()
+                                        )
+                                    ),
+                                    fontSize = 13.sp,
+                                    color = MaterialTheme.colors.onBackground.copy(0.7F)
+                                )
+                            }
                         }
                     }
                 }
-            }
-            Column(
-                modifier = Modifier.padding(top = 15.dp)
-            ) {
-                HomeSettingsItem(
-                    title = stringResource(id = R.string.settings_ui_customization_tag),
-                    icon = painterResource(id = R.drawable.ic_duotone_theme_color),
-                    background = TextColorRed,
-                    onClick = { navController.navigate(NavigationDestination.CustomizationSettings) }
-                )
-                HomeSettingsItem(
-                    title = stringResource(id = R.string.settings_account_tag),
-                    icon = painterResource(id = R.drawable.ic_duotone_user_group),
-                    background = TextColorPurple,
-                    onClick = { navController.navigate(NavigationDestination.AccountSettings) }
-                )
-                HomeSettingsItem(
-                    title = stringResource(id = R.string.settings_security_privacy_tag),
-                    icon = painterResource(id = R.drawable.ic_duotone_lock_closed),
-                    background = TextColorBlue,
-                    onClick = { navController.navigate(NavigationDestination.SecurityPrivacySettings) }
-                )
-                HomeSettingsItem(
-                    title = stringResource(id = R.string.settings_notifications_tag),
-                    icon = painterResource(id = R.drawable.ic_duotone_notification_bell),
-                    background = TextColorGreen,
-                    onClick = { navController.navigate(NavigationDestination.NotificationSettings) }
-                )
-                HomeSettingsItem(
-                    title = stringResource(id = R.string.settings_about_tag),
-                    icon = painterResource(id = R.drawable.ic_duotone_info_circle),
-                    background = TextColorYellow,
-                    onClick = { navController.navigate(NavigationDestination.AboutAppSettings) }
-                )
-                HomeSettingsItem(
-                    title = stringResource(id = R.string.settings_accessibility_tag),
-                    icon = painterResource(id = R.drawable.ic_duotone_eye_open),
-                    background = TextColorRed,
-                    onClick = { navController.navigate(NavigationDestination.AccessibilitySettings) }
-                )
-                HomeSettingsItem(
-                    title = stringResource(id = R.string.settings_help_feedback_tag),
-                    icon = painterResource(id = R.drawable.ic_duotone_flag),
-                    background = TextColorPurple,
-                    onClick = { navController.navigate(NavigationDestination.HelpFeedbackSettings) }
-                )
+                Column(
+                    modifier = Modifier.padding(top = 15.dp)
+                ) {
+                    HomeSettingsItem(
+                        title = stringResource(id = R.string.settings_ui_customization_tag),
+                        icon = painterResource(id = R.drawable.ic_duotone_theme_color),
+                        background = TextColorRed,
+                        onClick = { navController.navigate(NavigationDestination.CustomizationSettings) }
+                    )
+                    HomeSettingsItem(
+                        title = stringResource(id = R.string.settings_account_tag),
+                        icon = painterResource(id = R.drawable.ic_duotone_user_group),
+                        background = TextColorPurple,
+                        onClick = { navController.navigate(NavigationDestination.AccountSettings) }
+                    )
+                    HomeSettingsItem(
+                        title = stringResource(id = R.string.settings_security_privacy_tag),
+                        icon = painterResource(id = R.drawable.ic_duotone_lock_closed),
+                        background = TextColorBlue,
+                        onClick = { navController.navigate(NavigationDestination.SecurityPrivacySettings) }
+                    )
+                    HomeSettingsItem(
+                        title = stringResource(id = R.string.settings_notifications_tag),
+                        icon = painterResource(id = R.drawable.ic_duotone_notification_bell),
+                        background = TextColorGreen,
+                        onClick = { navController.navigate(NavigationDestination.NotificationSettings) }
+                    )
+                    HomeSettingsItem(
+                        title = stringResource(id = R.string.settings_about_tag),
+                        icon = painterResource(id = R.drawable.ic_duotone_info_circle),
+                        background = TextColorYellow,
+                        onClick = { navController.navigate(NavigationDestination.AboutAppSettings) }
+                    )
+                    HomeSettingsItem(
+                        title = stringResource(id = R.string.settings_accessibility_tag),
+                        icon = painterResource(id = R.drawable.ic_duotone_eye_open),
+                        background = TextColorRed,
+                        onClick = { navController.navigate(NavigationDestination.AccessibilitySettings) }
+                    )
+                    HomeSettingsItem(
+                        title = stringResource(id = R.string.settings_help_feedback_tag),
+                        icon = painterResource(id = R.drawable.ic_duotone_flag),
+                        background = TextColorPurple,
+                        onClick = { navController.navigate(NavigationDestination.HelpFeedbackSettings) }
+                    )
+                }
             }
         }
     }

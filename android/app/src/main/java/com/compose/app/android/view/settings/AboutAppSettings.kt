@@ -17,6 +17,7 @@
 package com.compose.app.android.view.settings
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -31,7 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.compose.app.android.BuildConfig
 import com.compose.app.android.R
+import com.compose.app.android.components.BasePreference
 import com.compose.app.android.components.SettingsActionBar
+import com.compose.app.android.presentation.NavigationDestination
+import com.compose.app.android.theme.IconHelpFeedback
 import com.compose.app.android.viewmodel.SettingsViewModel
 
 @Composable
@@ -39,13 +43,18 @@ fun AboutAppSettings(
     viewModel: SettingsViewModel,
     navController: NavController
 ) {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+    ) {
         SettingsActionBar(
             title = stringResource(id = R.string.settings_about_tag),
             navController = navController
         )
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(start = 20.dp, top = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -78,6 +87,20 @@ fun AboutAppSettings(
                     color = MaterialTheme.colors.onBackground.copy(0.5F)
                 )
             }
+        }
+        Column(
+            modifier = Modifier.padding(top = 25.dp)
+        ) {
+            BasePreference(
+                title = stringResource(id = R.string.settings_about_help_title),
+                icon = painterResource(id = IconHelpFeedback),
+                body = stringResource(id = R.string.settings_about_help_body),
+                onClickAction = {
+                    navController.navigate(NavigationDestination.AccessibilitySettings)
+                }
+            )
+            // rating
+            // link to play store
         }
     }
 }

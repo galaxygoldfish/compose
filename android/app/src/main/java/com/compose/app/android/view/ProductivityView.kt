@@ -51,6 +51,7 @@ import com.compose.app.android.model.ExpandableFAB
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
+import com.compose.app.android.utilities.createSquareImage
 import com.compose.app.android.utilities.getCloudPreferences
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.view.settings.LogOutAccountDialog
@@ -245,13 +246,12 @@ fun ProfileContextMenu(
                         }
                         viewModel.avatarImageStore.value?.let {
                             Image(
-                                bitmap = it.asImageBitmap(),
+                                bitmap = it.createSquareImage().asImageBitmap(),
                                 contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
                                 modifier = Modifier
                                     .padding(end = 20.dp, top = 20.dp)
-                                    .clip(CircleShape)
                                     .size(90.dp)
-                                    .aspectRatio(1F)
+                                    .clip(CircleShape)
                                     .align(Alignment.CenterVertically)
                             )
                         }
@@ -406,13 +406,12 @@ fun TopAppBar(
             }
             viewModel.avatarImageStore.value?.let {
                 Image(
-                    bitmap = it.asImageBitmap(),
+                    bitmap = it.createSquareImage().asImageBitmap(),
                     contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
                     modifier = Modifier
                         .padding(end = 16.dp)
-                        .clip(CircleShape)
                         .size(50.dp)
-                        .aspectRatio(1F)
+                        .clip(CircleShape)
                         .align(Alignment.CenterVertically)
                         .clickable {
                             viewModel.showProfileContextDialog.value = true

@@ -19,15 +19,12 @@ package com.compose.app.android.view
 import android.content.Context
 import android.view.WindowManager
 import androidx.annotation.StringRes
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,7 +40,6 @@ import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.rawStringResource
 import com.compose.app.android.viewmodel.LogInViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
 
 @Composable
@@ -58,8 +54,7 @@ fun LogInView(
     val scaffoldState = rememberScaffoldState()
 
     val snackbarIconState = remember { mutableStateOf(IconAlert) }
-    val snackbarIconDescription =
-        remember { mutableStateOf(context.rawStringResource(R.string.warning_icon_content_desc)) }
+    val snackbarIconDescription = remember { mutableStateOf(context.rawStringResource(R.string.warning_icon_content_desc)) }
 
     fun showSnackbar(@StringRes stringID: Int) {
         viewModel.asyncScope.launch {
@@ -169,22 +164,23 @@ fun LogInView(
                                             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
                                         )
                                         viewModel.attemptSignIn(
-                                            emailValue.value,
-                                            passwordValue.value,
-                                            context,
+                                            emailState = emailValue.value,
+                                            passwordState = passwordValue.value,
+                                            context = context,
                                             onSuccess = {
                                                 navController.navigate(NavigationDestination.ProductivityView)
                                             },
                                             onFailure = {
-                                                snackbarIconDescription.value =
-                                                    context.rawStringResource(R.string.warning_icon_content_desc)
+                                                snackbarIconDescription.value = context.rawStringResource(R.string.warning_icon_content_desc)
                                                 snackbarIconState.value = IconAlert
+                                                scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                                                 showSnackbar(R.string.log_in_failure_message)
                                             },
                                             onPreLaunch = {
                                                 snackbarIconDescription.value =
                                                     context.rawStringResource(R.string.account_tree_icon_content_desc)
                                                 snackbarIconState.value = IconPersonSingle
+                                                scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                                                 showSnackbar(R.string.log_in_progress_message)
                                             }
                                         )

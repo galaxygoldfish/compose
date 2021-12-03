@@ -16,11 +16,14 @@
  **/
 package com.compose.app.android.view.settings
 
+import android.content.Context
+import android.content.Intent
 import android.text.format.Formatter
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -41,9 +44,13 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.FullWidthButton
+import com.compose.app.android.components.IconOnlyButton
+import com.compose.app.android.components.LargeTextInputField
 import com.compose.app.android.components.SettingsActionBar
 import com.compose.app.android.firebase.FirebaseAccount
+import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.theme.*
+import com.compose.app.android.utilities.createSquareImage
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.viewmodel.SettingsViewModel
 import com.google.firebase.auth.ktx.auth
@@ -58,7 +65,11 @@ fun AccountSettings(
     if (viewModel.avatarImageStore.value == null) {
         viewModel.setAvatarImage(LocalContext.current.filesDir.path)
     }
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+    ) {
         SettingsActionBar(
             title = stringResource(id = R.string.settings_account_tag),
             navController = navController
@@ -68,11 +79,12 @@ fun AccountSettings(
         ) {
             viewModel.avatarImageStore.value?.let {
                 Image(
-                    bitmap = it.asImageBitmap(),
+                    bitmap = it.createSquareImage().asImageBitmap(),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(start = 20.dp, top = 30.dp)
                         .size(110.dp)
+                        .clip(CircleShape)
                 )
                 Column(
                     modifier = Modifier.padding(start = 30.dp, top = 10.dp),
@@ -172,7 +184,9 @@ fun AccountSettings(
             AccountSettingsItem(
                 icon = painterResource(id = IconEditPen),
                 title = stringResource(id = R.string.settings_account_edit_header),
-                onClick = { /** edit account view or dialog? fullscreen dialog? **/},
+                onClick = {
+                    viewModel.showingEditAccountDialog.value = true
+                },
                 paddingTop = 20.dp
             ) {
                 Text(
@@ -209,6 +223,10 @@ fun AccountSettings(
         LogOutAccountDialog(
             navController = navController,
             showingDialog = viewModel.showingLogOutDialog
+        )
+        EditAccountDetailsDialog(
+            viewModel = viewModel,
+            context = navController.context
         )
     }
 }
@@ -268,7 +286,13 @@ fun LogOutAccountDialog(
             Column(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colors.primaryVariant)
+                    .background(
+                        if (currentAppThemeState.value) {
+                            MaterialTheme.colors.primaryVariant
+                        } else {
+                            MaterialTheme.colors.background
+                        }
+                    )
             ) {
                 Icon(
                     painter = painterResource(id = IconPassword),
@@ -298,22 +322,168 @@ fun LogOutAccountDialog(
                             text = stringResource(id = R.string.dialog_log_out_button_positive),
                             icon = painterResource(id = IconCheckMark),
                             contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
-                            color = MaterialTheme.colors.secondaryVariant,
-                            textStyle = MaterialTheme.typography.body2
+                            color = MaterialTheme.colors.secondaryVariant.let {
+                                if (currentAppThemeState.value) it else it.copy(1.0F)
+                            },
+                            textStyle = MaterialTheme.typography.body2,
+                            contentColor = MaterialTheme.colors.onBackground
                         ) {
                             FirebaseAccount().signOutUser(context)
-                        }
-                        FullWidthButton(
-                            text = stringResource(id = R.string.dialog_log_out_button_negative),
-                            icon = painterResource(id = IconBackArrow),
-                            contentDescription = stringResource(id = R.string.back_button_content_desc),
-                            color = MaterialTheme.colors.secondaryVariant,
-                            textStyle = MaterialTheme.typography.body2
-                        ) {
-                            showingDialog.value = false
+                            context.startActivity(
+                                Intent(context, ComposeBaseActivity::class.java)
+                            )
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@ExperimentalAnimationApi
+@Composable
+fun EditAccountDetailsDialog(
+    viewModel: SettingsViewModel,
+    context: Context
+) {
+    viewModel.updateUserNameDetails(LocalContext.current)
+    AnimatedVisibility(
+        visible = viewModel.showingEditAccountDialog.value
+    ) {
+        Dialog(
+            onDismissRequest = {
+                viewModel.showingEditAccountDialog.value = false
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colors.primaryVariant)
+            ) {
+                Icon(
+                    painter = painterResource(id = IconEditPen),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(top = 20.dp, start = 18.dp)
+                        .size(30.dp),
+                    tint = MaterialTheme.colors.onBackground
+                )
+                Text(
+                    text = stringResource(id = R.string.settings_account_edit_header),
+                    style = MaterialTheme.typography.h4,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(start = 20.dp, top = 5.dp),
+                    color = MaterialTheme.colors.onBackground
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    viewModel.tempAvatarImage.value?.let {
+                        Image(
+                            bitmap = it.createSquareImage().asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(
+                                    start = 20.dp,
+                                    top = 30.dp,
+                                    end = 20.dp,
+                                    bottom = 20.dp
+                                )
+                                .size(110.dp)
+                                .clip(CircleShape)
+                        )
+                        IconOnlyButton(
+                            icon = painterResource(id = IconCamera),
+                            contentDescription = stringResource(id = R.string.file_folder_content_desc),
+                            onClick = {
+                                viewModel.openCameraForResult(context)
+                            },
+                        )
+                        IconOnlyButton(
+                            icon = painterResource(id = IconGallery),
+                            contentDescription = stringResource(id = R.string.camera_icon_content_desc),
+                            onClick = {
+                                viewModel.openGalleryForResult(context)
+                            }
+                        )
+                    }
+                }
+                LargeTextInputField(
+                    text = viewModel.tempFirstName.value,
+                    hint = stringResource(id = R.string.settings_account_edit_name_hint),
+                    valueCallback = {
+                        viewModel.tempFirstName.value = it
+                    },
+                    icon = painterResource(id = IconPersonSingle),
+                    contentDescription = stringResource(id = R.string.person_icon_content_desc),
+                    contentColor = MaterialTheme.colors.onBackground
+                )
+                LargeTextInputField(
+                    text = viewModel.tempLastName.value,
+                    hint = stringResource(id = R.string.settings_account_edit_surname_hint),
+                    valueCallback = {
+                        viewModel.tempLastName.value = it
+                    },
+                    icon = painterResource(id = IconPersonGroup),
+                    contentDescription = stringResource(id = R.string.person_icon_content_desc),
+                    contentColor = MaterialTheme.colors.onBackground
+                )
+                Spacer(modifier = Modifier.padding(top = 15.dp))
+                LocalContext.current.apply {
+                    FullWidthButton(
+                        text = stringResource(id = R.string.settings_account_edit_positive_button),
+                        icon = painterResource(id = IconCheckMark),
+                        contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
+                        color = MaterialTheme.colors.secondaryVariant,
+                        textStyle = MaterialTheme.typography.body2,
+                        contentColor = MaterialTheme.colors.onBackground
+                    ) {
+                        viewModel.apply {
+                            updateAccountEdit(context)
+                            setAvatarImage(filesDir.path, true)
+                            showingEditAccountDialog.value = false
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.padding(bottom = 10.dp))
+            }
+        }
+    }
+}
+
+@ExperimentalAnimationApi
+@Composable
+fun PasswordChangeDialog(
+    viewModel: SettingsViewModel
+) {
+    AnimatedVisibility(
+        visible = viewModel.showingEditAccountDialog.value
+    ) {
+        Dialog(
+            onDismissRequest = {
+                viewModel.showingEditAccountDialog.value = false
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colors.background)
+            ) {
+                Icon(
+                    painter = painterResource(id = IconPassword),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(top = 20.dp, start = 18.dp)
+                        .size(30.dp),
+                    tint = MaterialTheme.colors.onBackground
+                )
+                Text(
+                    text = stringResource(id = R.string.settings_account_password_edit_title),
+                    style = MaterialTheme.typography.h4,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(start = 20.dp, top = 5.dp),
+                    color = MaterialTheme.colors.onBackground
+                )
             }
         }
     }

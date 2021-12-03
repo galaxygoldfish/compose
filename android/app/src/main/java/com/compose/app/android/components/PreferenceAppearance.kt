@@ -109,6 +109,60 @@ fun SettingsActionBar(
 }
 
 /**
+ * Basic informational preference with only title and body
+ * text accompanied with an icon, no changeable state. This
+ * is usually used to link to a dialog or other screen.
+ *
+ * @param title - The main text to be shown on the preference.
+ * @param body - The text to be displayed below the title, used
+ * as a description of the preference.
+ * @param icon - The icon to be shown to the left of the title and
+ * body.
+ * @param onClickAction - Code block to be invoked when the
+ * preference is clicked.
+ */
+@Composable
+fun BasePreference(
+    title: String,
+    icon: Painter,
+    body: String,
+    onClickAction: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClickAction.invoke() }
+            .padding(end = 20.dp)
+    ) {
+        Icon(
+            painter = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colors.onBackground,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(start = 20.dp)
+        )
+        Column(
+            modifier = Modifier.padding(start = 20.dp)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.body1,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colors.onBackground,
+                modifier = Modifier.padding(top = 15.dp)
+            )
+            Text(
+                text = body,
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.onBackground.copy(0.7F),
+                modifier = Modifier.padding(bottom = 15.dp)
+            )
+        }
+    }
+}
+
+/**
  * Basic switch preference with icon, title and subtitle. Must
  * be called with context or in an apply block with context to
  * access SharedPreferences.

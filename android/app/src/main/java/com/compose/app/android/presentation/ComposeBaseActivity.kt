@@ -47,6 +47,8 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 object NavigationDestination {
     const val WelcomeView = "welcome"
@@ -86,21 +88,27 @@ class ComposeBaseActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val preferences = getCloudPreferences()
-        preferences.synchronizeLocal()
-        currentAppThemeState.value = preferences.getBoolean("STATE_DARK_MODE", false)
+        if (Firebase.auth.currentUser != null) {
 
-        setTheme(
-            if (currentAppThemeState.value) {
-                window.statusBarColor = resources.getColor(R.color.black)
-                R.style.Theme_Compose_Dark
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            val preferences = getCloudPreferences()
+            preferences.synchronizeLocal()
+
+            FirebaseAccount().updateLocalMetadata(this)
+
+            currentAppThemeState.value = preferences.getBoolean("STATE_DARK_MODE", false)
+
+            setTheme(
+                if (currentAppThemeState.value) {
+                    window.statusBarColor = resources.getColor(R.color.black)
+                    R.style.Theme_Compose_Dark
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                    }
+                    R.style.Theme_Compose_Light
                 }
-                R.style.Theme_Compose_Light
-            }
-        )
+            )
+        }
 
         setContent {
             ComposeTheme {
@@ -139,13 +147,18 @@ class ComposeBaseActivity : ComponentActivity() {
                 animationSpec = tween(300)
             )
         }
-        val animatedEnterSlide: (
-        AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> EnterTransition
+        val animatedSlideRight: (
+            AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> EnterTransition
         ) = { _: NavBackStackEntry, _: NavBackStackEntry ->
-            slideInHorizontally(
-                animationSpec = tween(100)
-            ) + fadeIn(
-                animationSpec = tween(100)
+            slideIntoContainer(
+                towards = AnimatedContentScope.SlideDirection.Right
+            )
+        }
+        val animatedSlideLeft: (
+            AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> ExitTransition
+        ) = { _: NavBackStackEntry, _: NavBackStackEntry ->
+            slideOutOfContainer(
+                towards = AnimatedContentScope.SlideDirection.Left
             )
         }
 
@@ -213,8 +226,8 @@ class ComposeBaseActivity : ComponentActivity() {
                  */
                 composable(
                     route = NavigationDestination.SettingsViewHome,
-                    enterTransition = animatedEnterSlide,
-                    exitTransition = animatedExitSlide
+                    enterTransition = animatedSlideRight,
+                    exitTransition = animatedSlideLeft
                 ) {
                     SettingsHomePage(
                         viewModel = settingsViewModel,
@@ -223,8 +236,8 @@ class ComposeBaseActivity : ComponentActivity() {
                 }
                 composable(
                     route = NavigationDestination.CustomizationSettings,
-                    enterTransition = animatedEnterSlide,
-                    exitTransition = animatedExitSlide
+                    enterTransition = animatedSlideRight,
+                    exitTransition = animatedSlideLeft
                 ) {
                     UICustomizationSettings(
                         viewModel = settingsViewModel,
@@ -233,8 +246,8 @@ class ComposeBaseActivity : ComponentActivity() {
                 }
                 composable(
                     route = NavigationDestination.AccountSettings,
-                    enterTransition = animatedEnterSlide,
-                    exitTransition = animatedExitSlide
+                    enterTransition = animatedSlideRight,
+                    exitTransition = animatedSlideLeft
                 ) {
                     AccountSettings(
                         viewModel = settingsViewModel,
@@ -243,8 +256,8 @@ class ComposeBaseActivity : ComponentActivity() {
                 }
                 composable(
                     route = NavigationDestination.SecurityPrivacySettings,
-                    enterTransition = animatedEnterSlide,
-                    exitTransition = animatedExitSlide
+                    enterTransition = animatedSlideRight,
+                    exitTransition = animatedSlideLeft
                 ) {
                     SecurityPrivacySettings(
                         viewModel = settingsViewModel,
@@ -253,8 +266,8 @@ class ComposeBaseActivity : ComponentActivity() {
                 }
                 composable(
                     route = NavigationDestination.NotificationSettings,
-                    enterTransition = animatedEnterSlide,
-                    exitTransition = animatedExitSlide
+                    enterTransition = animatedSlideRight,
+                    exitTransition = animatedSlideLeft
                 ) {
                     NotificationSettings(
                         viewModel = settingsViewModel,
@@ -263,8 +276,8 @@ class ComposeBaseActivity : ComponentActivity() {
                 }
                 composable(
                     route = NavigationDestination.AboutAppSettings,
-                    enterTransition = animatedEnterSlide,
-                    exitTransition = animatedExitSlide
+                    enterTransition = animatedSlideRight,
+                    exitTransition = animatedSlideLeft
                 ) {
                     AboutAppSettings(
                         viewModel = settingsViewModel,
@@ -273,18 +286,18 @@ class ComposeBaseActivity : ComponentActivity() {
                 }
                 composable(
                     route = NavigationDestination.AccessibilitySettings,
-                    enterTransition = animatedEnterSlide,
-                    exitTransition = animatedExitSlide
+                    enterTransition = animatedSlideRight,
+                    exitTransition = animatedSlideLeft
                 ) {
-                    UICustomizationSettings(
+                    AccessibilitySettings(
                         viewModel = settingsViewModel,
                         navController = navigationController
                     )
                 }
                 composable(
                     route = NavigationDestination.HelpFeedbackSettings,
-                    enterTransition = animatedEnterSlide,
-                    exitTransition = animatedExitSlide
+                    enterTransition = animatedSlideRight,
+                    exitTransition = animatedSlideLeft
                 ) {
                     HelpFeedbackSettings(
                         viewModel = settingsViewModel,
@@ -324,7 +337,14 @@ class ComposeBaseActivity : ComponentActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            createAccountViewModel.processActivityResult(data, requestCode, this)
+            when {
+                (requestCode == 1 || requestCode == 2) -> {
+                    createAccountViewModel.processActivityResult(data, requestCode, this)
+                }
+                (requestCode == 3 || requestCode == 4) -> {
+                    settingsViewModel.onActivityResult(data, requestCode, this)
+                }
+            }
         }
     }
 

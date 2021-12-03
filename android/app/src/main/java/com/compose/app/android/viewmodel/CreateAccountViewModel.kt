@@ -37,6 +37,8 @@ import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.IconAlert
 import com.compose.app.android.theme.IconPersonSingle
 import com.compose.app.android.utilities.rawStringResource
+import com.compose.app.android.viewmodel.CreateAccountViewModel.CreateAccountRequestCode.CODE_INTENT_CAMERA
+import com.compose.app.android.viewmodel.CreateAccountViewModel.CreateAccountRequestCode.CODE_INTENT_GALLERY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -44,7 +46,7 @@ import kotlinx.coroutines.launch
 
 class CreateAccountViewModel : ViewModel() {
 
-    companion object {
+    object CreateAccountRequestCode {
         const val CODE_INTENT_GALLERY = 1
         const val CODE_INTENT_CAMERA = 2
     }

@@ -22,6 +22,7 @@ import android.util.Log
 import android.util.Patterns
 import androidx.core.net.toUri
 import com.compose.app.android.R
+import com.compose.app.android.utilities.getCloudPreferences
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.utilities.rawStringResource
 import com.google.firebase.auth.FirebaseAuth
@@ -83,6 +84,7 @@ class FirebaseAccount {
                                 putString("IDENTITY_USER_NAME_LAST", it["LAST-NAME"] as String?)
                                 putString("IDENTITY_USER_AUTHENTICATOR", password)
                             }.apply()
+                            context.getCloudPreferences().synchronizeLocal()
                             completableToken.complete(true)
                         } else {
                             firebaseAuth
@@ -200,7 +202,9 @@ class FirebaseAccount {
         asyncScope.launch {
             val fileOutputStream = FileOutputStream(avatarImageLocal)
             avatarImageLocal.createNewFile()
-            avatarImage.compress(Bitmap.CompressFormat.PNG, 40, fileOutputStream)
+            avatarImage.apply {
+                avatarImage.compress(Bitmap.CompressFormat.PNG, 40, fileOutputStream)
+            }
             fileOutputStream.apply {
                 flush(); close()
             }
@@ -231,6 +235,18 @@ class FirebaseAccount {
             completableToken.complete(errorMap)
         }
         return completableToken.await()
+    }
+
+    fun updateLocalMetadata(context: Context) {
+        CoroutineScope(Dispatchers.IO).launch {
+            getUserMetadata().run {
+                context.getDefaultPreferences().edit().let {
+                    it.putString("IDENITIY_USER_NAME_FIRST", this["FIRST-NAME"] as String?)
+                    it.putString("IDENTITY_USER_NAME_LAST", this["LAST-NAME"] as String?)
+                    it.commit()
+                }
+            }
+        }
     }
 
     /**
@@ -265,8 +281,15 @@ class FirebaseAccount {
         return completableToken.await()
     }
 
+    /**
+     * Clear all local data and sign out from firebase
+     *
+     * @param context - Needed to access SharedPreferences.
+     */
     fun signOutUser(context: Context) {
-
+        val preferences = context.getDefaultPreferences()
+        preferences.edit().clear().commit()
+        firebaseAuth.signOut()
     }
 
 }

@@ -18,6 +18,7 @@ package com.compose.app.android.utilities
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import androidx.annotation.StringRes
 import androidx.preference.PreferenceManager
 
@@ -37,3 +38,10 @@ fun Context.rawStringResource(@StringRes id: Int): String {
 fun Context.getDefaultPreferences(): SharedPreferences {
     return PreferenceManager.getDefaultSharedPreferences(this)
 }
+
+/**
+ * Used to size the profile image into a perfect square to
+ * address the case when the photo uploaded isn't a perfect
+ * square
+ */
+fun Bitmap.createSquareImage() : Bitmap = Bitmap.createScaledBitmap(this, 100, 100, false)

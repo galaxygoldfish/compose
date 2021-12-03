@@ -56,4 +56,5 @@ const val IconCheckMark = R.drawable.ic_duotone_check
 const val IconShareMenu = R.drawable.ic_duotone_share
 const val IconLocation = R.drawable.ic_duotone_location
 
+const val IconHelpFeedback = R.drawable.ic_duotone_flag
 const val IconStorage = R.drawable.ic_duotone_package

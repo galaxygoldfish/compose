@@ -49,14 +49,19 @@ class LogInViewModel : ViewModel() {
      * sign-in to notify the user of it's progress.
      */
     fun attemptSignIn(
-        emailState: TextFieldValue, passwordState: TextFieldValue, context: Context,
-        onFailure: () -> Unit, onSuccess: () -> Unit, onPreLaunch: () -> Unit
+        emailState: TextFieldValue,
+        passwordState: TextFieldValue,
+        context: Context,
+        onFailure: () -> Unit,
+        onSuccess: () -> Unit,
+        onPreLaunch: () -> Unit
     ) {
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
         val synchronousScope = CoroutineScope(Dispatchers.Main + Job())
         asyncScope.launch {
             onPreLaunch.invoke()
-            if (FirebaseAccount().authenticateWithEmail(
+            if (
+                FirebaseAccount().authenticateWithEmail(
                     emailState.text,
                     passwordState.text,
                     context

@@ -62,7 +62,9 @@ fun LargeTextInputField(
     valueCallback: (TextFieldValue) -> Unit,
     icon: Painter,
     contentDescription: String,
-    passwordType: Boolean = false
+    passwordType: Boolean = false,
+    color: Color? = MaterialTheme.colors.secondaryVariant,
+    contentColor: Color? = LocalContentColor.current
 ) {
     var passwordVisibility by remember { mutableStateOf(true) }
     val keyboardType = if (passwordType) {
@@ -79,14 +81,16 @@ fun LargeTextInputField(
             Text(
                 text = hint,
                 style = MaterialTheme.typography.body2,
+                color = MaterialTheme.colors.onBackground
             )
         },
         colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = MaterialTheme.colors.secondaryVariant,
+            backgroundColor = color!!,
             cursorColor = MaterialTheme.colors.onBackground,
-            disabledLabelColor = MaterialTheme.colors.secondaryVariant,
+            disabledLabelColor = color,
             focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
+            unfocusedIndicatorColor = Color.Transparent,
+            textColor = contentColor!!
         ),
         onValueChange = valueCallback,
         shape = RoundedCornerShape(10.dp),

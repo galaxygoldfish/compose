@@ -94,76 +94,78 @@ fun TaskEditorView(
         }
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        scaffoldState = mainScaffoldState,
-        snackbarHost = {
-            mainScaffoldState.snackbarHostState
-        }
-    ) {
-        ModalBottomSheetLayout(
-            sheetState = bottomSheetScaffoldState,
-            sheetContent = {
-                DatePickerSheetView(
-                    viewModel = viewModel
-                )
-            },
-            sheetShape = RoundedCornerShape(8.dp),
-            sheetBackgroundColor = MaterialTheme.colors.primaryVariant,
-            sheetElevation = 0.dp,
-            scrimColor = MaterialTheme.colors.surface.copy(0.5F)
+    ComposeTheme {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            scaffoldState = mainScaffoldState,
+            snackbarHost = {
+                mainScaffoldState.snackbarHostState
+            }
         ) {
-            Column {
-                TaskActionBar(
-                    viewModel = viewModel,
-                    bottomSheetScaffoldState = bottomSheetScaffoldState,
-                    navController = navController
-                )
-                ExperimentalTextOnlyTextField(
-                    textFieldValue = viewModel.titleTextFieldValue.value,
-                    hint = stringResource(id = R.string.task_editor_title_placeholder),
-                    onValueChange = {
-                        viewModel.titleTextFieldValue.value = it
-                    },
-                    textStyle = MaterialTheme.typography.h2,
-                    modifier = Modifier.padding(start = 20.dp, top = 10.dp, end = 20.dp)
-                )
-                Text(
-                    text = if (!viewModel.interactionMonitor.value) {
-                        stringResource(id = R.string.task_editor_due_date_null)
-                    } else {
-                        String.format(
-                            stringResource(id = R.string.task_editor_due_date_template),
-                            "${viewModel.currentMonth.value} ${viewModel.selectedDayIndex.value}, ${viewModel.currentYear.value}",
-                            "${viewModel.selectedHour.value}:${viewModel.selectedMinute.value} ${if (viewModel.selectionAMPM.value == 0) "AM" else "PM"}"
-                        )
-                    },
-                    color = MaterialTheme.colors.onBackground.copy(0.7F),
-                    modifier = Modifier
-                        .padding(start = 21.dp, top = 2.dp)
-                        .clickable {
-                            composeAsync.launch {
-                                bottomSheetScaffoldState.show()
-                            }
-                        }
-                )
-                Row(modifier = Modifier.padding(top = 20.dp)) {
-                    Icon(
-                        painter = painterResource(id = IconLocation),
-                        contentDescription = null,
-                        modifier = Modifier.padding(start = 20.dp)
+            ModalBottomSheetLayout(
+                sheetState = bottomSheetScaffoldState,
+                sheetContent = {
+                    DatePickerSheetView(
+                        viewModel = viewModel
+                    )
+                },
+                sheetShape = RoundedCornerShape(8.dp),
+                sheetBackgroundColor = MaterialTheme.colors.primaryVariant,
+                sheetElevation = 0.dp,
+                scrimColor = MaterialTheme.colors.surface.copy(0.5F)
+            ) {
+                Column {
+                    TaskActionBar(
+                        viewModel = viewModel,
+                        bottomSheetScaffoldState = bottomSheetScaffoldState,
+                        navController = navController
                     )
                     ExperimentalTextOnlyTextField(
-                        textFieldValue = viewModel.locationTextFieldValue.value,
-                        hint = stringResource(id = R.string.task_editor_location_placeholder),
-                        onValueChange = { newValue ->
-                            viewModel.locationTextFieldValue.value = newValue
+                        textFieldValue = viewModel.titleTextFieldValue.value,
+                        hint = stringResource(id = R.string.task_editor_title_placeholder),
+                        onValueChange = {
+                            viewModel.titleTextFieldValue.value = it
                         },
-                        textStyle = MaterialTheme.typography.body1,
-                        modifier = Modifier.padding(start = 15.dp, bottom = 10.dp)
+                        textStyle = MaterialTheme.typography.h2,
+                        modifier = Modifier.padding(start = 20.dp, top = 10.dp, end = 20.dp)
                     )
+                    Text(
+                        text = if (!viewModel.interactionMonitor.value) {
+                            stringResource(id = R.string.task_editor_due_date_null)
+                        } else {
+                            String.format(
+                                stringResource(id = R.string.task_editor_due_date_template),
+                                "${viewModel.currentMonth.value} ${viewModel.selectedDayIndex.value}, ${viewModel.currentYear.value}",
+                                "${viewModel.selectedHour.value}:${viewModel.selectedMinute.value} ${if (viewModel.selectionAMPM.value == 0) "AM" else "PM"}"
+                            )
+                        },
+                        color = MaterialTheme.colors.onBackground.copy(0.7F),
+                        modifier = Modifier
+                            .padding(start = 21.dp, top = 2.dp)
+                            .clickable {
+                                composeAsync.launch {
+                                    bottomSheetScaffoldState.show()
+                                }
+                            }
+                    )
+                    Row(modifier = Modifier.padding(top = 20.dp)) {
+                        Icon(
+                            painter = painterResource(id = IconLocation),
+                            contentDescription = null,
+                            modifier = Modifier.padding(start = 20.dp)
+                        )
+                        ExperimentalTextOnlyTextField(
+                            textFieldValue = viewModel.locationTextFieldValue.value,
+                            hint = stringResource(id = R.string.task_editor_location_placeholder),
+                            onValueChange = { newValue ->
+                                viewModel.locationTextFieldValue.value = newValue
+                            },
+                            textStyle = MaterialTheme.typography.body1,
+                            modifier = Modifier.padding(start = 15.dp, bottom = 10.dp)
+                        )
+                    }
+                    SubTaskListView(viewModel = viewModel)
                 }
-                SubTaskListView(viewModel = viewModel)
             }
         }
     }

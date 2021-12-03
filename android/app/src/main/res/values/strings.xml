@@ -142,6 +142,11 @@
     <string name="settings_account_log_out_body">Sign out of this device.</string>
     <string name="settings_account_delete_header">Delete account</string>
     <string name="settings_account_delete_body">Disable account and remove all associated data.</string>
+    <string name="settings_account_edit_name_hint">Edit name</string>
+    <string name="settings_account_edit_surname_hint">Edit last name</string>
+    <string name="settings_account_edit_positive_button">Save details</string>
+    <string name="settings_account_password_edit_title">Edit password</string>
+    <string name="settings_account_password_edit_positive_button">Save changes</string>
 
     <string name="settings_security_privacy_tag">Security &amp; Privacy</string>
     <string name="settings_notifications_tag">Notifications</string>
@@ -151,6 +156,8 @@
 
     <string name="settings_about_tag">About app</string>
     <string name="settings_about_version_format">version %1$s</string>
+    <string name="settings_about_help_title">Help &amp; feedback</string>
+    <string name="settings_about_help_body">Send feedback, bug reports &amp; learn how to use the app.</string>
 
     <string name="dialog_log_out_header">Sign out</string>
     <string name="dialog_log_out_body_text">Are you sure that you wish to sign out of your account?</string>

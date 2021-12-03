@@ -16,8 +16,21 @@
  **/
 package com.compose.app.android.view.settings
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.compose.app.android.R
+import com.compose.app.android.components.SettingsActionBar
+import com.compose.app.android.components.SwitchPreference
+import com.compose.app.android.theme.IconPassword
+import com.compose.app.android.theme.currentAppThemeState
 import com.compose.app.android.viewmodel.SettingsViewModel
 
 @Composable
@@ -25,5 +38,25 @@ fun SecurityPrivacySettings(
     viewModel: SettingsViewModel,
     navController: NavController
 ) {
-
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+    ) {
+        SettingsActionBar(
+            title = stringResource(id = R.string.settings_security_privacy_tag),
+            navController = navController
+        )
+        LocalContext.current.apply {
+            // W I P
+            SwitchPreference(
+                title = stringResource(id = R.string.settings_customization_theme_title), //
+                subtitle = stringResource(id = R.string.settings_customization_theme_subtitle), //
+                icon = painterResource(id = IconPassword),
+                onAction = {  },
+                changeState = currentAppThemeState,
+                key = "STATE_APP_SECURED"
+            )
+        }
+    }
 }
