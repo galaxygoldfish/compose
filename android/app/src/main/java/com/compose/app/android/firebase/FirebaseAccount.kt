@@ -241,7 +241,7 @@ class FirebaseAccount {
         CoroutineScope(Dispatchers.IO).launch {
             getUserMetadata().run {
                 context.getDefaultPreferences().edit().let {
-                    it.putString("IDENITIY_USER_NAME_FIRST", this["FIRST-NAME"] as String?)
+                    it.putString("IDENTITY_USER_NAME_FIRST", this["FIRST-NAME"] as String?)
                     it.putString("IDENTITY_USER_NAME_LAST", this["LAST-NAME"] as String?)
                     it.commit()
                 }

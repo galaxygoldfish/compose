@@ -21,6 +21,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.provider.MediaStore
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
@@ -32,6 +33,9 @@ import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.utilities.handleProfileImageResult
 import com.compose.app.android.viewmodel.SettingsViewModel.SettingsRequestCode.CAMERA_REQUEST
 import com.compose.app.android.viewmodel.SettingsViewModel.SettingsRequestCode.GALLERY_REQUEST
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -52,11 +56,12 @@ class SettingsViewModel : ViewModel() {
 
     val showingLogOutDialog = mutableStateOf(false)
     val showingEditAccountDialog = mutableStateOf(false)
+    val showingPasswordDialog = mutableStateOf(false)
 
     val tempAvatarImage = mutableStateOf(avatarImageStore.value)
-    val tempFirstName = mutableStateOf(userFirstNameText.value)
-    val tempLastName = mutableStateOf(userLastNameText.value)
-    val tempPassword = mutableStateOf("")
+    val tempFirstName = mutableStateOf(TextFieldValue(""))
+    val tempLastName = mutableStateOf(TextFieldValue(""))
+    val tempPassword = mutableStateOf(TextFieldValue(""))
 
     private val asyncScope = CoroutineScope(Dispatchers.IO + Job())
 
@@ -89,6 +94,9 @@ class SettingsViewModel : ViewModel() {
             )
             tempFirstName.value = userFirstNameText.value
             tempLastName.value = userLastNameText.value
+            tempPassword.value = TextFieldValue(
+                getString("IDENTITY_USER_AUTHENTICATOR", "Error")!!
+            )
         }
     }
 
@@ -131,9 +139,9 @@ class SettingsViewModel : ViewModel() {
     fun updateAccountEdit(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             FirebaseAccount().apply {
-                tempAvatarImage.value?.let {
+                if ((tempAvatarImage.value?.equals(avatarImageStore.value)) == false) {
                     uploadNewProfileImage(
-                        avatarImage = it,
+                        avatarImage = tempAvatarImage.value!!,
                         context = context
                     )
                 }
@@ -141,12 +149,41 @@ class SettingsViewModel : ViewModel() {
                     tempFirstName.value.text.isNotEmpty() &&
                     tempLastName.value.text.isNotEmpty()
                 ) {
+                    Log.e("COMPOSE", "non empty")
                     uploadNewUserMetadata(
                         mapData = hashMapOf(
                             "FIRST-NAME" to tempFirstName.value.text,
                             "LAST-NAME" to tempLastName.value.text
                         )
+                    ).run { Log.e("COMPOSE", this.toString()) }
+                    updateLocalMetadata(context)
+                }
+            }
+        }
+    }
+
+    fun getPasswordHidden(context: Context) : String {
+        val password = context.getDefaultPreferences()
+            .getString("IDENTITY_USER_AUTHENTICATOR", "Error")!!
+        var tempDisplayText = ""
+        repeat(password.length) { tempDisplayText += "*" }
+        return tempDisplayText
+    }
+
+    fun updatePasswordEdit(context: Context) {
+        CoroutineScope(Dispatchers.IO).launch {
+            Firebase.auth.currentUser?.let {
+                context.getDefaultPreferences().apply {
+                    it.reauthenticate(
+                        EmailAuthProvider.getCredential(
+                            it.email!!,
+                            getString("IDENTITY_USER_AUTHENTICATOR", "")!!
+                        )
                     )
+                    it.updatePassword(tempPassword.value.text).addOnSuccessListener {
+                        edit().putString("IDENTITY_USER_AUTHENTICATOR", tempPassword.value.text)
+                            .commit()
+                    }
                 }
             }
         }

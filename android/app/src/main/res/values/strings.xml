@@ -147,6 +147,8 @@
     <string name="settings_account_edit_positive_button">Save details</string>
     <string name="settings_account_password_edit_title">Edit password</string>
     <string name="settings_account_password_edit_positive_button">Save changes</string>
+    <string name="settings_account_email_error_message">E-mail can\'t be changed</string>
+    <string name="settings_account_password_error_message">Password must be longer than 4 characters</string>
 
     <string name="settings_security_privacy_tag">Security &amp; Privacy</string>
     <string name="settings_notifications_tag">Notifications</string>

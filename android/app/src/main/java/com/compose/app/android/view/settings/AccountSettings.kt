@@ -19,6 +19,8 @@ package com.compose.app.android.view.settings
 import android.content.Context
 import android.content.Intent
 import android.text.format.Formatter
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
@@ -144,7 +146,15 @@ fun AccountSettings(
             AccountSettingsItem(
                 icon = painterResource(id = IconEmail),
                 title = stringResource(id = R.string.settings_account_email_header),
-                onClick = null,
+                onClick = {
+                    navController.context.apply {
+                        Toast.makeText(
+                            this,
+                            getString(R.string.settings_account_email_error_message),
+                            LENGTH_LONG
+                        ).show()
+                    }
+                },
                 paddingTop = 20.dp
             ) {
                 Firebase.auth.currentUser?.let { user ->
@@ -158,19 +168,17 @@ fun AccountSettings(
             AccountSettingsItem(
                 icon = painterResource(id = IconPassword),
                 title = stringResource(id = R.string.settings_account_password_header),
-                onClick = { /** open dialog to change password **/ },
+                onClick = {
+                    viewModel.showingPasswordDialog.value = true
+                },
                 paddingTop = 10.dp
             ) {
-                val password = LocalContext.current.getDefaultPreferences()
-                    .getString("IDENTITY_USER_AUTHENTICATOR", "Error")!!
-                var tempDisplayText = ""
-                repeat(password.length) { tempDisplayText += "*" }
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = tempDisplayText,
+                        text = viewModel.getPasswordHidden(LocalContext.current),
                         color = MaterialTheme.colors.onBackground.copy(0.7F),
                         modifier = Modifier.padding(top = 5.dp, bottom = 10.dp)
                     )
@@ -225,6 +233,10 @@ fun AccountSettings(
             showingDialog = viewModel.showingLogOutDialog
         )
         EditAccountDetailsDialog(
+            viewModel = viewModel,
+            context = navController.context
+        )
+        PasswordChangeDialog(
             viewModel = viewModel,
             context = navController.context
         )
@@ -346,7 +358,9 @@ fun EditAccountDetailsDialog(
     viewModel: SettingsViewModel,
     context: Context
 ) {
-    viewModel.updateUserNameDetails(LocalContext.current)
+    if (viewModel.tempFirstName.value.text.isEmpty()) {
+        viewModel.updateUserNameDetails(LocalContext.current)
+    }
     AnimatedVisibility(
         visible = viewModel.showingEditAccountDialog.value
     ) {
@@ -454,20 +468,21 @@ fun EditAccountDetailsDialog(
 @ExperimentalAnimationApi
 @Composable
 fun PasswordChangeDialog(
-    viewModel: SettingsViewModel
+    viewModel: SettingsViewModel,
+    context: Context
 ) {
     AnimatedVisibility(
-        visible = viewModel.showingEditAccountDialog.value
+        visible = viewModel.showingPasswordDialog.value
     ) {
         Dialog(
             onDismissRequest = {
-                viewModel.showingEditAccountDialog.value = false
+                viewModel.showingPasswordDialog.value = false
             }
         ) {
             Column(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colors.background)
+                    .background(MaterialTheme.colors.primaryVariant)
             ) {
                 Icon(
                     painter = painterResource(id = IconPassword),
@@ -481,9 +496,45 @@ fun PasswordChangeDialog(
                     text = stringResource(id = R.string.settings_account_password_edit_title),
                     style = MaterialTheme.typography.h4,
                     fontSize = 20.sp,
-                    modifier = Modifier.padding(start = 20.dp, top = 5.dp),
+                    modifier = Modifier.padding(start = 20.dp, top = 5.dp, bottom = 20.dp),
                     color = MaterialTheme.colors.onBackground
                 )
+                LargeTextInputField(
+                    text = viewModel.tempPassword.value,
+                    hint = stringResource(id = R.string.log_in_activity_password_hint),
+                    valueCallback = {
+                        viewModel.tempPassword.value = it
+                    },
+                    icon = painterResource(id = IconPassword),
+                    contentDescription = stringResource(id = R.string.lock_icon_content_desc),
+                    contentColor = MaterialTheme.colors.onBackground,
+                    passwordType = true
+                )
+                Spacer(modifier = Modifier.padding(top = 15.dp))
+                LocalContext.current.apply {
+                    FullWidthButton(
+                        text = stringResource(id = R.string.settings_account_edit_positive_button),
+                        icon = painterResource(id = IconCheckMark),
+                        contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
+                        color = MaterialTheme.colors.secondaryVariant,
+                        textStyle = MaterialTheme.typography.body2,
+                        contentColor = MaterialTheme.colors.onBackground
+                    ) {
+                        viewModel.apply {
+                            if (tempPassword.value.text.length > 4) {
+                                updatePasswordEdit(context)
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.settings_account_password_error_message),
+                                    LENGTH_LONG
+                                ).show()
+                            }
+                            showingPasswordDialog.value = false
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.padding(bottom = 10.dp))
             }
         }
     }
