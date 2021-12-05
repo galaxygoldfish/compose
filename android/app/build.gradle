@@ -81,5 +81,7 @@ dependencies {
 
     implementation "com.chargemap.compose:numberpicker:0.0.10"
 
+    implementation "com.godaddy.android.colorpicker:compose-color-picker-android:0.2.1"
+
 }
 

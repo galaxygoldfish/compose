@@ -45,10 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.compose.app.android.R
-import com.compose.app.android.components.FullWidthButton
-import com.compose.app.android.components.IconOnlyButton
-import com.compose.app.android.components.LargeTextInputField
-import com.compose.app.android.components.SettingsActionBar
+import com.compose.app.android.components.*
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.theme.*
@@ -358,6 +355,9 @@ fun EditAccountDetailsDialog(
     viewModel: SettingsViewModel,
     context: Context
 ) {
+    val colorCorrectedSecondary = MaterialTheme.colors.secondaryVariant.let {
+        if (currentAppThemeState.value) it else it.copy(1.0F)
+    }
     if (viewModel.tempFirstName.value.text.isEmpty()) {
         viewModel.updateUserNameDetails(LocalContext.current)
     }
@@ -369,26 +369,10 @@ fun EditAccountDetailsDialog(
                 viewModel.showingEditAccountDialog.value = false
             }
         ) {
-            Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colors.primaryVariant)
+            DialogScaffold(
+                text = stringResource(id = R.string.settings_account_edit_header),
+                icon = painterResource(id = IconEditPen)
             ) {
-                Icon(
-                    painter = painterResource(id = IconEditPen),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(top = 20.dp, start = 18.dp)
-                        .size(30.dp),
-                    tint = MaterialTheme.colors.onBackground
-                )
-                Text(
-                    text = stringResource(id = R.string.settings_account_edit_header),
-                    style = MaterialTheme.typography.h4,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(start = 20.dp, top = 5.dp),
-                    color = MaterialTheme.colors.onBackground
-                )
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -412,13 +396,15 @@ fun EditAccountDetailsDialog(
                             onClick = {
                                 viewModel.openCameraForResult(context)
                             },
+                            color = colorCorrectedSecondary
                         )
                         IconOnlyButton(
                             icon = painterResource(id = IconGallery),
                             contentDescription = stringResource(id = R.string.camera_icon_content_desc),
                             onClick = {
                                 viewModel.openGalleryForResult(context)
-                            }
+                            },
+                            color = colorCorrectedSecondary
                         )
                     }
                 }
@@ -430,7 +416,8 @@ fun EditAccountDetailsDialog(
                     },
                     icon = painterResource(id = IconPersonSingle),
                     contentDescription = stringResource(id = R.string.person_icon_content_desc),
-                    contentColor = MaterialTheme.colors.onBackground
+                    contentColor = MaterialTheme.colors.onBackground,
+                    color = colorCorrectedSecondary
                 )
                 LargeTextInputField(
                     text = viewModel.tempLastName.value,
@@ -440,7 +427,8 @@ fun EditAccountDetailsDialog(
                     },
                     icon = painterResource(id = IconPersonGroup),
                     contentDescription = stringResource(id = R.string.person_icon_content_desc),
-                    contentColor = MaterialTheme.colors.onBackground
+                    contentColor = MaterialTheme.colors.onBackground,
+                    color = colorCorrectedSecondary
                 )
                 Spacer(modifier = Modifier.padding(top = 15.dp))
                 LocalContext.current.apply {
@@ -448,7 +436,7 @@ fun EditAccountDetailsDialog(
                         text = stringResource(id = R.string.settings_account_edit_positive_button),
                         icon = painterResource(id = IconCheckMark),
                         contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
-                        color = MaterialTheme.colors.secondaryVariant,
+                        color = colorCorrectedSecondary,
                         textStyle = MaterialTheme.typography.body2,
                         contentColor = MaterialTheme.colors.onBackground
                     ) {
@@ -471,6 +459,9 @@ fun PasswordChangeDialog(
     viewModel: SettingsViewModel,
     context: Context
 ) {
+    val colorCorrectedSecondary = MaterialTheme.colors.secondaryVariant.let {
+        if (currentAppThemeState.value) it else it.copy(1.0F)
+    }
     AnimatedVisibility(
         visible = viewModel.showingPasswordDialog.value
     ) {
@@ -479,26 +470,10 @@ fun PasswordChangeDialog(
                 viewModel.showingPasswordDialog.value = false
             }
         ) {
-            Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colors.primaryVariant)
+            DialogScaffold(
+                text = stringResource(id = R.string.settings_account_password_header),
+                icon = painterResource(id = IconPassword)
             ) {
-                Icon(
-                    painter = painterResource(id = IconPassword),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(top = 20.dp, start = 18.dp)
-                        .size(30.dp),
-                    tint = MaterialTheme.colors.onBackground
-                )
-                Text(
-                    text = stringResource(id = R.string.settings_account_password_edit_title),
-                    style = MaterialTheme.typography.h4,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(start = 20.dp, top = 5.dp, bottom = 20.dp),
-                    color = MaterialTheme.colors.onBackground
-                )
                 LargeTextInputField(
                     text = viewModel.tempPassword.value,
                     hint = stringResource(id = R.string.log_in_activity_password_hint),
@@ -508,7 +483,8 @@ fun PasswordChangeDialog(
                     icon = painterResource(id = IconPassword),
                     contentDescription = stringResource(id = R.string.lock_icon_content_desc),
                     contentColor = MaterialTheme.colors.onBackground,
-                    passwordType = true
+                    passwordType = true,
+                    color = colorCorrectedSecondary
                 )
                 Spacer(modifier = Modifier.padding(top = 15.dp))
                 LocalContext.current.apply {
@@ -516,7 +492,7 @@ fun PasswordChangeDialog(
                         text = stringResource(id = R.string.settings_account_edit_positive_button),
                         icon = painterResource(id = IconCheckMark),
                         contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
-                        color = MaterialTheme.colors.secondaryVariant,
+                        color = colorCorrectedSecondary,
                         textStyle = MaterialTheme.typography.body2,
                         contentColor = MaterialTheme.colors.onBackground
                     ) {

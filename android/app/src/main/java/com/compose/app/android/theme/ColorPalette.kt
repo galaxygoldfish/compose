@@ -25,9 +25,9 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun getDarkColorPalette(): Colors {
     return darkColors(
-        primary = DeepSeaAccent,
+        primary = currentAppAccentColor.value,
         primaryVariant = NeutralColorDark,
-        secondary = DeepSeaAccent,
+        secondary = currentAppAccentColor.value,
         secondaryVariant = NeutralButtonColorDark,
         background = Color.Black,
         surface = Color.Black,
@@ -41,9 +41,9 @@ fun getDarkColorPalette(): Colors {
 @Composable
 fun getLightColorPalette(): Colors {
     return lightColors(
-        primary = DeepSeaAccent,
+        primary = currentAppAccentColor.value,
         primaryVariant = NeutralColorLight,
-        secondary = DeepSeaAccent,
+        secondary = currentAppAccentColor.value,
         secondaryVariant = NeutralButtonColorLight,
         background = Color.White,
         surface = Color.White,

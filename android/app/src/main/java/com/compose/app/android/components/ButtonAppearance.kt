@@ -138,7 +138,8 @@ fun TextOnlyButton(
 fun IconOnlyButton(
     icon: Painter,
     onClick: () -> Unit,
-    contentDescription: String
+    contentDescription: String,
+    color: Color? = MaterialTheme.colors.secondaryVariant
 ) {
     Button(
         modifier = Modifier

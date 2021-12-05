@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 
 val currentAppThemeState = mutableStateOf(false)
+val currentAppAccentColor = mutableStateOf(DeepSeaAccent)
 
 @Composable
 fun ComposeTheme(

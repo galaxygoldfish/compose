@@ -130,6 +130,9 @@
     <string name="settings_ui_customization_tag">UI &amp; Customization</string>
     <string name="settings_customization_theme_title">Enable dark theme</string>
     <string name="settings_customization_theme_subtitle">Use darker backgrounds to save battery.</string>
+    <string name="settings_customization_color_title">Accent color</string>
+    <string name="settings_customization_color_subtitle">Change the app\'s primary accent color.</string>
+    <string name="settings_customization_color_button_positive">Apply new color</string>
 
     <string name="settings_account_tag">Account</string>
     <string name="settings_account_type_temp">Free account</string>

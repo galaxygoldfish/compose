@@ -16,6 +16,7 @@
  **/
 package com.compose.app.android.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,12 +24,14 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.compose.app.android.R
+import com.compose.app.android.theme.currentAppThemeState
 
 /**
  * Snackbar, containing an icon and text which is usually
@@ -139,5 +142,40 @@ fun OptionListItem(
                 .padding(start = 20.dp)
                 .align(Alignment.CenterVertically)
         )
+    }
+}
+
+@Composable
+fun DialogScaffold(
+    text: String,
+    icon: Painter,
+    content: @Composable () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(if (currentAppThemeState.value) {
+                    MaterialTheme.colors.primaryVariant
+                } else {
+                    MaterialTheme.colors.background
+                }
+            )
+    ) {
+        Icon(
+            painter = icon,
+            contentDescription = null,
+            modifier = Modifier
+                .padding(top = 20.dp, start = 18.dp)
+                .size(30.dp),
+            tint = MaterialTheme.colors.onBackground
+        )
+        Text(
+            text = text,
+            style = MaterialTheme.typography.h4,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(start = 20.dp, top = 5.dp),
+            color = MaterialTheme.colors.onBackground
+        )
+        content.invoke()
     }
 }

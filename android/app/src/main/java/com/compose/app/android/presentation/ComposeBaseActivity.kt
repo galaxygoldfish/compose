@@ -33,11 +33,16 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ExperimentalGraphicsApi
+import androidx.compose.ui.graphics.toArgb
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.theme.ComposeTheme
+import com.compose.app.android.theme.DeepSeaAccent
+import com.compose.app.android.theme.currentAppAccentColor
 import com.compose.app.android.theme.currentAppThemeState
 import com.compose.app.android.utilities.getCloudPreferences
 import com.compose.app.android.view.*
@@ -72,7 +77,8 @@ object NavigationDestination {
     ExperimentalPagerApi::class,
     ExperimentalAnimationApi::class,
     ExperimentalFoundationApi::class,
-    ExperimentalMaterialApi::class
+    ExperimentalMaterialApi::class,
+    ExperimentalGraphicsApi::class
 )
 class ComposeBaseActivity : ComponentActivity() {
 
@@ -96,6 +102,7 @@ class ComposeBaseActivity : ComponentActivity() {
             FirebaseAccount().updateLocalMetadata(this)
 
             currentAppThemeState.value = preferences.getBoolean("STATE_DARK_MODE", false)
+            currentAppAccentColor.value = Color(preferences.getInteger("STATE_ACCENT_COLOR", DeepSeaAccent.toArgb()))
 
             setTheme(
                 if (currentAppThemeState.value) {

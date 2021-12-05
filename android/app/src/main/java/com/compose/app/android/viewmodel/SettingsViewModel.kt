@@ -51,12 +51,10 @@ class SettingsViewModel : ViewModel() {
     val avatarImageStore: MutableState<Bitmap?> = mutableStateOf(null)
     val userStorageUsage = mutableStateOf(0)
 
-    val userFirstNameText = mutableStateOf(TextFieldValue(""))
-    val userLastNameText = mutableStateOf(TextFieldValue(""))
-
     val showingLogOutDialog = mutableStateOf(false)
     val showingEditAccountDialog = mutableStateOf(false)
     val showingPasswordDialog = mutableStateOf(false)
+    val showingColorPickerDialog = mutableStateOf(false)
 
     val tempAvatarImage = mutableStateOf(avatarImageStore.value)
     val tempFirstName = mutableStateOf(TextFieldValue(""))
@@ -86,14 +84,12 @@ class SettingsViewModel : ViewModel() {
 
     fun updateUserNameDetails(context: Context) {
         context.getDefaultPreferences().apply {
-            userFirstNameText.value = TextFieldValue(
+            tempLastName.value = TextFieldValue(
                 getString("IDENTITY_USER_NAME_FIRST", "Error")!!
             )
-            userLastNameText.value = TextFieldValue(
+            tempFirstName.value = TextFieldValue(
                 getString("IDENTITY_USER_NAME_LAST", "Error")!!
             )
-            tempFirstName.value = userFirstNameText.value
-            tempLastName.value = userLastNameText.value
             tempPassword.value = TextFieldValue(
                 getString("IDENTITY_USER_AUTHENTICATOR", "Error")!!
             )

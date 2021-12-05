@@ -34,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.TextStyle
@@ -45,6 +44,7 @@ import com.compose.app.android.R
 import com.compose.app.android.components.SheetHandle
 import com.compose.app.android.theme.IconLeftArrowSmall
 import com.compose.app.android.theme.IconRightArrowSmall
+import com.compose.app.android.theme.currentAppAccentColor
 import com.compose.app.android.viewmodel.TaskEditorViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -228,7 +228,7 @@ fun CalendarDayPicker(
                                         .clip(RoundedCornerShape(8.dp))
                                         .background(
                                             if (viewModel.selectedDayIndex.value == index + 1) {
-                                                colorResource(id = R.color.deep_sea)
+                                                currentAppAccentColor.value
                                             } else {
                                                 MaterialTheme.colors.primaryVariant
                                             }

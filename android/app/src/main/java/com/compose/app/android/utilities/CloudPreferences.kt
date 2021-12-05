@@ -106,8 +106,8 @@ class CloudPreferences(context: Context) {
      * Sync the value both locally and remote afterwards
      */
     private fun saveItem(key: String, item: Any) {
+        putDataLocal(key, item)
         CoroutineScope(Dispatchers.IO).launch {
-            putDataLocal(key, item)
             putDataRemote(key, item)
         }
     }
