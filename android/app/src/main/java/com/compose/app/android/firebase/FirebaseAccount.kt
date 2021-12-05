@@ -16,10 +16,12 @@
  **/
 package com.compose.app.android.firebase
 
+import android.app.ActivityManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import android.util.Patterns
+import androidx.compose.runtime.MutableState
 import androidx.core.net.toUri
 import com.compose.app.android.R
 import com.compose.app.android.utilities.getCloudPreferences
@@ -290,6 +292,43 @@ class FirebaseAccount {
         val preferences = context.getDefaultPreferences()
         preferences.edit().clear().commit()
         firebaseAuth.signOut()
+    }
+
+    fun deleteAccount(
+        context: Context,
+        monitor: MutableState<Boolean>
+    ) {
+        firebaseFirestore.apply {
+            collection("METADATA")
+                .document("USERS")
+                .collection(firebaseAuth.currentUser!!.uid).let {
+                    it.document("USERFILE").delete()
+                    it.document("PREFERENCES").delete()
+                    it.document("QUOTA-MONITOR").delete()
+                }
+            collection("USERDATA").apply {
+                fun deleteAll(name: String) {
+                    document(firebaseAuth.currentUser!!.uid).let { it ->
+                        it.collection(name).get().addOnCompleteListener { result ->
+                            result.result?.documents?.forEach {
+                                it.reference.delete()
+                            }
+                        }
+                    }
+                }
+                deleteAll("NOTE-DATA")
+                deleteAll("TASK-DATA")
+            }
+        }
+        firebaseStorage.apply {
+            reference.child("USER-AVATARS/${firebaseAuth.currentUser!!.uid}").delete()
+        }
+        val preferences = context.getDefaultPreferences()
+        preferences.edit().clear().commit()
+        firebaseAuth.currentUser!!.delete().addOnSuccessListener {
+            (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).clearApplicationUserData()
+            monitor.value = true
+        }
     }
 
 }

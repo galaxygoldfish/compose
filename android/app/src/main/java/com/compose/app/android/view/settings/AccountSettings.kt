@@ -16,7 +16,6 @@
  **/
 package com.compose.app.android.view.settings
 
-import android.content.Context
 import android.content.Intent
 import android.text.format.Formatter
 import android.widget.Toast
@@ -30,6 +29,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,6 +49,7 @@ import com.compose.app.android.R
 import com.compose.app.android.components.*
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.presentation.ComposeBaseActivity
+import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.createSquareImage
 import com.compose.app.android.utilities.getDefaultPreferences
@@ -215,7 +217,9 @@ fun AccountSettings(
             AccountSettingsItem(
                 icon = painterResource(id = IconTrashItem),
                 title = stringResource(id = R.string.settings_account_delete_header),
-                onClick = { /** open account delete dialog for confirmation **/ },
+                onClick = {
+                    viewModel.showingAccountDeleteDialog.value = true
+                },
                 paddingTop = 10.dp
             ) {
                 Text(
@@ -229,13 +233,11 @@ fun AccountSettings(
             navController = navController,
             showingDialog = viewModel.showingLogOutDialog
         )
-        EditAccountDetailsDialog(
+        EditAccountDetailsDialog(viewModel = viewModel)
+        PasswordChangeDialog(viewModel = viewModel)
+        AccountDeleteDialog(
             viewModel = viewModel,
-            context = navController.context
-        )
-        PasswordChangeDialog(
-            viewModel = viewModel,
-            context = navController.context
+            navController = navController
         )
     }
 }
@@ -352,8 +354,7 @@ fun LogOutAccountDialog(
 @ExperimentalAnimationApi
 @Composable
 fun EditAccountDetailsDialog(
-    viewModel: SettingsViewModel,
-    context: Context
+    viewModel: SettingsViewModel
 ) {
     val colorCorrectedSecondary = MaterialTheme.colors.secondaryVariant.let {
         if (currentAppThemeState.value) it else it.copy(1.0F)
@@ -373,81 +374,83 @@ fun EditAccountDetailsDialog(
                 text = stringResource(id = R.string.settings_account_edit_header),
                 icon = painterResource(id = IconEditPen)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    viewModel.tempAvatarImage.value?.let {
-                        Image(
-                            bitmap = it.createSquareImage().asImageBitmap(),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(
-                                    start = 20.dp,
-                                    top = 30.dp,
-                                    end = 20.dp,
-                                    bottom = 20.dp
-                                )
-                                .size(110.dp)
-                                .clip(CircleShape)
-                        )
-                        IconOnlyButton(
-                            icon = painterResource(id = IconCamera),
-                            contentDescription = stringResource(id = R.string.file_folder_content_desc),
-                            onClick = {
-                                viewModel.openCameraForResult(context)
-                            },
-                            color = colorCorrectedSecondary
-                        )
-                        IconOnlyButton(
-                            icon = painterResource(id = IconGallery),
-                            contentDescription = stringResource(id = R.string.camera_icon_content_desc),
-                            onClick = {
-                                viewModel.openGalleryForResult(context)
-                            },
-                            color = colorCorrectedSecondary
-                        )
-                    }
-                }
-                LargeTextInputField(
-                    text = viewModel.tempFirstName.value,
-                    hint = stringResource(id = R.string.settings_account_edit_name_hint),
-                    valueCallback = {
-                        viewModel.tempFirstName.value = it
-                    },
-                    icon = painterResource(id = IconPersonSingle),
-                    contentDescription = stringResource(id = R.string.person_icon_content_desc),
-                    contentColor = MaterialTheme.colors.onBackground,
-                    color = colorCorrectedSecondary
-                )
-                LargeTextInputField(
-                    text = viewModel.tempLastName.value,
-                    hint = stringResource(id = R.string.settings_account_edit_surname_hint),
-                    valueCallback = {
-                        viewModel.tempLastName.value = it
-                    },
-                    icon = painterResource(id = IconPersonGroup),
-                    contentDescription = stringResource(id = R.string.person_icon_content_desc),
-                    contentColor = MaterialTheme.colors.onBackground,
-                    color = colorCorrectedSecondary
-                )
-                Spacer(modifier = Modifier.padding(top = 15.dp))
-                LocalContext.current.apply {
-                    FullWidthButton(
-                        text = stringResource(id = R.string.settings_account_edit_positive_button),
-                        icon = painterResource(id = IconCheckMark),
-                        contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
-                        color = colorCorrectedSecondary,
-                        textStyle = MaterialTheme.typography.body2,
-                        contentColor = MaterialTheme.colors.onBackground
+                LocalContext.current.let { context ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        viewModel.apply {
-                            updateAccountEdit(context)
-                            setAvatarImage(filesDir.path, true)
-                            showingEditAccountDialog.value = false
+                        viewModel.tempAvatarImage.value?.let {
+                            Image(
+                                bitmap = it.createSquareImage().asImageBitmap(),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(
+                                        start = 20.dp,
+                                        top = 30.dp,
+                                        end = 20.dp,
+                                        bottom = 20.dp
+                                    )
+                                    .size(110.dp)
+                                    .clip(CircleShape)
+                            )
+                            IconOnlyButton(
+                                icon = painterResource(id = IconCamera),
+                                contentDescription = stringResource(id = R.string.file_folder_content_desc),
+                                onClick = {
+                                    viewModel.openCameraForResult(context)
+                                },
+                                color = colorCorrectedSecondary
+                            )
+                            IconOnlyButton(
+                                icon = painterResource(id = IconGallery),
+                                contentDescription = stringResource(id = R.string.camera_icon_content_desc),
+                                onClick = {
+                                    viewModel.openGalleryForResult(context)
+                                },
+                                color = colorCorrectedSecondary
+                            )
                         }
                     }
+                    LargeTextInputField(
+                        text = viewModel.tempFirstName.value,
+                        hint = stringResource(id = R.string.settings_account_edit_name_hint),
+                        valueCallback = {
+                            viewModel.tempFirstName.value = it
+                        },
+                        icon = painterResource(id = IconPersonSingle),
+                        contentDescription = stringResource(id = R.string.person_icon_content_desc),
+                        contentColor = MaterialTheme.colors.onBackground,
+                        color = colorCorrectedSecondary
+                    )
+                    LargeTextInputField(
+                        text = viewModel.tempLastName.value,
+                        hint = stringResource(id = R.string.settings_account_edit_surname_hint),
+                        valueCallback = {
+                            viewModel.tempLastName.value = it
+                        },
+                        icon = painterResource(id = IconPersonGroup),
+                        contentDescription = stringResource(id = R.string.person_icon_content_desc),
+                        contentColor = MaterialTheme.colors.onBackground,
+                        color = colorCorrectedSecondary
+                    )
+                    Spacer(modifier = Modifier.padding(top = 15.dp))
+                    LocalContext.current.apply {
+                        FullWidthButton(
+                            text = stringResource(id = R.string.settings_account_edit_positive_button),
+                            icon = painterResource(id = IconCheckMark),
+                            contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
+                            color = colorCorrectedSecondary,
+                            textStyle = MaterialTheme.typography.body2,
+                            contentColor = MaterialTheme.colors.onBackground
+                        ) {
+                            viewModel.apply {
+                                updateAccountEdit(context)
+                                setAvatarImage(filesDir.path, true)
+                                showingEditAccountDialog.value = false
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.padding(bottom = 10.dp))
                 }
-                Spacer(modifier = Modifier.padding(bottom = 10.dp))
             }
         }
     }
@@ -456,12 +459,8 @@ fun EditAccountDetailsDialog(
 @ExperimentalAnimationApi
 @Composable
 fun PasswordChangeDialog(
-    viewModel: SettingsViewModel,
-    context: Context
+    viewModel: SettingsViewModel
 ) {
-    val colorCorrectedSecondary = MaterialTheme.colors.secondaryVariant.let {
-        if (currentAppThemeState.value) it else it.copy(1.0F)
-    }
     AnimatedVisibility(
         visible = viewModel.showingPasswordDialog.value
     ) {
@@ -484,15 +483,15 @@ fun PasswordChangeDialog(
                     contentDescription = stringResource(id = R.string.lock_icon_content_desc),
                     contentColor = MaterialTheme.colors.onBackground,
                     passwordType = true,
-                    color = colorCorrectedSecondary
+                    color = colorCorrectedSecondary()
                 )
                 Spacer(modifier = Modifier.padding(top = 15.dp))
-                LocalContext.current.apply {
+                LocalContext.current.let { context ->
                     FullWidthButton(
                         text = stringResource(id = R.string.settings_account_edit_positive_button),
                         icon = painterResource(id = IconCheckMark),
                         contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
-                        color = colorCorrectedSecondary,
+                        color = colorCorrectedSecondary(),
                         textStyle = MaterialTheme.typography.body2,
                         contentColor = MaterialTheme.colors.onBackground
                     ) {
@@ -511,6 +510,84 @@ fun PasswordChangeDialog(
                     }
                 }
                 Spacer(modifier = Modifier.padding(bottom = 10.dp))
+            }
+        }
+    }
+}
+
+@ExperimentalAnimationApi
+@Composable
+fun AccountDeleteDialog(
+    viewModel: SettingsViewModel,
+    navController: NavController
+) {
+    val doneDeletingAccount = remember { mutableStateOf(false) }
+    val accountDeleteProcessing = remember { mutableStateOf(false) }
+    AnimatedVisibility(
+        visible = viewModel.showingAccountDeleteDialog.value
+    ) {
+        Dialog(
+            onDismissRequest = {
+                viewModel.showingAccountDeleteDialog.value = false
+            }
+        ) {
+            DialogScaffold(
+                text = stringResource(id = R.string.settings_account_delete_header),
+                icon = painterResource(id = IconTrashItem)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.settings_account_delete_warning),
+                    style = MaterialTheme.typography.subtitle2,
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 15.dp)
+                )
+                LocalContext.current.apply {
+                    Button(
+                        modifier = Modifier
+                            .height(height = 60.dp)
+                            .fillMaxWidth()
+                            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
+                        onClick = {
+                            accountDeleteProcessing.value = true
+                            FirebaseAccount().deleteAccount(
+                                context = this,
+                                monitor = doneDeletingAccount
+                            )
+                        },
+                        colors = ButtonDefaults.buttonColors(backgroundColor = colorCorrectedSecondary()),
+                        elevation = ButtonDefaults.elevation(
+                            defaultElevation = 0.dp,
+                            pressedElevation = 0.dp
+                        )
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            if (!accountDeleteProcessing.value) {
+                                Icon(
+                                    painter = painterResource(id = IconCheckMark),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colors.onBackground
+                                )
+                                Text(
+                                    text = stringResource(id = R.string.settings_account_delete_positive_button),
+                                    style = MaterialTheme.typography.body2,
+                                    modifier = Modifier
+                                        .align(Alignment.TopCenter)
+                                        .padding(top = 1.dp, start = 24.dp),
+                                    color = MaterialTheme.colors.onBackground,
+                                )
+                            } else {
+                                LinearProgressIndicator(
+                                    modifier = Modifier.fillMaxWidth(0.8F),
+                                    color = currentAppAccentColor.value
+                                )
+                                if (doneDeletingAccount.value) {
+                                    navController.navigate(NavigationDestination.WelcomeView)
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

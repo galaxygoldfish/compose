@@ -55,6 +55,7 @@ class SettingsViewModel : ViewModel() {
     val showingEditAccountDialog = mutableStateOf(false)
     val showingPasswordDialog = mutableStateOf(false)
     val showingColorPickerDialog = mutableStateOf(false)
+    val showingAccountDeleteDialog = mutableStateOf(false)
 
     val tempAvatarImage = mutableStateOf(avatarImageStore.value)
     val tempFirstName = mutableStateOf(TextFieldValue(""))
