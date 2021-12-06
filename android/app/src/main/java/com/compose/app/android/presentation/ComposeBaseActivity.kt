@@ -36,6 +36,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ExperimentalGraphicsApi
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.compose.app.android.R
@@ -45,6 +46,7 @@ import com.compose.app.android.theme.DeepSeaAccent
 import com.compose.app.android.theme.currentAppAccentColor
 import com.compose.app.android.theme.currentAppThemeState
 import com.compose.app.android.utilities.getCloudPreferences
+import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.view.*
 import com.compose.app.android.view.settings.*
 import com.compose.app.android.viewmodel.*
@@ -62,6 +64,7 @@ object NavigationDestination {
     const val ProductivityView = "productivity"
     const val NoteEditorView = "noteEditor"
     const val TaskEditorView = "taskEditor"
+    const val SecurityLockView = "security"
     const val SettingsViewHome = "settings"
     const val CustomizationSettings = "customizationSettings"
     const val AccountSettings = "accountSettings"
@@ -88,6 +91,7 @@ class ComposeBaseActivity : ComponentActivity() {
     private val noteEditorViewModel: NoteEditorViewModel by viewModels()
     private val taskEditorViewModel: TaskEditorViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
+    private val securityViewModel: SecurityLockViewModel by viewModels()
 
     private lateinit var navigationController: NavHostController
 
@@ -128,8 +132,18 @@ class ComposeBaseActivity : ComponentActivity() {
     fun ComposeNavigationHost(intent: Intent) {
 
         navigationController = rememberAnimatedNavController()
+
+        val passwordAvailable = LocalContext.current.let {
+            it.getDefaultPreferences().getString("IDENTITY_USER_KEY", "") != "" &&
+                    it.getCloudPreferences().getBoolean("STATE_APP_SECURED", false)
+        }
+
         val navigationStart = if (FirebaseAccount().determineIfUserExists()) {
-            NavigationDestination.ProductivityView
+            if (passwordAvailable) {
+                NavigationDestination.SecurityLockView
+            } else {
+                NavigationDestination.ProductivityView
+            }
         } else {
             NavigationDestination.WelcomeView
         }
@@ -228,9 +242,14 @@ class ComposeBaseActivity : ComponentActivity() {
                         viewModel = taskEditorViewModel
                     )
                 }
-                /**
-                 * Preference view composables
-                 */
+                composable(
+                    route = NavigationDestination.SecurityLockView
+                ) {
+                    SecurityLockView(
+                        viewModel = securityViewModel,
+                        navController = navigationController
+                    )
+                }
                 composable(
                     route = NavigationDestination.SettingsViewHome,
                     enterTransition = animatedSlideRight,

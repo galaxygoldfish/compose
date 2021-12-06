@@ -48,6 +48,7 @@ const val IconSaveContent = R.drawable.ic_duotone_save
 const val IconThemeColor = R.drawable.ic_duotone_theme_color
 const val IconColorSwitch = R.drawable.ic_duotone_filters
 const val IconTrashItem = R.drawable.ic_duotone_trash_can
+const val IconBackspace = R.drawable.ic_duotone_delete
 
 const val IconCheckCircle = R.drawable.ic_duotone_check_circle
 const val IconNotification = R.drawable.ic_duotone_notification_bell

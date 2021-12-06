@@ -154,8 +154,18 @@
     <string name="settings_account_password_edit_positive_button">Save changes</string>
     <string name="settings_account_email_error_message">E-mail can\'t be changed</string>
     <string name="settings_account_password_error_message">Password must be longer than 4 characters</string>
+    <string name="dialog_log_out_header">Sign out</string>
+    <string name="dialog_log_out_body_text">Are you sure that you wish to sign out of your account?</string>
+    <string name="dialog_log_out_button_positive">Log out</string>
 
     <string name="settings_security_privacy_tag">Security &amp; Privacy</string>
+    <string name="settings_security_privacy_enable_title">Enable password lock</string>
+    <string name="settings_security_privacy_enable_body">Require a password to access the app every time it is opened.</string>
+    <string name="settings_security_privacy_lock_change_title">Change security PIN</string>
+    <string name="settings_security_privacy_lock_change_body">Edit the PIN used to unlock the app if the password lock is on.</string>
+    <string name="settings_security_privacy_lock_change_hint">Strong password</string>
+    <string name="settings_security_privacy_lock_button_positive">Save new password</string>
+
     <string name="settings_notifications_tag">Notifications</string>
 
     <string name="settings_accessibility_tag">Accessibility</string>
@@ -166,9 +176,6 @@
     <string name="settings_about_help_title">Help &amp; feedback</string>
     <string name="settings_about_help_body">Send feedback, bug reports &amp; learn how to use the app.</string>
 
-    <string name="dialog_log_out_header">Sign out</string>
-    <string name="dialog_log_out_body_text">Are you sure that you wish to sign out of your account?</string>
-    <string name="dialog_log_out_button_positive">Log out</string>
-    <string name="dialog_log_out_button_negative">Stay logged in</string>
+    <string name="security_lock_hint_text">Enter password to unlock</string>
 
 </resources>

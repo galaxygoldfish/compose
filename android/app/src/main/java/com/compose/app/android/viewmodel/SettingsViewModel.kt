@@ -56,11 +56,13 @@ class SettingsViewModel : ViewModel() {
     val showingPasswordDialog = mutableStateOf(false)
     val showingColorPickerDialog = mutableStateOf(false)
     val showingAccountDeleteDialog = mutableStateOf(false)
+    val showingPasswordEditDialog = mutableStateOf(false)
 
     val tempAvatarImage = mutableStateOf(avatarImageStore.value)
     val tempFirstName = mutableStateOf(TextFieldValue(""))
     val tempLastName = mutableStateOf(TextFieldValue(""))
     val tempPassword = mutableStateOf(TextFieldValue(""))
+    val tempSecurityPin = mutableStateOf(TextFieldValue(""))
 
     private val asyncScope = CoroutineScope(Dispatchers.IO + Job())
 
@@ -93,6 +95,9 @@ class SettingsViewModel : ViewModel() {
             )
             tempPassword.value = TextFieldValue(
                 getString("IDENTITY_USER_AUTHENTICATOR", "Error")!!
+            )
+            tempSecurityPin.value = TextFieldValue(
+                getString("IDENTITY_USER_KEY", "")!!
             )
         }
     }
@@ -186,5 +191,12 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
+    fun saveNewSecurityPin(context: Context) {
+        context.getDefaultPreferences().edit().apply {
+            putString("IDENTITY_USER_KEY", tempSecurityPin.value.text)
+            apply()
+        }
+        showingPasswordEditDialog.value = false
+    }
 
 }
