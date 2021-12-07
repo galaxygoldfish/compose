@@ -57,22 +57,27 @@ fun SecurityPrivacySettings(
             title = stringResource(id = R.string.settings_security_privacy_tag),
             navController = navController
         )
-        LocalContext.current.apply {
-            val enableLock = remember { mutableStateOf(getCloudPreferences().getBoolean("STATE_APP_SECURED")) }
-            SwitchPreference(
-                title = stringResource(id = R.string.settings_security_privacy_enable_title),
-                subtitle = stringResource(id = R.string.settings_security_privacy_enable_body),
-                icon = painterResource(id = IconPassword),
-                onAction = { enableLock.value = it },
-                key = "STATE_APP_SECURED",
-                changeState = enableLock
-            )
-            BasePreference(
-                title = stringResource(id = R.string.settings_security_privacy_lock_change_title),
-                icon = painterResource(id = IconEditPen),
-                body = stringResource(id = R.string.settings_security_privacy_lock_change_body),
-            ) {
-                viewModel.showingPasswordEditDialog.value = true
+        Column(
+            modifier = Modifier.padding(top = 15.dp)
+        ) {
+            LocalContext.current.apply {
+                val enableLock =
+                    remember { mutableStateOf(getCloudPreferences().getBoolean("STATE_APP_SECURED")) }
+                SwitchPreference(
+                    title = stringResource(id = R.string.settings_security_privacy_enable_title),
+                    subtitle = stringResource(id = R.string.settings_security_privacy_enable_body),
+                    icon = painterResource(id = IconPassword),
+                    onAction = { enableLock.value = it },
+                    key = "STATE_APP_SECURED",
+                    changeState = enableLock
+                )
+                BasePreference(
+                    title = stringResource(id = R.string.settings_security_privacy_lock_change_title),
+                    icon = painterResource(id = IconEditPen),
+                    body = stringResource(id = R.string.settings_security_privacy_lock_change_body),
+                ) {
+                    viewModel.showingPasswordEditDialog.value = true
+                }
             }
         }
     }

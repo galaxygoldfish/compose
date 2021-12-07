@@ -8,6 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -182,20 +184,23 @@ fun Context.SwitchPreference(
     title: String,
     subtitle: String,
     icon: Painter,
-    onAction: (Boolean) -> Unit,
-    changeState: MutableState<Boolean>,
+    onAction: ((Boolean) -> Unit)? = null,
+    changeState: MutableState<Boolean>? = null,
+    defaultValue: Boolean = false,
     key: String
 ) {
+    val change = changeState ?: remember { mutableStateOf(defaultValue) }
     val cloudPreferences = this.getCloudPreferences()
     val onClickAction = { newVal: Boolean ->
         cloudPreferences.putBoolean(key, newVal)
-        onAction.invoke(newVal)
+        change.value = newVal
+        onAction?.invoke(newVal)
     }
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-            onClickAction.invoke(!changeState.value)
+            onClickAction.invoke(!change.value)
         }
     ) {
         Icon(
@@ -226,8 +231,8 @@ fun Context.SwitchPreference(
         }
         MaterialTheme.colors.apply {
             Switch(
-                checked = changeState.value,
-                onCheckedChange = onClickAction,
+                checked = change.value,
+                onCheckedChange = { onClickAction.invoke(it) },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = primary,
                     uncheckedThumbColor = Color.DarkGray.copy(0.8F), // TODO - bad for accessibility

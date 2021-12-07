@@ -167,6 +167,8 @@
     <string name="settings_security_privacy_lock_button_positive">Save new password</string>
 
     <string name="settings_notifications_tag">Notifications</string>
+    <string name="settings_notifications_enable_title">Enable notifications</string>
+    <string name="settings_notifications_enable_body">Receive notifications when your tasks are due</string>
 
     <string name="settings_accessibility_tag">Accessibility</string>
     <string name="settings_help_feedback_tag">Help &amp; Feedback</string>

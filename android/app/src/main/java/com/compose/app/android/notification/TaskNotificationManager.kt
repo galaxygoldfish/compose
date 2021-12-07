@@ -33,6 +33,7 @@ import com.compose.app.android.R
 import com.compose.app.android.database.NotifyRepository
 import com.compose.app.android.notification.receiver.NotificationReceiver
 import com.compose.app.android.presentation.ComposeBaseActivity
+import com.compose.app.android.utilities.getCloudPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -108,26 +109,32 @@ class TaskNotificationManager {
             taskID: String
         ) {
             Log.e("COMPOSE", "TaskNotificationManager#sendTaskNotification")
-            val intent = Intent(context, ComposeBaseActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                putExtra("TASK_ID_NOTIFICATION", taskID)
-            }
-            val pendingIntent: PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                getActivity(context, 0, intent, FLAG_IMMUTABLE)
-            } else {
-                getActivity(context, 0, intent, 0)
-            }
-            val builder = NotificationCompat.Builder(context, TASK_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_round_add_task_24)
-                .setLargeIcon(
-                    BitmapFactory.decodeResource(context.resources, R.drawable.ic_round_add_task_24)
-                )
-                .setContentTitle(title)
-                .setContentText(content)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent)
-            with(NotificationManagerCompat.from(context)) {
-                notify(Random.nextInt(), builder.build())
+            if (context.getCloudPreferences().getBoolean("STATE_ENABLE_NOTIFICATIONS", false)) {
+                val intent = Intent(context, ComposeBaseActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    putExtra("TASK_ID_NOTIFICATION", taskID)
+                }
+                val pendingIntent: PendingIntent =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        getActivity(context, 0, intent, FLAG_IMMUTABLE)
+                    } else {
+                        getActivity(context, 0, intent, 0)
+                    }
+                val builder = NotificationCompat.Builder(context, TASK_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_round_add_task_24)
+                    .setLargeIcon(
+                        BitmapFactory.decodeResource(
+                            context.resources,
+                            R.drawable.ic_round_add_task_24
+                        )
+                    )
+                    .setContentTitle(title)
+                    .setContentText(content)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setContentIntent(pendingIntent)
+                with(NotificationManagerCompat.from(context)) {
+                    notify(Random.nextInt(), builder.build())
+                }
             }
         }
 

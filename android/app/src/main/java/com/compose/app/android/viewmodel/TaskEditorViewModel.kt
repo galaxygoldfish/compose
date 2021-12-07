@@ -28,6 +28,7 @@ import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.DocumentType
 import com.compose.app.android.model.SubTaskDocument
 import com.compose.app.android.notification.TaskNotificationManager
+import com.compose.app.android.utilities.getCloudPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -49,7 +50,8 @@ class TaskEditorViewModel : ViewModel() {
     private val calendar: Calendar = Calendar.getInstance()
     private val dayIndex = calendar[Calendar.DAY_OF_MONTH]
     private val calendarMinute = calendar[Calendar.MINUTE]
-    private val editedMinute = if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute.toString()
+    private val editedMinute =
+        if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute.toString()
 
     var monthIndex = mutableStateOf(calendar[Calendar.MONTH])
     val currentMonth = mutableStateOf("")
@@ -188,8 +190,11 @@ class TaskEditorViewModel : ViewModel() {
                     "DUE-DATE-TIME-UNIX" to (parsedDueDate?.time ?: 0),
                     "SUB-TASK-ITEMS" to parseSubTaskList()
                 )
-                Log.e("COMPOSE", "TaskEditorViewModel#saveTaskData: \nparsedDueDateTime = = ${parsedDueDate!!.time}\ndateTime = = ${Date().time}\nCOMPARISON RETURN = = ${Date().time < parsedDueDate!!.time}")
-                if (parsedDueDate.time > Date().time) {
+                Log.e("COMPOSE", "TaskEditorViewModel#saveTaskData")
+                if (
+                    parsedDueDate!!.time > Date().time &&
+                    context.getCloudPreferences().getBoolean("STATE_ENABLE_NOTIFICATIONS", false)
+                ) {
                     TaskNotificationManager.scheduleTaskNotification(
                         context = context,
                         taskID = currentDocumentID.value!!,
