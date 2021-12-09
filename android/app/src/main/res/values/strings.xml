@@ -171,6 +171,9 @@
     <string name="settings_notifications_enable_body">Receive notifications when your tasks are due</string>
 
     <string name="settings_accessibility_tag">Accessibility</string>
+    <string name="settings_accessibility_text_size_title">Font size</string>
+    <string name="settings_accessibility_text_size_body">Read text easier by increasing the font size.</string>
+    
     <string name="settings_help_feedback_tag">Help &amp; Feedback</string>
 
     <string name="settings_about_tag">About app</string>

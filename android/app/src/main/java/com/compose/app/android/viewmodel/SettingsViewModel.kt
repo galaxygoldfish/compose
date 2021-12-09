@@ -50,6 +50,7 @@ class SettingsViewModel : ViewModel() {
 
     val avatarImageStore: MutableState<Bitmap?> = mutableStateOf(null)
     val userStorageUsage = mutableStateOf(0)
+    val accessibilityFontSize = mutableStateOf(1.0F)
 
     val showingLogOutDialog = mutableStateOf(false)
     val showingEditAccountDialog = mutableStateOf(false)
@@ -85,7 +86,7 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
-    fun updateUserNameDetails(context: Context) {
+    fun updateMetadata(context: Context) {
         context.getDefaultPreferences().apply {
             tempLastName.value = TextFieldValue(
                 getString("IDENTITY_USER_NAME_FIRST", "Error")!!
@@ -99,6 +100,7 @@ class SettingsViewModel : ViewModel() {
             tempSecurityPin.value = TextFieldValue(
                 getString("IDENTITY_USER_KEY", "")!!
             )
+            accessibilityFontSize.value = getString("STATE_FONT_SIZE", "1.0")!!.toFloat()
         }
     }
 

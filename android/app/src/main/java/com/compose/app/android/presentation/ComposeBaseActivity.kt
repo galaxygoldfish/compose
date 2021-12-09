@@ -17,7 +17,9 @@
 package com.compose.app.android.presentation
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -360,18 +362,42 @@ class ComposeBaseActivity : ComponentActivity() {
         )
     }
 
+    /**
+     * Check if the request is coming from a profile change
+     * action, and if so, send data to the according viewModel.
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when {
+                // CreateAccountView is the requester
                 (requestCode == 1 || requestCode == 2) -> {
                     createAccountViewModel.processActivityResult(data, requestCode, this)
                 }
+                // SettingsView->AccountSettingsView is the requester
                 (requestCode == 3 || requestCode == 4) -> {
                     settingsViewModel.onActivityResult(data, requestCode, this)
                 }
             }
         }
+    }
+
+    /**
+     * When base context is attached, configuration changes can
+     * be overridden, so the font scale chosen in accessibility
+     * settings can be applied
+     */
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(newBase)
+
+        val newFontScale = newBase?.getDefaultPreferences()
+           ?.getString("STATE_FONT_SIZE", "1.0")?.toFloat()
+
+        Configuration().apply {
+            newFontScale?.let { fontScale = it }
+            applyOverrideConfiguration(this)
+        }
+
     }
 
 }

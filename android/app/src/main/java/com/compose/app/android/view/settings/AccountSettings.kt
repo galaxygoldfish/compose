@@ -360,7 +360,7 @@ fun EditAccountDetailsDialog(
         if (currentAppThemeState.value) it else it.copy(1.0F)
     }
     if (viewModel.tempFirstName.value.text.isEmpty()) {
-        viewModel.updateUserNameDetails(LocalContext.current)
+        viewModel.updateMetadata(LocalContext.current)
     }
     AnimatedVisibility(
         visible = viewModel.showingEditAccountDialog.value
