@@ -175,6 +175,21 @@
     <string name="settings_accessibility_text_size_body">Read text easier by increasing the font size.</string>
     
     <string name="settings_help_feedback_tag">Help &amp; Feedback</string>
+    <string name="settings_help_feedback_support_title">Support</string>
+    <string name="settings_help_feedback_support_body">Learn how to use the app, discover new features &amp; more.</string>
+    <string name="settings_help_feedback_feedback_title">Feedback</string>
+    <string name="settings_help_feedback_feedback_body">Report a bug or issue, send a suggestion or give feedback.</string>
+
+    <string name="settings_create_feedback_title">Send feedback</string>
+    <string name="settings_create_feedback_body">Send feedback to report bugs, issues or make suggestions to improve the app.</string>
+    <string name="settings_create_feedback_input_title_hint">Enter a title</string>
+    <string name="settings_create_feedback_input_body_hint">Describe the bug, issue or feedback. If a bug, please include how to replicate the bug, and describe the intended result and what happened.</string>
+    <string name="settings_create_feedback_type_header">Feedback category</string>
+    <string name="settings_create_feedback_button_positive">Send feedback</string>
+    <string name="settings_create_feedback_error_message">Oops! Make sure that all fields are filled out and that you\'ve selected a category</string>
+    <string name="settings_create_feedback_thanks_message">Thanks for the feedback!</string>
+
+    <string name="settings_feature_unavailable_toast">Unfortunately, this feature isn\'t available yet</string>
 
     <string name="settings_about_tag">About app</string>
     <string name="settings_about_version_format">version %1$s</string>

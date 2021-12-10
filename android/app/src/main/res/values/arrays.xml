@@ -76,4 +76,11 @@
         <item>Purple</item>
     </string-array>
 
+    <string-array name="feedback_type">
+        <item>General feedback</item>
+        <item>Bug/Issue</item>
+        <item>Request/Suggestion</item>
+        <item>Other</item>
+    </string-array>
+
 </resources>

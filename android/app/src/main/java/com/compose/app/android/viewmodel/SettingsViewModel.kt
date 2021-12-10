@@ -27,7 +27,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.compose.app.android.firebase.FirebaseAccount
+import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.firebase.FirebaseUtils
+import com.compose.app.android.model.FeedbackDocument
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.utilities.handleProfileImageResult
@@ -40,6 +42,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.*
+
+// TODO organize this viewmodel
 
 class SettingsViewModel : ViewModel() {
 
@@ -64,6 +69,10 @@ class SettingsViewModel : ViewModel() {
     val tempLastName = mutableStateOf(TextFieldValue(""))
     val tempPassword = mutableStateOf(TextFieldValue(""))
     val tempSecurityPin = mutableStateOf(TextFieldValue(""))
+
+    val currentFeedbackTitle = mutableStateOf(TextFieldValue(""))
+    val currentFeedbackBody = mutableStateOf(TextFieldValue(""))
+    val currentFeedbackType = mutableStateOf("Other") // probably should access string array for localization
 
     private val asyncScope = CoroutineScope(Dispatchers.IO + Job())
 
@@ -199,6 +208,20 @@ class SettingsViewModel : ViewModel() {
             apply()
         }
         showingPasswordEditDialog.value = false
+    }
+
+    fun saveCurrentFeedback() {
+        FirebaseDocument().apply {
+            uploadFeedback(
+                FeedbackDocument(
+                    title = currentFeedbackTitle.value.text,
+                    extraDetails = currentFeedbackBody.value.text,
+                    feedbackType = currentFeedbackType.value,
+                    dateOfSubmission = Date().time,
+                    userOfSubmissionID = Firebase.auth.currentUser!!.uid
+                )
+            )
+        }
     }
 
 }

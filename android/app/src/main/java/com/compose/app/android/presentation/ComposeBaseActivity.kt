@@ -75,6 +75,7 @@ object NavigationDestination {
     const val AboutAppSettings = "aboutAppSettings"
     const val AccessibilitySettings = "accessibilitySettings"
     const val HelpFeedbackSettings = "helpFeedbackSettings"
+    const val CreateFeedbackView = "createFeedback"
 }
 
 @OptIn(
@@ -330,6 +331,16 @@ class ComposeBaseActivity : ComponentActivity() {
                     HelpFeedbackSettings(
                         viewModel = settingsViewModel,
                         navController = navigationController
+                    )
+                }
+                composable(
+                    route = NavigationDestination.CreateFeedbackView,
+                    enterTransition = animatedSlideRight,
+                    exitTransition = animatedSlideLeft
+                ) {
+                    CreateFeedbackView(
+                        navController = navigationController,
+                        viewModel = settingsViewModel
                     )
                 }
             }

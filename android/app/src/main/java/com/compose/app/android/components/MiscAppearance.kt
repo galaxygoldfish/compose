@@ -59,7 +59,11 @@ fun BasicSnackbar(
         snackbar = @Composable { data ->
             Snackbar(
                 elevation = 0.dp,
-                backgroundColor = MaterialTheme.colors.secondaryVariant,
+                backgroundColor = if (currentAppThemeState.value) {
+                    MaterialTheme.colors.primaryVariant
+                } else {
+                    MaterialTheme.colors.secondaryVariant
+                },
                 content = @Composable {
                     Row {
                         Icon(

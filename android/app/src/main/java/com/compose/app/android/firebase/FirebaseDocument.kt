@@ -18,6 +18,7 @@ package com.compose.app.android.firebase
 
 import androidx.lifecycle.MutableLiveData
 import com.compose.app.android.model.DocumentType
+import com.compose.app.android.model.FeedbackDocument
 import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
 import com.google.accompanist.swiperefresh.SwipeRefreshState
@@ -230,11 +231,7 @@ class FirebaseDocument {
      * @param type - Specify whether the document is a note or task
      * using the DocumentType enum
      */
-    suspend fun saveDocument(
-        documentFields: Map<String, Any>,
-        documentID: String,
-        type: DocumentType
-    ) {
+    suspend fun saveDocument(documentFields: Map<String, Any>, documentID: String, type: DocumentType) {
         val noteOrTask = if (type == DocumentType.NOTE) "NOTE-DATA" else "TASK-DATA"
         val documentPath = firebaseFirestore.collection("USERDATA")
             .document(firebaseAuth.currentUser!!.uid).collection(noteOrTask).document(documentID)
@@ -252,10 +249,7 @@ class FirebaseDocument {
      * @param documentType - Specify type of document (note or task)
      * using the DocumentType enum
      */
-    fun deleteDocument(
-        documentID: String,
-        documentType: DocumentType
-    ) {
+    fun deleteDocument(documentID: String, documentType: DocumentType) {
         val noteOrTask = if (documentType == DocumentType.NOTE) "NOTE-DATA" else "TASK-DATA"
         val documentPath = firebaseFirestore.collection("USERDATA")
             .document(firebaseAuth.currentUser!!.uid).collection(noteOrTask).document(documentID)
@@ -265,6 +259,20 @@ class FirebaseDocument {
                 storageDocumentPath.set(it2)
                 documentPath.delete()
             }
+        }
+    }
+
+    fun uploadFeedback(feedbackDocument: FeedbackDocument) {
+        feedbackDocument.apply {
+            firebaseFirestore.collection("FEEDBACK").document().set(
+                hashMapOf(
+                    "FEEDBACK-TITLE" to title,
+                    "FEEDBACK-DETAILS" to extraDetails,
+                    "FEEDBACK-CATEGORY" to feedbackType,
+                    "SUBMISSION-DATE" to dateOfSubmission,
+                    "SUBMISSION-USER-UID" to userOfSubmissionID
+                )
+            )
         }
     }
 
