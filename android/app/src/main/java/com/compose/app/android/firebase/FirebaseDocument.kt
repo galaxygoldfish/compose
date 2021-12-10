@@ -235,7 +235,7 @@ class FirebaseDocument {
         val noteOrTask = if (type == DocumentType.NOTE) "NOTE-DATA" else "TASK-DATA"
         val documentPath = firebaseFirestore.collection("USERDATA")
             .document(firebaseAuth.currentUser!!.uid).collection(noteOrTask).document(documentID)
-        val documentSize = FirebaseUtils.calculateDocumentSize(documentPath)
+        val documentSize = FirebaseQuota.calculateDocumentSize(documentPath)
         documentPath.set(documentFields)
         storageDocumentPath.set(
             mapOf("${noteOrTask}-${documentID}" to documentSize),
@@ -262,6 +262,11 @@ class FirebaseDocument {
         }
     }
 
+    /**
+     * Send feedback to dedicated folder in Firebase.
+     * @param feedbackDocument - Model class storing feedback data to be
+     * uploaded
+     */
     fun uploadFeedback(feedbackDocument: FeedbackDocument) {
         feedbackDocument.apply {
             firebaseFirestore.collection("FEEDBACK").document().set(

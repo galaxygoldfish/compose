@@ -28,6 +28,7 @@ const val IconSettings = R.drawable.ic_duotone_settings
 const val IconCreateAccount = R.drawable.ic_duotone_create_account
 const val IconPersonSingle = R.drawable.ic_duotone_user_single
 const val IconPersonGroup = R.drawable.ic_duotone_user_group
+const val IconAccountCircle = R.drawable.ic_duotone_account_circle
 
 const val IconEmail = R.drawable.ic_duotone_mail_letter
 const val IconPassword = R.drawable.ic_duotone_lock_closed

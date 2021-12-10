@@ -16,6 +16,7 @@
  **/
 package com.compose.app.android.view.settings
 
+import android.content.Context
 import android.content.Intent
 import android.text.format.Formatter
 import android.widget.Toast
@@ -56,6 +57,9 @@ import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.viewmodel.SettingsViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
 @Composable
@@ -233,7 +237,10 @@ fun AccountSettings(
             navController = navController,
             showingDialog = viewModel.showingLogOutDialog
         )
-        EditAccountDetailsDialog(viewModel = viewModel)
+        EditAccountDetailsDialog(
+            viewModel = viewModel,
+            context = navController.context
+        )
         PasswordChangeDialog(viewModel = viewModel)
         AccountDeleteDialog(
             viewModel = viewModel,
@@ -256,7 +263,8 @@ fun AccountSettingsItem(
             .padding(start = 20.dp, end = 20.dp, top = paddingTop!!)
             .clickable { onClick?.invoke() },
         shape = RoundedCornerShape(10.dp),
-        backgroundColor = MaterialTheme.colors.primaryVariant
+        backgroundColor = MaterialTheme.colors.primaryVariant,
+        elevation = 0.dp
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -354,7 +362,8 @@ fun LogOutAccountDialog(
 @ExperimentalAnimationApi
 @Composable
 fun EditAccountDetailsDialog(
-    viewModel: SettingsViewModel
+    viewModel: SettingsViewModel,
+    context: Context
 ) {
     val colorCorrectedSecondary = MaterialTheme.colors.secondaryVariant.let {
         if (currentAppThemeState.value) it else it.copy(1.0F)
@@ -374,83 +383,83 @@ fun EditAccountDetailsDialog(
                 text = stringResource(id = R.string.settings_account_edit_header),
                 icon = painterResource(id = IconEditPen)
             ) {
-                LocalContext.current.let { context ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        viewModel.tempAvatarImage.value?.let {
-                            Image(
-                                bitmap = it.createSquareImage().asImageBitmap(),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .padding(
-                                        start = 20.dp,
-                                        top = 30.dp,
-                                        end = 20.dp,
-                                        bottom = 20.dp
-                                    )
-                                    .size(110.dp)
-                                    .clip(CircleShape)
-                            )
-                            IconOnlyButton(
-                                icon = painterResource(id = IconCamera),
-                                contentDescription = stringResource(id = R.string.file_folder_content_desc),
-                                onClick = {
-                                    viewModel.openCameraForResult(context)
-                                },
-                                color = colorCorrectedSecondary
-                            )
-                            IconOnlyButton(
-                                icon = painterResource(id = IconGallery),
-                                contentDescription = stringResource(id = R.string.camera_icon_content_desc),
-                                onClick = {
-                                    viewModel.openGalleryForResult(context)
-                                },
-                                color = colorCorrectedSecondary
-                            )
-                        }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    viewModel.tempAvatarImage.value?.let {
+                        Image(
+                            bitmap = it.createSquareImage().asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(
+                                    start = 20.dp,
+                                    top = 30.dp,
+                                    end = 20.dp,
+                                    bottom = 20.dp
+                                )
+                                .size(110.dp)
+                                .clip(CircleShape)
+                        )
+                        IconOnlyButton(
+                            icon = painterResource(id = IconCamera),
+                            contentDescription = stringResource(id = R.string.file_folder_content_desc),
+                            onClick = {
+                                viewModel.openCameraForResult(context)
+                            },
+                            color = colorCorrectedSecondary
+                        )
+                        IconOnlyButton(
+                            icon = painterResource(id = IconGallery),
+                            contentDescription = stringResource(id = R.string.camera_icon_content_desc),
+                            onClick = {
+                                viewModel.openGalleryForResult(context)
+                            },
+                            color = colorCorrectedSecondary
+                        )
                     }
-                    LargeTextInputField(
-                        text = viewModel.tempFirstName.value,
-                        hint = stringResource(id = R.string.settings_account_edit_name_hint),
-                        valueCallback = {
-                            viewModel.tempFirstName.value = it
-                        },
-                        icon = painterResource(id = IconPersonSingle),
-                        contentDescription = stringResource(id = R.string.person_icon_content_desc),
-                        contentColor = MaterialTheme.colors.onBackground,
-                        color = colorCorrectedSecondary
-                    )
-                    LargeTextInputField(
-                        text = viewModel.tempLastName.value,
-                        hint = stringResource(id = R.string.settings_account_edit_surname_hint),
-                        valueCallback = {
-                            viewModel.tempLastName.value = it
-                        },
-                        icon = painterResource(id = IconPersonGroup),
-                        contentDescription = stringResource(id = R.string.person_icon_content_desc),
-                        contentColor = MaterialTheme.colors.onBackground,
-                        color = colorCorrectedSecondary
-                    )
-                    Spacer(modifier = Modifier.padding(top = 15.dp))
-                    LocalContext.current.apply {
-                        FullWidthButton(
-                            text = stringResource(id = R.string.settings_account_edit_positive_button),
-                            icon = painterResource(id = IconCheckMark),
-                            contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
-                            color = colorCorrectedSecondary,
-                            textStyle = MaterialTheme.typography.body2,
-                            contentColor = MaterialTheme.colors.onBackground
-                        ) {
-                            viewModel.apply {
+                }
+                LargeTextInputField(
+                    text = viewModel.tempFirstName.value,
+                    hint = stringResource(id = R.string.settings_account_edit_name_hint),
+                    valueCallback = {
+                        viewModel.tempFirstName.value = it
+                    },
+                    icon = painterResource(id = IconPersonSingle),
+                    contentDescription = stringResource(id = R.string.person_icon_content_desc),
+                    contentColor = MaterialTheme.colors.onBackground,
+                    color = colorCorrectedSecondary
+                )
+                LargeTextInputField(
+                    text = viewModel.tempLastName.value,
+                    hint = stringResource(id = R.string.settings_account_edit_surname_hint),
+                    valueCallback = {
+                        viewModel.tempLastName.value = it
+                    },
+                    icon = painterResource(id = IconPersonGroup),
+                    contentDescription = stringResource(id = R.string.person_icon_content_desc),
+                    contentColor = MaterialTheme.colors.onBackground,
+                    color = colorCorrectedSecondary
+                )
+                Spacer(modifier = Modifier.padding(top = 15.dp))
+                LocalContext.current.apply {
+                    FullWidthButton(
+                        text = stringResource(id = R.string.settings_account_edit_positive_button),
+                        icon = painterResource(id = IconCheckMark),
+                        contentDescription = stringResource(id = R.string.welcome_log_in_button_content_desc),
+                        color = colorCorrectedSecondary,
+                        textStyle = MaterialTheme.typography.body2,
+                        contentColor = MaterialTheme.colors.onBackground
+                    ) {
+                        viewModel.apply {
+                            CoroutineScope(Dispatchers.IO).launch {
                                 updateAccountEdit(context)
                                 setAvatarImage(filesDir.path, true)
-                                showingEditAccountDialog.value = false
                             }
+                            showingEditAccountDialog.value = false
                         }
                     }
-                    Spacer(modifier = Modifier.padding(bottom = 10.dp))
                 }
+                Spacer(modifier = Modifier.padding(bottom = 10.dp))
             }
         }
     }

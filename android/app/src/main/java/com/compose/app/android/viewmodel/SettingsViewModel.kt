@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.firebase.FirebaseDocument
-import com.compose.app.android.firebase.FirebaseUtils
+import com.compose.app.android.firebase.FirebaseQuota
 import com.compose.app.android.model.FeedbackDocument
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.utilities.getDefaultPreferences
@@ -44,10 +44,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.*
 
-// TODO organize this viewmodel
-
 class SettingsViewModel : ViewModel() {
 
+    // For use in AccountSettings when setting a new profile image
     object SettingsRequestCode {
         const val GALLERY_REQUEST = 3
         const val CAMERA_REQUEST = 4
@@ -70,9 +69,12 @@ class SettingsViewModel : ViewModel() {
     val tempPassword = mutableStateOf(TextFieldValue(""))
     val tempSecurityPin = mutableStateOf(TextFieldValue(""))
 
+    val uploadingAvatar = mutableStateOf(false)
+    val avatarUploadSuccess = mutableStateOf(false)
+
     val currentFeedbackTitle = mutableStateOf(TextFieldValue(""))
     val currentFeedbackBody = mutableStateOf(TextFieldValue(""))
-    val currentFeedbackType = mutableStateOf("Other") // probably should access string array for localization
+    val currentFeedbackType = mutableStateOf("Other")
 
     private val asyncScope = CoroutineScope(Dispatchers.IO + Job())
 
@@ -95,12 +97,16 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Set name, password, key and other data required to display to
+     * their most updated version from local preferences.
+     */
     fun updateMetadata(context: Context) {
         context.getDefaultPreferences().apply {
-            tempLastName.value = TextFieldValue(
+            tempFirstName.value = TextFieldValue(
                 getString("IDENTITY_USER_NAME_FIRST", "Error")!!
             )
-            tempFirstName.value = TextFieldValue(
+            tempLastName.value = TextFieldValue(
                 getString("IDENTITY_USER_NAME_LAST", "Error")!!
             )
             tempPassword.value = TextFieldValue(
@@ -113,9 +119,12 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Retrieve the most updated user storage usage to display
+     */
     fun updateUserStorageUsage() {
         asyncScope.launch {
-            userStorageUsage.value = FirebaseUtils.calculateUserStorage()
+            userStorageUsage.value = FirebaseQuota.calculateUserStorage()
         }
     }
 
@@ -147,13 +156,15 @@ class SettingsViewModel : ViewModel() {
     }
 
     /**
-     * Finalize changes and
+     * Upload new profile picture if changed, and also upload new
+     * name and last name details if changed, then update them locally
      */
     fun updateAccountEdit(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             FirebaseAccount().apply {
                 if ((tempAvatarImage.value?.equals(avatarImageStore.value)) == false) {
-                    uploadNewProfileImage(
+                    uploadingAvatar.value = true
+                    avatarUploadSuccess.value = uploadNewProfileImage(
                         avatarImage = tempAvatarImage.value!!,
                         context = context
                     )
@@ -175,6 +186,10 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Convert an unhidden password string to a string of "*"
+     * characters to display.
+     */
     fun getPasswordHidden(context: Context) : String {
         val password = context.getDefaultPreferences()
             .getString("IDENTITY_USER_AUTHENTICATOR", "Error")!!
@@ -183,6 +198,10 @@ class SettingsViewModel : ViewModel() {
         return tempDisplayText
     }
 
+    /**
+     * Upload the new password, but first re-authenticate the user to
+     * make sure that Firebase doesn't throw a security exception
+     */
     fun updatePasswordEdit(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             Firebase.auth.currentUser?.let {
@@ -202,6 +221,11 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Sync the new lock screen password locally, but not remotely
+     * so that the user isn't locked out if they sign in again while
+     * leaving the password lock feature on
+     */
     fun saveNewSecurityPin(context: Context) {
         context.getDefaultPreferences().edit().apply {
             putString("IDENTITY_USER_KEY", tempSecurityPin.value.text)
@@ -210,6 +234,9 @@ class SettingsViewModel : ViewModel() {
         showingPasswordEditDialog.value = false
     }
 
+    /**
+     * Upload the current feedback to Firebase
+     */
     fun saveCurrentFeedback() {
         FirebaseDocument().apply {
             uploadFeedback(

@@ -35,7 +35,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -78,6 +80,7 @@ fun ProductivityView(
     navController: NavController
 ) {
 
+    // Probably don't need this lol
     context.setTheme(if (MaterialTheme.colors.isLight) R.style.Theme_Compose_Light else R.style.Theme_Compose_Dark)
 
     viewModel.apply {
@@ -85,6 +88,7 @@ fun ProductivityView(
         updateNoteList()
         updateTaskList()
         updateStorageCount()
+
     }
 
     val scaffoldState = rememberScaffoldState()
@@ -244,9 +248,10 @@ fun ProfileContextMenu(
                                 color = MaterialTheme.colors.onBackground.copy(0.7F)
                             )
                         }
-                        viewModel.avatarImageStore.value?.let {
                             Image(
-                                bitmap = it.createSquareImage().asImageBitmap(),
+                                bitmap = viewModel.avatarImageStore.value?.asImageBitmap().let {
+                                    it ?: ImageBitmap.imageResource(id = IconAccountCircle)
+                                },
                                 contentDescription = stringResource(id = R.string.avatar_icon_content_desc),
                                 modifier = Modifier
                                     .padding(end = 20.dp, top = 20.dp)
@@ -254,7 +259,6 @@ fun ProfileContextMenu(
                                     .clip(CircleShape)
                                     .align(Alignment.CenterVertically)
                             )
-                        }
                     }
                     Column(
                         modifier = Modifier.padding(top = 25.dp, bottom = 15.dp)

@@ -10,6 +10,9 @@ class SecurityLockViewModel : ViewModel() {
 
     val passwordEnteredText = mutableStateOf(TextFieldValue(""))
 
+    /**
+     * Check if the password is correct and return the value
+     */
     fun authenticate(context: Context) : Boolean {
         val password = context.getDefaultPreferences().getString("IDENTITY_USER_KEY", "")
         return passwordEnteredText.value.text == password

@@ -22,7 +22,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CompletableDeferred
 
-class FirebaseUtils {
+class FirebaseQuota {
     companion object {
 
         /**

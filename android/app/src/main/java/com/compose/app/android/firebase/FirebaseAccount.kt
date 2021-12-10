@@ -198,8 +198,7 @@ class FirebaseAccount {
     ): Boolean {
         val completableToken = CompletableDeferred<Boolean>()
         val asyncScope = CoroutineScope(Dispatchers.IO + Job())
-        val avatarImagePath =
-            firebaseStorage.reference.child("USER-AVATARS/${firebaseAuth.currentUser!!.uid}")
+        val avatarImagePath = firebaseStorage.reference.child("USER-AVATARS/${firebaseAuth.currentUser!!.uid}")
         val avatarImageLocal = File(context.filesDir, "avatar.png")
         asyncScope.launch {
             val fileOutputStream = FileOutputStream(avatarImageLocal)
@@ -239,6 +238,10 @@ class FirebaseAccount {
         return completableToken.await()
     }
 
+    /**
+     * Sync remote user name details to the local preference storage
+     * so that views get the most updated name
+     */
     fun updateLocalMetadata(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             getUserMetadata().run {
@@ -285,8 +288,6 @@ class FirebaseAccount {
 
     /**
      * Clear all local data and sign out from firebase
-     *
-     * @param context - Needed to access SharedPreferences.
      */
     fun signOutUser(context: Context) {
         val preferences = context.getDefaultPreferences()
@@ -294,10 +295,13 @@ class FirebaseAccount {
         firebaseAuth.signOut()
     }
 
-    fun deleteAccount(
-        context: Context,
-        monitor: MutableState<Boolean>
-    ) {
+    /**
+     * Delete all associated notes, tasks and metadata documents
+     * associated with the current user, then delete their account
+     * @param monitor - State value which will be updated to true if
+     * the account has been deleted successfully
+     */
+    fun deleteAccount(context: Context, monitor: MutableState<Boolean>) {
         firebaseFirestore.apply {
             collection("METADATA")
                 .document("USERS")

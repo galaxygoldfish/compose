@@ -28,7 +28,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.firebase.FirebaseDocument
-import com.compose.app.android.firebase.FirebaseUtils
+import com.compose.app.android.firebase.FirebaseQuota
 import com.compose.app.android.model.ExpandableFABState
 import com.compose.app.android.model.NoteDocument
 import com.compose.app.android.model.TaskDocument
@@ -119,7 +119,7 @@ class ProductivityViewModel : ViewModel() {
      */
     fun updateStorageCount() {
         asyncScope.launch {
-            userStorageSize.value = FirebaseUtils.calculateUserStorage()
+            userStorageSize.value = FirebaseQuota.calculateUserStorage()
         }
     }
 

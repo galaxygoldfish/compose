@@ -101,7 +101,7 @@ fun SheetHandle() {
                 .width(100.dp)
                 .height(4.dp),
             shape = RoundedCornerShape(8.dp),
-            backgroundColor = colorResource(id = R.color.bottom_sheet_handle_color), // TODO - Don't use colorResource to fix weird jetpack compose dark/light theme switching
+            backgroundColor = colorResource(id = R.color.bottom_sheet_handle_color),
             elevation = 0.dp
         ) { }
     }
@@ -150,6 +150,11 @@ fun OptionListItem(
     }
 }
 
+/**
+ * Reusable component to ensure consistency across dialogs,
+ * contains an icon with text under it, and a dark or light
+ * gray background with 10.dp rounded corners
+ */
 @Composable
 fun DialogScaffold(
     text: String,
@@ -185,6 +190,11 @@ fun DialogScaffold(
     }
 }
 
+/**
+ * When using the secondaryVariant color, retrieve a
+ * corrected version for use in light theme on primaryVariant
+ * as it's opacity is too low that it blends in
+ */
 @Composable
 fun colorCorrectedSecondary() : Color {
     return MaterialTheme.colors.secondaryVariant.let {
