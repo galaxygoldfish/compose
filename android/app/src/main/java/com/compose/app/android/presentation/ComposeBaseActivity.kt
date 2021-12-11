@@ -411,4 +411,16 @@ class ComposeBaseActivity : ComponentActivity() {
 
     }
 
+    override fun onBackPressed() {
+        NavigationDestination.apply {
+            navigationController.currentDestination?.route?.let {
+                when {
+                    it.contains(NoteEditorView) -> noteEditorViewModel.saveNoteContents()
+                    it.contains(TaskEditorView) -> taskEditorViewModel.saveTaskData(this@ComposeBaseActivity)
+                }
+            }
+        }
+        super.onBackPressed()
+    }
+
 }
