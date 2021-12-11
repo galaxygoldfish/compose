@@ -197,7 +197,11 @@ class ComposeBaseActivity : ComponentActivity() {
                         navController = navigationController
                     )
                 }
-                composable(NavigationDestination.CreateAccountView) {
+                composable(
+                    route = NavigationDestination.CreateAccountView,
+                    enterTransition = animatedSlideRight,
+                    exitTransition = animatedSlideLeft
+                ) {
                     keyboardPop(true)
                     CreateAccountView(
                         context = this@ComposeBaseActivity,
@@ -205,7 +209,11 @@ class ComposeBaseActivity : ComponentActivity() {
                         navController = navigationController
                     )
                 }
-                composable(NavigationDestination.LogInView) {
+                composable(
+                    route = NavigationDestination.LogInView,
+                    enterTransition = animatedSlideRight,
+                    exitTransition = animatedSlideLeft
+                ) {
                     keyboardPop(true)
                     LogInView(
                         context = this@ComposeBaseActivity,
