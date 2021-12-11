@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -294,9 +295,10 @@ fun SubTaskListView(
             LazyColumn(
                 content = {
                     itemsIndexed(items = viewModel.subTaskItemList.value) { index, item ->
-                        Row(modifier = Modifier.padding(top = 15.dp)) {
-                            val currentItemComplete =
-                                remember { mutableStateOf(item.taskComplete) }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val currentItemComplete = remember { mutableStateOf(item.taskComplete) }
                             val currentItemText = remember {
                                 mutableStateOf(
                                     TextFieldValue(
@@ -332,12 +334,12 @@ fun SubTaskListView(
                                 } else {
                                     textStyle
                                 },
-                                modifier = Modifier.padding(start = 15.dp)
+                                modifier = Modifier.padding(start = 5.dp)
                             )
                         }
                     }
                 },
-                modifier = Modifier.padding(start = 20.dp)
+                modifier = Modifier.padding(start = 10.dp)
             )
         }
         // Since compose just *absolutely* refuses to update the list when button
