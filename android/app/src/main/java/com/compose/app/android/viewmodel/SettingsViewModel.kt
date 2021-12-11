@@ -30,6 +30,7 @@ import com.compose.app.android.firebase.FirebaseAccount
 import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.firebase.FirebaseQuota
 import com.compose.app.android.model.FeedbackDocument
+import com.compose.app.android.model.WhatsNewDocument
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.utilities.getDefaultPreferences
 import com.compose.app.android.utilities.handleProfileImageResult
@@ -62,6 +63,7 @@ class SettingsViewModel : ViewModel() {
     val showingColorPickerDialog = mutableStateOf(false)
     val showingAccountDeleteDialog = mutableStateOf(false)
     val showingPasswordEditDialog = mutableStateOf(false)
+    val showingWhatsNewDialog = mutableStateOf(false)
 
     val tempAvatarImage = mutableStateOf(avatarImageStore.value)
     val tempFirstName = mutableStateOf(TextFieldValue(""))
@@ -76,9 +78,16 @@ class SettingsViewModel : ViewModel() {
     val currentFeedbackBody = mutableStateOf(TextFieldValue(""))
     val currentFeedbackType = mutableStateOf("Other")
 
+    val currentUpdateChanges = mutableStateOf<WhatsNewDocument?>(null)
+
     private val asyncScope = CoroutineScope(Dispatchers.IO + Job())
 
-    init { updateUserStorageUsage() }
+    init {
+        updateUserStorageUsage()
+        asyncScope.launch {
+            currentUpdateChanges.value = FirebaseDocument().getUpdateDetails()
+        }
+    }
 
     /**
      * Fetch the latest version of the user's avatar image from

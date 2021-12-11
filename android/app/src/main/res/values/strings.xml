@@ -195,6 +195,13 @@
     <string name="settings_about_version_format">version %1$s</string>
     <string name="settings_about_help_title">Help &amp; feedback</string>
     <string name="settings_about_help_body">Send feedback, bug reports &amp; learn how to use the app.</string>
+    <string name="settings_about_whats_new_title">What\'s new</string>
+    <string name="settings_about_whats_new_subtitle_format">%1$s - Updated on %2$s</string>
+    <string name="settings_about_whats_new_body">View changes made in the latest update.</string>
+    <string name="settings_about_updates_title">Google Play listing</string>
+    <string name="settings_about_updates_body">Check for updates, leave a review and get support.</string>
+    <string name="settings_about_manage_title">System settings</string>
+    <string name="settings_about_manage_body">Manage permissions, clear cache or data and manage battery.</string>
 
     <string name="security_lock_hint_text">Enter password to unlock</string>
 

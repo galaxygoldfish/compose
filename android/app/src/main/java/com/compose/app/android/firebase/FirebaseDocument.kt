@@ -17,10 +17,8 @@
 package com.compose.app.android.firebase
 
 import androidx.lifecycle.MutableLiveData
-import com.compose.app.android.model.DocumentType
-import com.compose.app.android.model.FeedbackDocument
-import com.compose.app.android.model.NoteDocument
-import com.compose.app.android.model.TaskDocument
+import com.compose.app.android.BuildConfig
+import com.compose.app.android.model.*
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
@@ -271,7 +269,6 @@ class FirebaseDocument {
         feedbackDocument.apply {
             firebaseFirestore.collection("FEEDBACK").document().set(
                 hashMapOf(
-                    "FEEDBACK-TITLE" to title,
                     "FEEDBACK-DETAILS" to extraDetails,
                     "FEEDBACK-CATEGORY" to feedbackType,
                     "SUBMISSION-DATE" to dateOfSubmission,
@@ -279,6 +276,34 @@ class FirebaseDocument {
                 )
             )
         }
+    }
+
+    /**
+     * Retrieve the latest details about the current release, as
+     * an instance of the WhatsNewDocument
+     */
+    suspend fun getUpdateDetails() : WhatsNewDocument {
+        val completableDeferred = CompletableDeferred<WhatsNewDocument>()
+        firebaseFirestore.collection("UPDATE-LOG")
+            .document("UPDATE-${BuildConfig.VERSION_NAME}")
+            .get()
+            .addOnSuccessListener { document ->
+                document.data?.let { it ->
+                    completableDeferred.complete(
+                        WhatsNewDocument(
+                            versionName = it["VERSION-NAME"] as String,
+                            changeBody = it["UPDATE-DETAIL"] as String,
+                            changeDate = it["UPDATE-DATE"] as String
+                        )
+                    )
+                }
+            }
+            .addOnFailureListener {
+                completableDeferred.complete(
+                    ("Error").let { WhatsNewDocument(it, it, it) }
+                )
+            }
+        return completableDeferred.await()
     }
 
 }

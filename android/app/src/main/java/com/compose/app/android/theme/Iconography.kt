@@ -63,3 +63,6 @@ const val IconHelpFeedback = R.drawable.ic_duotone_flag
 const val IconSend = R.drawable.ic_duotone_send
 const val IconStorage = R.drawable.ic_duotone_package
 const val IconZoomIn = R.drawable.ic_duotone_zoom_in
+
+const val IconGift = R.drawable.ic_duotone_gift
+const val IconSuitcase = R.drawable.ic_duotone_suitcase
