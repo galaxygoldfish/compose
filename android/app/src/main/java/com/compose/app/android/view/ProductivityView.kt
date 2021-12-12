@@ -37,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,8 +47,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.compose.app.android.BuildConfig
 import com.compose.app.android.R
 import com.compose.app.android.components.AddNoteTaskMenuFAB
+import com.compose.app.android.components.FullWidthButton
 import com.compose.app.android.components.OptionListItem
 import com.compose.app.android.model.ExpandableFAB
 import com.compose.app.android.presentation.ComposeBaseActivity
@@ -88,7 +91,15 @@ fun ProductivityView(
         updateNoteList()
         updateTaskList()
         updateStorageCount()
+    }
 
+    LocalContext.current.apply {
+        if (
+            BuildConfig.VERSION_NAME.contains("beta") &&
+            !getDefaultPreferences().getBoolean("SHOW_BETA_WELCOME", false)
+        ) {
+            viewModel.showingBetaProgramDialog.value = true
+        }
     }
 
     val scaffoldState = rememberScaffoldState()
@@ -174,6 +185,7 @@ fun ProductivityView(
                             navController = navController,
                             showingDialog = viewModel.showingLogOutDialog
                         )
+                        BetaProgramDialog(viewModel = viewModel)
                     }
                 }
             }
@@ -601,5 +613,59 @@ fun BottomNavigationBar(
                 ),
             )
         )
+    }
+}
+
+@ExperimentalAnimationApi
+@Composable
+fun BetaProgramDialog(viewModel: ProductivityViewModel) {
+    AnimatedVisibility(
+        visible = viewModel.showingBetaProgramDialog.value
+    ) {
+        Dialog(
+            onDismissRequest = {
+                viewModel.showingBetaProgramDialog.value = false
+            },
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colors.background)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_illustration_beta_program),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(top = 23.dp, start = 20.dp, end = 20.dp)
+                )
+                Text(
+                    text = stringResource(id = R.string.beta_program_dialog_header),
+                    modifier = Modifier.padding(start = 20.dp, top = 15.dp),
+                    style = MaterialTheme.typography.h4
+                )
+                Text(
+                    text = stringResource(id = R.string.beta_program_dialog_body),
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 15.dp)
+                )
+                LocalContext.current.apply {
+                    FullWidthButton(
+                        text = stringResource(id = R.string.beta_program_dialog_positive_button),
+                        icon = painterResource(id = IconCheckMark),
+                        contentDescription = "",
+                        color = MaterialTheme.colors.primaryVariant,
+                        contentColor = MaterialTheme.colors.onBackground,
+                        textStyle = MaterialTheme.typography.body1
+                    ) {
+                        getDefaultPreferences().edit().putBoolean("SHOW_BETA_WELCOME", true).commit()
+                        viewModel.showingBetaProgramDialog.value = false
+                    }
+                }
+                Spacer(Modifier.padding(bottom = 15.dp))
+            }
+        }
     }
 }

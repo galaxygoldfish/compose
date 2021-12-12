@@ -90,7 +90,11 @@
     <string name="productivity_menu_notes">NEW NOTE</string>
     <string name="productivity_menu_task">NEW TASK</string>
     <string name="productivity_nothing_here_message">There\'s nothing here yet…</string>
-    
+
+    <string name="beta_program_dialog_header">Compose Beta</string>
+    <string name="beta_program_dialog_body">Welcome to the Compose Beta program!\n\nThis release may be unstable, and can contain bugs and issues. Please report any issue or suggestion with the feedback tool located in settings.</string>
+    <string name="beta_program_dialog_positive_button">Got it!</string>
+
     <string name="note_editor_title_placeholder">Title here</string>
     <string name="note_editor_content_placeholder">Content here</string>
     <string name="note_editor_color_picker_title">Note card color</string>
@@ -188,7 +192,6 @@
     <string name="settings_create_feedback_button_positive">Send feedback</string>
     <string name="settings_create_feedback_error_message">Oops! Make sure that all fields are filled out and that you\'ve selected a category</string>
     <string name="settings_create_feedback_thanks_message">Thanks for the feedback!</string>
-
     <string name="settings_feature_unavailable_toast">Unfortunately, this feature isn\'t available yet</string>
 
     <string name="settings_about_tag">About app</string>

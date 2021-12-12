@@ -54,6 +54,7 @@ class ProductivityViewModel : ViewModel() {
     val avatarImageStore: MutableState<Bitmap?> = mutableStateOf(null)
     val showProfileContextDialog = mutableStateOf(false)
     val showingLogOutDialog = mutableStateOf(false)
+    val showingBetaProgramDialog = mutableStateOf(false)
 
     val floatingActionState = mutableStateOf(ExpandableFABState.COLLAPSED)
     val taskSelectedState = mutableStateOf(false)
