@@ -208,4 +208,10 @@
 
     <string name="security_lock_hint_text">Enter password to unlock</string>
 
+    <string name="storage_usage_alert_header">You\'ve run out of storage</string>
+    <string name="storage_usage_alert_body">Unfortunately, you\'ve used all 5 MB allocated to your Compose ID, so this document cannot be saved.\n\nYou can still make edits to notes, however they won\'t be saved or backed up. </string>
+    <string name="storage_usage_alert_positive_button">OK, return to editor</string>
+    <string name="storage_usage_alert_neutral_button">Go back anyway</string>
+    <string name="storage_usage_alert_negative_button">Delete this document</string>
+
 </resources>
