@@ -53,7 +53,7 @@ fun FullWidthButton(
     text: String,
     icon: Painter,
     contentDescription: String,
-    textStyle: TextStyle? = TextStyle(),
+    textStyle: TextStyle? = MaterialTheme.typography.body1,
     color: Color,
     contentColor: Color? = LocalContentColor.current,
     onClick: () -> Unit

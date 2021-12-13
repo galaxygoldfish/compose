@@ -72,7 +72,7 @@ fun AboutAppSettings(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.mipmap.compose_app_icon),
+                painter = painterResource(id = R.mipmap.ic_launcher),
                 contentDescription = stringResource(id = R.string.app_name),
                 modifier = Modifier
                     .padding(vertical = 15.dp)

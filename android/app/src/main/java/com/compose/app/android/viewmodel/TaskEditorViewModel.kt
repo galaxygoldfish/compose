@@ -25,14 +25,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.compose.app.android.R
 import com.compose.app.android.firebase.FirebaseDocument
+import com.compose.app.android.firebase.FirebaseQuota
 import com.compose.app.android.model.DocumentType
 import com.compose.app.android.model.SubTaskDocument
 import com.compose.app.android.notification.TaskNotificationManager
 import com.compose.app.android.utilities.getCloudPreferences
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.time.Year
 import java.util.*
@@ -50,8 +48,7 @@ class TaskEditorViewModel : ViewModel() {
     private val calendar: Calendar = Calendar.getInstance()
     private val dayIndex = calendar[Calendar.DAY_OF_MONTH]
     private val calendarMinute = calendar[Calendar.MINUTE]
-    private val editedMinute =
-        if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute.toString()
+    private val editedMinute = if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute.toString()
 
     var monthIndex = mutableStateOf(calendar[Calendar.MONTH])
     val currentMonth = mutableStateOf("")
@@ -60,6 +57,8 @@ class TaskEditorViewModel : ViewModel() {
     val selectedHour = mutableStateOf("0")
     val selectedMinute = mutableStateOf("00")
     val selectionAMPM = mutableStateOf(0)
+
+    val showingStorageAlertDialog = mutableStateOf(false)
 
     private val asynchronousScope = CoroutineScope(Dispatchers.IO + Job())
 
@@ -171,48 +170,57 @@ class TaskEditorViewModel : ViewModel() {
      * and if a time was selected, schedule a notification for
      * that time.
      */
-    fun saveTaskData(context: Context) {
+    suspend fun saveTaskData(context: Context) : Boolean {
+        val completableDeferred = CompletableDeferred<Boolean>()
         if (titleTextFieldValue.value.text.isNotEmpty()) {
-            asynchronousScope.launch {
-                val dueTime =
-                    "${selectedHour.value}:${selectedMinute.value} ${if (selectionAMPM.value == 0) "AM" else "PM"}"
-                val baseTimeFormat = SimpleDateFormat("MMMM d h:mm a yyyy", Locale.ENGLISH)
-                val parsedDueDate = baseTimeFormat.parse(
-                    "${currentMonth.value} ${selectedDayIndex.value} $dueTime ${currentYear.value}"
-                )
-                val taskDataMap = mapOf(
-                    "ID" to (currentDocumentID.value ?: UUID.randomUUID().toString()),
-                    "TITLE" to titleTextFieldValue.value.text,
-                    "LOCATION" to locationTextFieldValue.value.text,
-                    "COMPLETE" to taskCompletionState.value,
-                    "DUE-TIME-HR" to dueTime,
-                    "DUE-DATE-HR" to "${currentMonth.value} ${selectedDayIndex.value}, ${currentYear.value}",
-                    "DUE-DATE-TIME-UNIX" to (parsedDueDate?.time ?: 0),
-                    "SUB-TASK-ITEMS" to parseSubTaskList()
-                )
-                Log.e("COMPOSE", "TaskEditorViewModel#saveTaskData")
-                if (
-                    parsedDueDate!!.time > Date().time &&
-                    context.getCloudPreferences().getBoolean("STATE_ENABLE_NOTIFICATIONS", false)
-                ) {
-                    TaskNotificationManager.scheduleTaskNotification(
-                        context = context,
-                        taskID = currentDocumentID.value!!,
-                        content = String.format(
-                            context.getString(R.string.notification_content_format),
-                            titleTextFieldValue.value.text
-                        ),
-                        title = context.getString(R.string.notification_title_format),
-                        timeUnix = parsedDueDate.time
+            if (FirebaseQuota.calculateUserStorage() < 5000000) {
+                asynchronousScope.launch {
+                    val dueTime =
+                        "${selectedHour.value}:${selectedMinute.value} ${if (selectionAMPM.value == 0) "AM" else "PM"}"
+                    val baseTimeFormat = SimpleDateFormat("MMMM d h:mm a yyyy", Locale.ENGLISH)
+                    val parsedDueDate = baseTimeFormat.parse(
+                        "${currentMonth.value} ${selectedDayIndex.value} $dueTime ${currentYear.value}"
                     )
+                    val taskDataMap = mapOf(
+                        "ID" to (currentDocumentID.value ?: UUID.randomUUID().toString()),
+                        "TITLE" to titleTextFieldValue.value.text,
+                        "LOCATION" to locationTextFieldValue.value.text,
+                        "COMPLETE" to taskCompletionState.value,
+                        "DUE-TIME-HR" to dueTime,
+                        "DUE-DATE-HR" to "${currentMonth.value} ${selectedDayIndex.value}, ${currentYear.value}",
+                        "DUE-DATE-TIME-UNIX" to (parsedDueDate?.time ?: 0),
+                        "SUB-TASK-ITEMS" to parseSubTaskList()
+                    )
+                    Log.e("COMPOSE", "TaskEditorViewModel#saveTaskData")
+                    if (
+                        parsedDueDate!!.time > Date().time &&
+                        context.getCloudPreferences()
+                            .getBoolean("STATE_ENABLE_NOTIFICATIONS", false)
+                    ) {
+                        TaskNotificationManager.scheduleTaskNotification(
+                            context = context,
+                            taskID = currentDocumentID.value!!,
+                            content = String.format(
+                                context.getString(R.string.notification_content_format),
+                                titleTextFieldValue.value.text
+                            ),
+                            title = context.getString(R.string.notification_title_format),
+                            timeUnix = parsedDueDate.time
+                        )
+                    }
+                    FirebaseDocument().saveDocument(
+                        documentID = currentDocumentID.value ?: UUID.randomUUID().toString(),
+                        documentFields = taskDataMap,
+                        type = DocumentType.TASK
+                    )
+                    completableDeferred.complete(true)
                 }
-                FirebaseDocument().saveDocument(
-                    documentID = currentDocumentID.value ?: UUID.randomUUID().toString(),
-                    documentFields = taskDataMap,
-                    type = DocumentType.TASK
-                )
+            } else {
+                showingStorageAlertDialog.value = true
+                completableDeferred.complete(false)
             }
         }
+        return completableDeferred.await()
     }
 
 }

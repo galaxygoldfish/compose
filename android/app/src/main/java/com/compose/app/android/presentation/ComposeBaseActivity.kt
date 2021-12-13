@@ -58,6 +58,9 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object NavigationDestination {
     const val WelcomeView = "welcome"
@@ -420,15 +423,29 @@ class ComposeBaseActivity : ComponentActivity() {
     }
 
     override fun onBackPressed() {
-        NavigationDestination.apply {
-            navigationController.currentDestination?.route?.let {
-                when {
-                    it.contains(NoteEditorView) -> noteEditorViewModel.saveNoteContents()
-                    it.contains(TaskEditorView) -> taskEditorViewModel.saveTaskData(this@ComposeBaseActivity)
+        val noteOrTask = navigationController.currentDestination?.route?.let {
+            when {
+                // Task or note editor
+                it.contains(NavigationDestination.NoteEditorView) -> true
+                it.contains(NavigationDestination.TaskEditorView) -> false
+                // Other navigation destination
+                else -> {
+                    super.onBackPressed()
+                    return@let null
                 }
             }
         }
-        super.onBackPressed()
+        CoroutineScope(Dispatchers.Main).launch {
+            if (noteOrTask == true) {
+                if (noteEditorViewModel.saveNoteContents()) {
+                    super.onBackPressed()
+                }
+            } else if (noteOrTask == false) {
+                if (taskEditorViewModel.saveTaskData(this@ComposeBaseActivity)) {
+                    super.onBackPressed()
+                }
+            }
+        }
     }
 
 }

@@ -167,6 +167,17 @@ fun TaskEditorView(
                     }
                     SubTaskListView(viewModel = viewModel)
                 }
+                StorageUsageAlertDialog(
+                    showState = viewModel.showingStorageAlertDialog,
+                    onDiscardAction = {
+                        FirebaseDocument().deleteDocument(
+                            documentID = viewModel.currentDocumentID.value!!,
+                            documentType = DocumentType.TASK
+                        )
+                        navController.popBackStack()
+                    },
+                    navController = navController
+                )
             }
         }
     }
@@ -194,8 +205,11 @@ fun TaskActionBar(
                 .padding(start = 15.dp, top = 5.dp)
                 .size(30.dp),
             onClick = {
-                viewModel.saveTaskData(navController.context)
-                navController.navigate(NavigationDestination.ProductivityView)
+                composeAsync.launch {
+                    if (viewModel.saveTaskData(navController.context)) {
+                        navController.navigate(NavigationDestination.ProductivityView)
+                    }
+                }
             },
             content = @Composable {
                 Icon(
@@ -228,7 +242,9 @@ fun TaskActionBar(
                     .padding(end = 10.dp)
                     .size(30.dp),
                 onClick = {
-                    viewModel.saveTaskData(navController.context)
+                    composeAsync.launch {
+                        viewModel.saveTaskData(navController.context)
+                    }
                 },
                 content = @Composable {
                     Icon(

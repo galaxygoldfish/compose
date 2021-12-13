@@ -186,6 +186,18 @@ fun NoteEditorView(
                     ) {
                         NoteFormatOptionDialog(viewModel = viewModel)
                     }
+                    StorageUsageAlertDialog(
+                        showState = viewModel.showingStorageAlertDialog,
+                        onDiscardAction = {
+                            FirebaseDocument().deleteDocument(
+                                viewModel.noteDocumentID.value!!,
+                                DocumentType.NOTE
+                            )
+                            viewModel.clearTextFields()
+                            navController.navigate(NavigationDestination.ProductivityView)
+                        },
+                        navController = navController
+                    )
                 }
             }
         }
@@ -214,9 +226,12 @@ fun NoteActionBar(
                 .padding(start = 15.dp, top = 5.dp)
                 .size(30.dp),
             onClick = {
-                viewModel.saveNoteContents()
-                viewModel.clearTextFields()
-                navController.navigate(NavigationDestination.ProductivityView)
+                coroutineScope.launch {
+                    if (viewModel.saveNoteContents()) {
+                        viewModel.clearTextFields()
+                        navController.navigate(NavigationDestination.ProductivityView)
+                    }
+                }
             },
             content = @Composable {
                 Icon(
@@ -234,7 +249,9 @@ fun NoteActionBar(
                     .padding(end = 10.dp)
                     .size(30.dp),
                 onClick = {
-                    viewModel.saveNoteContents()
+                    coroutineScope.launch {
+                        viewModel.saveNoteContents()
+                    }
                 },
                 content = @Composable {
                     Icon(

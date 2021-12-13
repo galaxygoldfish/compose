@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.compose.app.android.firebase.FirebaseDocument
+import com.compose.app.android.firebase.FirebaseQuota
 import com.compose.app.android.model.*
 import com.compose.app.android.model.SavedSpanType.BOLD_SPAN
 import com.compose.app.android.model.SavedSpanType.COLOR_BLUE
@@ -41,10 +42,7 @@ import com.compose.app.android.model.SavedSpanType.ITALIC_SPAN
 import com.compose.app.android.model.SavedSpanType.SIZE_SPAN
 import com.compose.app.android.model.SavedSpanType.UNDERLINE_SPAN
 import com.compose.app.android.theme.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -61,8 +59,10 @@ class NoteEditorViewModel : ViewModel() {
 
     val noteFormatList = mutableStateOf(mutableListOf<TextFormatSpan>())
     var styleSaveList = mutableListOf<MutableMap<String, Int>>()
+
     val showFormatOptionDialog = mutableStateOf(false)
     val currentDialogResource = mutableStateOf(0) // 0 for size, 1 for color
+    val showingStorageAlertDialog = mutableStateOf(false)
 
     private val asynchronousScope = CoroutineScope(Dispatchers.IO + Job())
     private val synchronousScope = CoroutineScope(Dispatchers.Main + Job())
@@ -97,25 +97,33 @@ class NoteEditorViewModel : ViewModel() {
      * Upload note contents to firebase only if there is note content
      * to save.
      */
-    fun saveNoteContents() {
-        if (titleTextValue.value.text.isNotEmpty() || contentTextValue.value.text.isNotEmpty()) {
-            val noteDocumentMap = mapOf(
-                "ID" to noteDocumentID.value!!,
-                "TITLE" to titleTextValue.value.text,
-                "CONTENT" to contentTextValue.value.text,
-                "COLOR" to selectedNoteColorCentral.value!!,
-                "DATE" to getCurrentDate(),
-                "TIME" to getCurrentTime(),
-                "STYLE" to styleSaveList
-            )
-            asynchronousScope.launch {
-                FirebaseDocument().saveDocument(
-                    documentFields = noteDocumentMap,
-                    documentID = noteDocumentID.value!!,
-                    type = DocumentType.NOTE
-                )
+    suspend fun saveNoteContents() : Boolean {
+        val completableDeferred = CompletableDeferred<Boolean>()
+        asynchronousScope.launch {
+            if (titleTextValue.value.text.isNotEmpty() || contentTextValue.value.text.isNotEmpty()) {
+                if (FirebaseQuota.calculateUserStorage() < 5000000) {
+                    val noteDocumentMap = mapOf(
+                        "ID" to noteDocumentID.value!!,
+                        "TITLE" to titleTextValue.value.text,
+                        "CONTENT" to contentTextValue.value.text,
+                        "COLOR" to selectedNoteColorCentral.value!!,
+                        "DATE" to getCurrentDate(),
+                        "TIME" to getCurrentTime(),
+                        "STYLE" to styleSaveList
+                    )
+                    FirebaseDocument().saveDocument(
+                        documentFields = noteDocumentMap,
+                        documentID = noteDocumentID.value!!,
+                        type = DocumentType.NOTE
+                    )
+                    completableDeferred.complete(true)
+                } else {
+                    showingStorageAlertDialog.value = true
+                    completableDeferred.complete(false)
+                }
             }
         }
+        return completableDeferred.await()
     }
 
     /**
