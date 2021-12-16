@@ -43,13 +43,12 @@ import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.createSquareImage
 import com.compose.app.android.utilities.getDefaultPreferences
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.viewmodel.SettingsViewModel
 
 @Composable
-fun SettingsHomePage(
-    viewModel: SettingsViewModel,
-    navController: NavController
-) {
+fun SettingsHomePage(navController: NavController) {
+    val viewModel = navController.context.getViewModel(SettingsViewModel::class.java)
     viewModel.apply {
         setAvatarImage(LocalContext.current.filesDir.path)
         updateUserStorageUsage()

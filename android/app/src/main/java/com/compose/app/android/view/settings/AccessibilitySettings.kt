@@ -32,13 +32,12 @@ import com.compose.app.android.R
 import com.compose.app.android.components.SettingsActionBar
 import com.compose.app.android.theme.IconZoomIn
 import com.compose.app.android.utilities.getDefaultPreferences
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.viewmodel.SettingsViewModel
 
 @Composable
-fun AccessibilitySettings(
-    viewModel: SettingsViewModel,
-    navController: NavController
-) {
+fun AccessibilitySettings(navController: NavController) {
+    val viewModel = navController.context.getViewModel(SettingsViewModel::class.java)
     Column(
         modifier = Modifier
             .fillMaxSize()

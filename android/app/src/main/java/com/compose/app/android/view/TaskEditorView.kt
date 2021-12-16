@@ -51,6 +51,7 @@ import com.compose.app.android.model.DocumentType
 import com.compose.app.android.model.SubTaskDocument
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.viewmodel.TaskEditorViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -63,9 +64,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun TaskEditorView(
     navController: NavController,
-    documentID: String,
-    viewModel: TaskEditorViewModel
+    documentID: String
 ) {
+
+    val viewModel = navController.context.getViewModel(TaskEditorViewModel::class.java)
 
     val mainScaffoldState = rememberScaffoldState()
     val composeAsync = rememberCoroutineScope()

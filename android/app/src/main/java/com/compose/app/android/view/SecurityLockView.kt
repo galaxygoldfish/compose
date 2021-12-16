@@ -40,13 +40,12 @@ import com.compose.app.android.theme.ComposeTheme
 import com.compose.app.android.theme.IconBackspace
 import com.compose.app.android.theme.IconCheckMark
 import com.compose.app.android.theme.IconPassword
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.viewmodel.SecurityLockViewModel
 
 @Composable
-fun SecurityLockView(
-    viewModel: SecurityLockViewModel,
-    navController: NavController
-) {
+fun SecurityLockView(navController: NavController) {
+    val viewModel = navController.context.getViewModel(SecurityLockViewModel::class.java)
     ComposeTheme {
         Column(
             modifier = Modifier

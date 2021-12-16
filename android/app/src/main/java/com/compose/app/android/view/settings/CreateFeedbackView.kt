@@ -9,8 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,15 +24,13 @@ import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.IconAlert
 import com.compose.app.android.theme.IconHelpFeedback
 import com.compose.app.android.theme.IconSend
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.viewmodel.SettingsViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun CreateFeedbackView(
-    navController: NavController,
-    viewModel: SettingsViewModel
-) {
-    val showingErrorSnackbar = remember { mutableStateOf(false) }
+fun CreateFeedbackView(navController: NavController) {
+    val viewModel = navController.context.getViewModel(SettingsViewModel::class.java)
     val hostState = rememberScaffoldState().snackbarHostState
     Column(
         modifier = Modifier

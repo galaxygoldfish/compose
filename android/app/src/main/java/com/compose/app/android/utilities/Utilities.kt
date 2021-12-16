@@ -1,10 +1,13 @@
 package com.compose.app.android.utilities
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.viewmodel.CreateAccountViewModel
 import com.compose.app.android.viewmodel.SettingsViewModel
@@ -35,3 +38,16 @@ fun handleProfileImageResult(
         }
     }
 }
+
+/**
+ * Faster way to get a viewModel class instance from the
+ * ViewModelProvider, eliminating boilerplate code.
+ *
+ * @param type - The ViewModel type to retrieve, for example,
+ * ProductivityViewModel::class.java may be passed in to get
+ * the current instance of that viewModel
+ * @return - An instance of the viewModel type specified, or
+ * if it does not exist in the provider, a new one will be
+ * created and returned
+ */
+fun <T : ViewModel> Context.getViewModel(type: Class<T>) : T = ViewModelProvider(this as ComposeBaseActivity).get(type)

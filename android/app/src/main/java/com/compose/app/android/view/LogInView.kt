@@ -16,7 +16,6 @@
  **/
 package com.compose.app.android.view
 
-import android.content.Context
 import android.view.WindowManager
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
@@ -38,28 +37,31 @@ import com.compose.app.android.components.TextOnlyButton
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.utilities.rawStringResource
 import com.compose.app.android.viewmodel.LogInViewModel
 import kotlinx.coroutines.launch
 
+// TODO - same as create account view, move variables to viewModel
+
 @Composable
-fun LogInView(
-    context: Context,
-    viewModel: LogInViewModel,
-    navController: NavController
-) {
+fun LogInView(navController: NavController) {
+
+    val viewModel = navController.context.getViewModel(LogInViewModel::class.java)
 
     val emailValue = remember { mutableStateOf(TextFieldValue()) }
     val passwordValue = remember { mutableStateOf(TextFieldValue()) }
     val scaffoldState = rememberScaffoldState()
 
     val snackbarIconState = remember { mutableStateOf(IconAlert) }
-    val snackbarIconDescription = remember { mutableStateOf(context.rawStringResource(R.string.warning_icon_content_desc)) }
+    val snackbarIconDescription = remember {
+        mutableStateOf(navController.context.rawStringResource(R.string.warning_icon_content_desc))
+    }
 
     fun showSnackbar(@StringRes stringID: Int) {
         viewModel.asyncScope.launch {
             scaffoldState.snackbarHostState.showSnackbar(
-                context.rawStringResource(stringID),
+                navController.context.rawStringResource(stringID),
                 duration = SnackbarDuration.Indefinite
             )
         }
@@ -160,25 +162,24 @@ fun LogInView(
                                     text = stringResource(id = R.string.log_in_activity_action_proceed),
                                     color = MaterialTheme.colors.primary,
                                     onClick = {
-                                        (context as ComposeBaseActivity).window.setSoftInputMode(
+                                        (navController.context as ComposeBaseActivity).window.setSoftInputMode(
                                             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
                                         )
                                         viewModel.attemptSignIn(
                                             emailState = emailValue.value,
                                             passwordState = passwordValue.value,
-                                            context = context,
+                                            context = navController.context,
                                             onSuccess = {
                                                 navController.navigate(NavigationDestination.ProductivityView)
                                             },
                                             onFailure = {
-                                                snackbarIconDescription.value = context.rawStringResource(R.string.warning_icon_content_desc)
+                                                snackbarIconDescription.value = navController.context.rawStringResource(R.string.warning_icon_content_desc)
                                                 snackbarIconState.value = IconAlert
                                                 scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                                                 showSnackbar(R.string.log_in_failure_message)
                                             },
                                             onPreLaunch = {
-                                                snackbarIconDescription.value =
-                                                    context.rawStringResource(R.string.account_tree_icon_content_desc)
+                                                snackbarIconDescription.value = navController.context.rawStringResource(R.string.account_tree_icon_content_desc)
                                                 snackbarIconState.value = IconPersonSingle
                                                 scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
                                                 showSnackbar(R.string.log_in_progress_message)

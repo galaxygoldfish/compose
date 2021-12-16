@@ -35,13 +35,9 @@ import androidx.navigation.NavController
 import com.compose.app.android.R
 import com.compose.app.android.components.SettingsActionBar
 import com.compose.app.android.presentation.NavigationDestination
-import com.compose.app.android.viewmodel.SettingsViewModel
 
 @Composable
-fun HelpFeedbackSettings(
-    viewModel: SettingsViewModel,
-    navController: NavController
-) {
+fun HelpFeedbackSettings(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()

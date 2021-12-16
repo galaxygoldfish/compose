@@ -64,6 +64,7 @@ import com.compose.app.android.model.SavedSpanType.COLOR_YELLOW
 import com.compose.app.android.model.SavedSpanType.SIZE_SPAN
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.viewmodel.NoteEditorViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -76,10 +77,11 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun NoteEditorView(
-    viewModel: NoteEditorViewModel,
     navController: NavController,
     documentID: String
 ) {
+
+    val viewModel = navController.context.getViewModel(NoteEditorViewModel::class.java)
 
     viewModel.apply {
         previousDocumentID.value = noteDocumentID.value

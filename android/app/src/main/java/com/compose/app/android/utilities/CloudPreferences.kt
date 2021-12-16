@@ -1,6 +1,7 @@
 package com.compose.app.android.utilities
 
 import android.content.Context
+import android.util.Log
 import com.compose.app.android.firebase.FirebaseDocument
 import com.compose.app.android.model.DocumentType
 import kotlinx.coroutines.CoroutineScope
@@ -94,6 +95,7 @@ class CloudPreferences(context: Context) {
     }
 
     private fun getItemLocal(key: String, defaultValue: Any?) : Any? {
+        Log.e("COMPOSE", "getItemLocal $key")
         return when (defaultValue) {
             is Int -> sharedPreferencesDefault.getInt(key, defaultValue)
             is String -> sharedPreferencesDefault.getString(key, defaultValue)
@@ -116,6 +118,7 @@ class CloudPreferences(context: Context) {
      * Save the value to SharedPreferences locally
      */
     private fun putDataLocal(key: String, value: Any) {
+        Log.e("COMPOSE", "putDataLocal")
         sharedPreferencesDefault.edit().apply {
             when (value) {
                 is String -> putString(key, value)
@@ -131,6 +134,7 @@ class CloudPreferences(context: Context) {
      * document for the current user
      */
     private fun putDataRemote(key: String, value: Any) {
+        Log.e("COMPOSE", "putDataRemote")
         FirebaseDocument().apply {
             updateSpecificValue(
                 key = key,

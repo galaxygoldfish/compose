@@ -131,12 +131,16 @@
 
     <string name="settings_home_page_title">Preferences</string>
 
+    <string name="settings_customization_interface_category">INTERFACE</string>
     <string name="settings_ui_customization_tag">UI &amp; Customization</string>
     <string name="settings_customization_theme_title">Enable dark theme</string>
     <string name="settings_customization_theme_subtitle">Use darker backgrounds to save battery.</string>
     <string name="settings_customization_color_title">Accent color</string>
     <string name="settings_customization_color_subtitle">Change the app\'s primary accent color.</string>
     <string name="settings_customization_color_button_positive">Apply new color</string>
+    <string name="settings_customization_utilities_category">UTILITIES</string>
+    <string name="settings_customization_auto_save_title">Save on back press (Beta)</string>
+    <string name="settingS_customization_auto_save_subtitle">Save documents to the cloud when back button is pressed, this may cause slowness or lagging.</string>
 
     <string name="settings_account_tag">Account</string>
     <string name="settings_account_type_temp">Free account</string>

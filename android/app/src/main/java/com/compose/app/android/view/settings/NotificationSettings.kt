@@ -32,13 +32,9 @@ import com.compose.app.android.R
 import com.compose.app.android.components.SettingsActionBar
 import com.compose.app.android.components.SwitchPreference
 import com.compose.app.android.theme.IconNotification
-import com.compose.app.android.viewmodel.SettingsViewModel
 
 @Composable
-fun NotificationSettings(
-    viewModel: SettingsViewModel,
-    navController: NavController
-) {
+fun NotificationSettings(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()

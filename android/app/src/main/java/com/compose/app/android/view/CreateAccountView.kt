@@ -16,7 +16,6 @@
  **/
 package com.compose.app.android.view
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.WindowManager
@@ -48,15 +47,16 @@ import com.compose.app.android.components.TextOnlyButton
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.utilities.rawStringResource
 import com.compose.app.android.viewmodel.CreateAccountViewModel
 
+// TODO - move all this stuff to viewModel, text and image variables shoudln't be in the view code
+
 @Composable
-fun CreateAccountView(
-    context: Context,
-    viewModel: CreateAccountViewModel,
-    navController: NavController
-) {
+fun CreateAccountView(navController: NavController) {
+
+    val viewModel = navController.context.getViewModel(CreateAccountViewModel::class.java)
 
     val emailState = remember { mutableStateOf(TextFieldValue()) }
     val passwordState = remember { mutableStateOf(TextFieldValue()) }
@@ -66,12 +66,11 @@ fun CreateAccountView(
 
     val scaffoldState = rememberScaffoldState()
     val snackbarIconState = remember { mutableStateOf(IconAlert) }
-    val snackbarIconDescription =
-        remember { mutableStateOf(context.rawStringResource(R.string.warning_icon_content_desc)) }
+    val snackbarIconDescription = remember { mutableStateOf(navController.context.rawStringResource(R.string.warning_icon_content_desc)) }
     val avatarImageState = remember {
         mutableStateOf(
             BitmapFactory.decodeResource(
-                context.resources,
+                navController.context.resources,
                 R.drawable.default_avatar_image
             )
         )
@@ -81,7 +80,7 @@ fun CreateAccountView(
         avatarImageState.value = avatar
     }
 
-    viewModel.avatarImageLive.observe(context as ComposeBaseActivity, avatarImageUpdater)
+    viewModel.avatarImageLive.observe(navController.context as ComposeBaseActivity, avatarImageUpdater)
 
     ComposeTheme {
         Scaffold(
@@ -187,14 +186,14 @@ fun CreateAccountView(
                                         icon = painterResource(id = IconCamera),
                                         contentDescription = stringResource(id = R.string.file_folder_content_desc),
                                         onClick = {
-                                            viewModel.openCameraForResult(context)
+                                            viewModel.openCameraForResult(navController.context as ComposeBaseActivity)
                                         },
                                     )
                                     IconOnlyButton(
                                         icon = painterResource(id = IconGallery),
                                         contentDescription = stringResource(id = R.string.camera_icon_content_desc),
                                         onClick = {
-                                            viewModel.openGalleryForResult(context)
+                                            viewModel.openGalleryForResult(navController.context as ComposeBaseActivity)
                                         },
                                     )
                                 }
@@ -248,7 +247,7 @@ fun CreateAccountView(
                                 text = stringResource(id = R.string.create_account_continue_button),
                                 color = MaterialTheme.colors.primary,
                                 onClick = {
-                                    context.window.setSoftInputMode(
+                                    (navController.context as ComposeBaseActivity).window.setSoftInputMode(
                                         WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
                                     )
                                     viewModel.attemptCreateNewUser(
@@ -259,7 +258,7 @@ fun CreateAccountView(
                                         snackbarState = scaffoldState.snackbarHostState,
                                         iconState = snackbarIconState,
                                         descriptionState = snackbarIconDescription,
-                                        context = context,
+                                        context = navController.context, // smh don't need this
                                         navController = navController
                                     )
                                 }

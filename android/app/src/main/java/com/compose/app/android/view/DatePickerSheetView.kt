@@ -60,9 +60,7 @@ import java.time.YearMonth
 @ExperimentalPagerApi
 @ExperimentalFoundationApi
 @Composable
-fun DatePickerSheetView(
-    viewModel: TaskEditorViewModel
-) {
+fun DatePickerSheetView(viewModel: TaskEditorViewModel) {
 
     val monthArrayResource = stringArrayResource(id = R.array.month_list)
     val weekdays = stringArrayResource(id = R.array.weekday_list_abbreviated)

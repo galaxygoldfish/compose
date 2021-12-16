@@ -40,14 +40,13 @@ import com.compose.app.android.theme.IconCheckMark
 import com.compose.app.android.theme.IconEditPen
 import com.compose.app.android.theme.IconPassword
 import com.compose.app.android.utilities.getCloudPreferences
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.viewmodel.SettingsViewModel
 
 @ExperimentalAnimationApi
 @Composable
-fun SecurityPrivacySettings(
-    viewModel: SettingsViewModel,
-    navController: NavController
-) {
+fun SecurityPrivacySettings(navController: NavController) {
+    val viewModel = navController.context.getViewModel(SettingsViewModel::class.java)
     Column(
         modifier = Modifier
             .fillMaxSize()

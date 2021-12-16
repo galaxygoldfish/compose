@@ -32,7 +32,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -48,14 +48,13 @@ import com.compose.app.android.theme.IconGift
 import com.compose.app.android.theme.IconHelpFeedback
 import com.compose.app.android.theme.IconSettings
 import com.compose.app.android.theme.IconSuitcase
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.viewmodel.SettingsViewModel
 
 @ExperimentalAnimationApi
 @Composable
-fun AboutAppSettings(
-    viewModel: SettingsViewModel,
-    navController: NavController
-) {
+fun AboutAppSettings(navController: NavController) {
+    val viewModel = navController.context.getViewModel(SettingsViewModel::class.java)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,17 +71,13 @@ fun AboutAppSettings(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.mipmap.ic_launcher),
+                painter = painterResource(id = R.mipmap.ic_launcher_foreground),
                 contentDescription = stringResource(id = R.string.app_name),
                 modifier = Modifier
                     .padding(vertical = 15.dp)
                     .padding(start = 5.dp)
                     .size(80.dp)
-                    .shadow(
-                        elevation = 8.dp,
-                        shape = RoundedCornerShape(16.dp),
-                        clip = true
-                    )
+                    .clip(RoundedCornerShape(20.dp))
             )
             Column(
                 modifier = Modifier.padding(start = 20.dp)

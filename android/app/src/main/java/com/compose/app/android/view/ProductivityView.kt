@@ -16,7 +16,6 @@
  **/
 package com.compose.app.android.view
 
-import android.content.Context
 import android.content.Intent
 import android.text.format.Formatter.formatFileSize
 import androidx.compose.animation.AnimatedVisibility
@@ -59,6 +58,7 @@ import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.createSquareImage
 import com.compose.app.android.utilities.getCloudPreferences
 import com.compose.app.android.utilities.getDefaultPreferences
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.view.settings.LogOutAccountDialog
 import com.compose.app.android.viewmodel.ProductivityViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -77,17 +77,12 @@ import java.util.*
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
-fun ProductivityView(
-    context: Context,
-    viewModel: ProductivityViewModel,
-    navController: NavController
-) {
+fun ProductivityView(navController: NavController) {
 
-    // Probably don't need this lol
-    context.setTheme(if (MaterialTheme.colors.isLight) R.style.Theme_Compose_Light else R.style.Theme_Compose_Dark)
+    val viewModel = navController.context.getViewModel(ProductivityViewModel::class.java)
 
     viewModel.apply {
-        updateToNewestAvatar(context.filesDir.path)
+        updateToNewestAvatar(navController.context.filesDir.path)
         updateNoteList()
         updateTaskList()
         updateStorageCount()
@@ -133,12 +128,10 @@ fun ProductivityView(
                         Box {
                             when (viewPagerState.currentPage) {
                                 0 -> NoteOptionMenu(
-                                    viewModel = viewModel,
                                     navController = navController,
                                     bottomSheetState = bottomSheetState
                                 )
                                 1 -> TaskOptionMenu(
-                                    viewModel = viewModel,
                                     navController = navController,
                                     bottomSheetState = bottomSheetState
                                 )

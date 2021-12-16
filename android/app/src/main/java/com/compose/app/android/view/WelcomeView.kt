@@ -16,7 +16,6 @@
  **/
 package com.compose.app.android.view
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -37,7 +36,7 @@ import com.compose.app.android.theme.IconCreateAccount
 import com.compose.app.android.theme.IconLogIn
 
 @Composable
-fun WelcomeView(context: Context, navController: NavController) {
+fun WelcomeView(navController: NavController) {
     ComposeTheme {
         Box(
             modifier = Modifier.fillMaxSize()

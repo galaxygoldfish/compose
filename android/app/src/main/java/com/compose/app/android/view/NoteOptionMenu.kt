@@ -44,6 +44,7 @@ import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.IconEditPen
 import com.compose.app.android.theme.IconShareMenu
 import com.compose.app.android.theme.IconTrashItem
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.viewmodel.ProductivityViewModel
 import kotlinx.coroutines.launch
 
@@ -51,10 +52,10 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun NoteOptionMenu(
-    viewModel: ProductivityViewModel,
     navController: NavController,
     bottomSheetState: ModalBottomSheetState
 ) {
+    val viewModel = navController.context.getViewModel(ProductivityViewModel::class.java)
     val noteDocument by viewModel.bottomSheetNoteDocument.observeAsState()
     val composeAsync = rememberCoroutineScope()
     Column {

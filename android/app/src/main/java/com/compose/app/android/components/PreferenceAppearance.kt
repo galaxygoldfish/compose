@@ -24,6 +24,7 @@ import com.compose.app.android.R
 import com.compose.app.android.theme.IconBackArrow
 import com.compose.app.android.theme.currentAppThemeState
 import com.compose.app.android.utilities.getCloudPreferences
+import java.util.*
 
 /**
  * "Link preference" used only on the settings home page,
@@ -189,8 +190,8 @@ fun Context.SwitchPreference(
     defaultValue: Boolean = false,
     key: String
 ) {
-    val change = changeState ?: remember { mutableStateOf(defaultValue) }
     val cloudPreferences = this.getCloudPreferences()
+    val change = changeState ?: remember { mutableStateOf(cloudPreferences.getBoolean(key, defaultValue)) }
     val onClickAction = { newVal: Boolean ->
         cloudPreferences.putBoolean(key, newVal)
         change.value = newVal
@@ -245,4 +246,21 @@ fun Context.SwitchPreference(
             )
         }
     }
+}
+
+/**
+ * Accent-colored text to be placed in separation of different
+ * groups of preferences, to separate them in an organized manner
+ */
+@Composable
+fun PreferenceCategoryHeader(
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = text.uppercase(Locale.getDefault()),
+        style = MaterialTheme.typography.overline,
+        color = MaterialTheme.colors.primary,
+        modifier = modifier.padding(start = 64.dp, top = 10.dp)
+    )
 }

@@ -27,7 +27,6 @@ import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -39,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ExperimentalGraphicsApi
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.compose.app.android.R
@@ -49,6 +49,7 @@ import com.compose.app.android.theme.currentAppAccentColor
 import com.compose.app.android.theme.currentAppThemeState
 import com.compose.app.android.utilities.getCloudPreferences
 import com.compose.app.android.utilities.getDefaultPreferences
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.view.*
 import com.compose.app.android.view.settings.*
 import com.compose.app.android.viewmodel.*
@@ -61,6 +62,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object NavigationDestination {
     const val WelcomeView = "welcome"
@@ -90,14 +92,6 @@ object NavigationDestination {
     ExperimentalGraphicsApi::class
 )
 class ComposeBaseActivity : ComponentActivity() {
-
-    private val createAccountViewModel: CreateAccountViewModel by viewModels()
-    private val logInViewModel: LogInViewModel by viewModels()
-    private val productivityViewModel: ProductivityViewModel by viewModels()
-    private val noteEditorViewModel: NoteEditorViewModel by viewModels()
-    private val taskEditorViewModel: TaskEditorViewModel by viewModels()
-    private val settingsViewModel: SettingsViewModel by viewModels()
-    private val securityViewModel: SecurityLockViewModel by viewModels()
 
     private lateinit var navigationController: NavHostController
 
@@ -195,10 +189,7 @@ class ComposeBaseActivity : ComponentActivity() {
             builder = {
                 composable(NavigationDestination.WelcomeView) {
                     keyboardPop(false)
-                    WelcomeView(
-                        context = this@ComposeBaseActivity,
-                        navController = navigationController
-                    )
+                    WelcomeView(navController = navigationController)
                 }
                 composable(
                     route = NavigationDestination.CreateAccountView,
@@ -206,11 +197,7 @@ class ComposeBaseActivity : ComponentActivity() {
                     exitTransition = animatedSlideLeft
                 ) {
                     keyboardPop(true)
-                    CreateAccountView(
-                        context = this@ComposeBaseActivity,
-                        viewModel = createAccountViewModel,
-                        navController = navigationController
-                    )
+                    CreateAccountView(navController = navigationController)
                 }
                 composable(
                     route = NavigationDestination.LogInView,
@@ -218,19 +205,11 @@ class ComposeBaseActivity : ComponentActivity() {
                     exitTransition = animatedSlideLeft
                 ) {
                     keyboardPop(true)
-                    LogInView(
-                        context = this@ComposeBaseActivity,
-                        viewModel = logInViewModel,
-                        navController = navigationController
-                    )
+                    LogInView(navController = navigationController)
                 }
                 composable(NavigationDestination.ProductivityView) {
                     keyboardPop(false)
-                    ProductivityView(
-                        context = this@ComposeBaseActivity,
-                        viewModel = productivityViewModel,
-                        navController = navigationController
-                    )
+                    ProductivityView(navController = navigationController)
                 }
                 composable(
                     route = """${NavigationDestination.NoteEditorView}/{noteID}""",
@@ -239,7 +218,6 @@ class ComposeBaseActivity : ComponentActivity() {
                 ) { backStackEntry ->
                     keyboardPop(true)
                     NoteEditorView(
-                        viewModel = noteEditorViewModel,
                         navController = navigationController,
                         documentID = backStackEntry.arguments!!.getString("noteID")!!
                     )
@@ -252,107 +230,76 @@ class ComposeBaseActivity : ComponentActivity() {
                     keyboardPop(true)
                     TaskEditorView(
                         navController = navigationController,
-                        documentID = backStackEntry.arguments!!.getString("taskID")!!,
-                        viewModel = taskEditorViewModel
+                        documentID = backStackEntry.arguments!!.getString("taskID")!!
                     )
                 }
                 composable(
                     route = NavigationDestination.SecurityLockView
                 ) {
-                    SecurityLockView(
-                        viewModel = securityViewModel,
-                        navController = navigationController
-                    )
+                    SecurityLockView(navController = navigationController)
                 }
                 composable(
                     route = NavigationDestination.SettingsViewHome,
                     enterTransition = animatedSlideRight,
                     exitTransition = animatedSlideLeft
                 ) {
-                    SettingsHomePage(
-                        viewModel = settingsViewModel,
-                        navController = navigationController
-                    )
+                    SettingsHomePage(navController = navigationController)
                 }
                 composable(
                     route = NavigationDestination.CustomizationSettings,
                     enterTransition = animatedSlideRight,
                     exitTransition = animatedSlideLeft
                 ) {
-                    UICustomizationSettings(
-                        viewModel = settingsViewModel,
-                        navController = navigationController
-                    )
+                    UICustomizationSettings(navController = navigationController)
                 }
                 composable(
                     route = NavigationDestination.AccountSettings,
                     enterTransition = animatedSlideRight,
                     exitTransition = animatedSlideLeft
                 ) {
-                    AccountSettings(
-                        viewModel = settingsViewModel,
-                        navController = navigationController
-                    )
+                    AccountSettings(navController = navigationController)
                 }
                 composable(
                     route = NavigationDestination.SecurityPrivacySettings,
                     enterTransition = animatedSlideRight,
                     exitTransition = animatedSlideLeft
                 ) {
-                    SecurityPrivacySettings(
-                        viewModel = settingsViewModel,
-                        navController = navigationController
-                    )
+                    SecurityPrivacySettings(navController = navigationController)
                 }
                 composable(
                     route = NavigationDestination.NotificationSettings,
                     enterTransition = animatedSlideRight,
                     exitTransition = animatedSlideLeft
                 ) {
-                    NotificationSettings(
-                        viewModel = settingsViewModel,
-                        navController = navigationController
-                    )
+                    NotificationSettings(navController = navigationController)
                 }
                 composable(
                     route = NavigationDestination.AboutAppSettings,
                     enterTransition = animatedSlideRight,
                     exitTransition = animatedSlideLeft
                 ) {
-                    AboutAppSettings(
-                        viewModel = settingsViewModel,
-                        navController = navigationController
-                    )
+                    AboutAppSettings(navController = navigationController)
                 }
                 composable(
                     route = NavigationDestination.AccessibilitySettings,
                     enterTransition = animatedSlideRight,
                     exitTransition = animatedSlideLeft
                 ) {
-                    AccessibilitySettings(
-                        viewModel = settingsViewModel,
-                        navController = navigationController
-                    )
+                    AccessibilitySettings(navController = navigationController)
                 }
                 composable(
                     route = NavigationDestination.HelpFeedbackSettings,
                     enterTransition = animatedSlideRight,
                     exitTransition = animatedSlideLeft
                 ) {
-                    HelpFeedbackSettings(
-                        viewModel = settingsViewModel,
-                        navController = navigationController
-                    )
+                    HelpFeedbackSettings(navController = navigationController)
                 }
                 composable(
                     route = NavigationDestination.CreateFeedbackView,
                     enterTransition = animatedSlideRight,
                     exitTransition = animatedSlideLeft
                 ) {
-                    CreateFeedbackView(
-                        navController = navigationController,
-                        viewModel = settingsViewModel
-                    )
+                    CreateFeedbackView(navController = navigationController)
                 }
             }
         )
@@ -390,15 +337,17 @@ class ComposeBaseActivity : ComponentActivity() {
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        val createAccountVM = ViewModelProvider(this@ComposeBaseActivity).get(CreateAccountViewModel::class.java)
+        val settingsVM = ViewModelProvider(this@ComposeBaseActivity).get(SettingsViewModel::class.java)
         if (resultCode == Activity.RESULT_OK) {
             when {
                 // CreateAccountView is the requester
                 (requestCode == 1 || requestCode == 2) -> {
-                    createAccountViewModel.processActivityResult(data, requestCode, this)
+                    createAccountVM.processActivityResult(data, requestCode, this)
                 }
                 // SettingsView->AccountSettingsView is the requester
                 (requestCode == 3 || requestCode == 4) -> {
-                    settingsViewModel.onActivityResult(data, requestCode, this)
+                    settingsVM.onActivityResult(data, requestCode, this)
                 }
             }
         }
@@ -423,28 +372,39 @@ class ComposeBaseActivity : ComponentActivity() {
     }
 
     override fun onBackPressed() {
-        val noteOrTask = navigationController.currentDestination?.route?.let {
-            when {
-                // Task or note editor
-                it.contains(NavigationDestination.NoteEditorView) -> true
-                it.contains(NavigationDestination.TaskEditorView) -> false
-                // Other navigation destination
-                else -> {
-                    super.onBackPressed()
-                    return@let null
+        if (getCloudPreferences().getBoolean("STATE_SAVE_ON_BACK", true)) {
+            val noteOrTask = navigationController.currentDestination?.route?.let {
+                when {
+                    it.contains(NavigationDestination.NoteEditorView) -> true
+                    it.contains(NavigationDestination.TaskEditorView) -> false
+                    else -> {
+                        super.onBackPressed()
+                        return@let null
+                    }
                 }
             }
-        }
-        CoroutineScope(Dispatchers.Main).launch {
-            if (noteOrTask == true) {
-                if (noteEditorViewModel.saveNoteContents()) {
-                    super.onBackPressed()
-                }
-            } else if (noteOrTask == false) {
-                if (taskEditorViewModel.saveTaskData(this@ComposeBaseActivity)) {
-                    super.onBackPressed()
+            noteOrTask?.let {
+                CoroutineScope(Dispatchers.Default).launch {
+                    when (it) {
+                        true -> {
+                            if (getViewModel(NoteEditorViewModel::class.java).saveNoteContents()) {
+                                withContext(Dispatchers.Main) {
+                                    super.onBackPressed()
+                                }
+                            }
+                        }
+                        false -> {
+                            if (getViewModel(TaskEditorViewModel::class.java).saveTaskData(this@ComposeBaseActivity)) {
+                                withContext(Dispatchers.Main) {
+                                    super.onBackPressed()
+                                }
+                            }
+                        }
+                    }
                 }
             }
+        } else {
+            super.onBackPressed()
         }
     }
 

@@ -41,16 +41,17 @@ import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.IconEditPen
 import com.compose.app.android.theme.IconShareMenu
 import com.compose.app.android.theme.IconTrashItem
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.viewmodel.ProductivityViewModel
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
 fun TaskOptionMenu(
-    viewModel: ProductivityViewModel,
     navController: NavController,
     bottomSheetState: ModalBottomSheetState
 ) {
+    val viewModel = navController.context.getViewModel(ProductivityViewModel::class.java)
     val composeAsync = rememberCoroutineScope()
     val taskDocument by viewModel.bottomSheetTaskDocument.observeAsState()
     Column {

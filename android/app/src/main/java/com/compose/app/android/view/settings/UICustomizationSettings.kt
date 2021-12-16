@@ -39,16 +39,15 @@ import com.compose.app.android.components.*
 import com.compose.app.android.presentation.ComposeBaseActivity
 import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.getCloudPreferences
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.viewmodel.SettingsViewModel
 import com.godaddy.android.colorpicker.ClassicColorPicker
 
 @ExperimentalGraphicsApi
 @ExperimentalAnimationApi
 @Composable
-fun UICustomizationSettings(
-    viewModel: SettingsViewModel,
-    navController: NavController
-) {
+fun UICustomizationSettings(navController: NavController) {
+    val viewModel = navController.context.getViewModel(SettingsViewModel::class.java)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,6 +61,9 @@ fun UICustomizationSettings(
             modifier = Modifier.padding(top = 15.dp)
         ) {
             LocalContext.current.apply {
+                PreferenceCategoryHeader(
+                    text = stringResource(id = R.string.settings_customization_interface_category)
+                )
                 SwitchPreference(
                     title = stringResource(id = R.string.settings_customization_theme_title),
                     subtitle = stringResource(id = R.string.settings_customization_theme_subtitle),
@@ -83,6 +85,16 @@ fun UICustomizationSettings(
                     onClickAction = {
                         viewModel.showingColorPickerDialog.value = true
                     }
+                )
+                PreferenceCategoryHeader(
+                    text = stringResource(id = R.string.settings_customization_utilities_category)
+                )
+                SwitchPreference(
+                    title = stringResource(id = R.string.settings_customization_auto_save_title),
+                    subtitle = stringResource(id = R.string.settingS_customization_auto_save_subtitle),
+                    icon = painterResource(id = IconSaveContent),
+                    key = "STATE_SAVE_ON_BACK",
+                    defaultValue = true
                 )
             }
         }

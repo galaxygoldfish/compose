@@ -54,6 +54,7 @@ import com.compose.app.android.presentation.NavigationDestination
 import com.compose.app.android.theme.*
 import com.compose.app.android.utilities.createSquareImage
 import com.compose.app.android.utilities.getDefaultPreferences
+import com.compose.app.android.utilities.getViewModel
 import com.compose.app.android.viewmodel.SettingsViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -63,10 +64,8 @@ import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
 @Composable
-fun AccountSettings(
-    viewModel: SettingsViewModel,
-    navController: NavController
-) {
+fun AccountSettings(navController: NavController) {
+    val viewModel = navController.context.getViewModel(SettingsViewModel::class.java)
     if (viewModel.avatarImageStore.value == null) {
         viewModel.setAvatarImage(LocalContext.current.filesDir.path)
     }
