@@ -8,23 +8,25 @@ struct WelcomeView : View {
         NavigationView {
             ZStack(alignment: .topLeading) {
                 FullscreenPlaceholder()
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 0) {
                     Text("welcome_header_message")
-                        .font(.custom(InterBold, size: 35.0))
+                        .font(typographyH1)
                         .padding(.top)
                         .padding(.leading, 20)
                     Text("welcome_subtitle_text")
-                        .font(.custom(InterRegular, size: 16))
+                        .font(typographyBody1)
                         .padding(.leading, 20)
-                        .padding(.top, 2)
                         .padding(.trailing, 30)
+                        .padding(.top, 10)
+                    Spacer()
                     HStack {
                         Spacer()
                         Image("WelcomeGraphic")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .padding(.horizontal, 35)
-                            .padding(.vertical, 30)
+                            .padding(.bottom, 20)
+                            .padding(.top, 10)
                         Spacer()
                     }
                     Spacer()
@@ -41,6 +43,7 @@ struct WelcomeView : View {
                                 navigationChoice = "logIn"
                             }
                         )
+                            .padding(.bottom, 10)
                     }
                     .navigationBarBackButtonHidden(true)
                     NavigationLink(

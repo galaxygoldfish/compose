@@ -17,6 +17,7 @@
 		9E7C337E26CC9174003BF000 /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7C337D26CC9174003BF000 /* CreateAccountView.swift */; };
 		9EB5471526D5BA7200C52767 /* NoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB5471426D5BA7200C52767 /* NoteListView.swift */; };
 		9EB5471726D5BA7A00C52767 /* TaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB5471626D5BA7A00C52767 /* TaskListView.swift */; };
+		9ECA9E732782854300848068 /* TypographyStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECA9E722782854300848068 /* TypographyStyles.swift */; };
 		9EF8770926BA302500790481 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9EF876EF26BA302500790481 /* GoogleService-Info.plist */; };
 		9EF8770A26BA302500790481 /* Inter-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9EF876F226BA302500790481 /* Inter-Bold.otf */; };
 		9EF8770B26BA302500790481 /* Inter-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9EF876F326BA302500790481 /* Inter-Regular.otf */; };
@@ -50,6 +51,7 @@
 		9E7C337D26CC9174003BF000 /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
 		9EB5471426D5BA7200C52767 /* NoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListView.swift; sourceTree = "<group>"; };
 		9EB5471626D5BA7A00C52767 /* TaskListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListView.swift; sourceTree = "<group>"; };
+		9ECA9E722782854300848068 /* TypographyStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypographyStyles.swift; sourceTree = "<group>"; };
 		9EF876DD26BA2E7600790481 /* Compose.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Compose.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EF876E926BA2E7800790481 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9EF876EF26BA302500790481 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -108,6 +110,17 @@
 			path = utilities;
 			sourceTree = "<group>";
 		};
+		9ECA9E712782851D00848068 /* components */ = {
+			isa = PBXGroup;
+			children = (
+				9EF876FF26BA302500790481 /* InputViews.swift */,
+				9EF8770026BA302500790481 /* ButtonViews.swift */,
+				9EF8770126BA302500790481 /* MiscViews.swift */,
+				9E14D3E426CDDBEC00898D19 /* SystemViews.swift */,
+			);
+			path = components;
+			sourceTree = "<group>";
+		};
 		9EF876D426BA2E7500790481 = {
 			isa = PBXGroup;
 			children = (
@@ -134,6 +147,7 @@
 				9EF876EF26BA302500790481 /* GoogleService-Info.plist */,
 				9EF8770626BA302500790481 /* main */,
 				9EF876FE26BA302500790481 /* styles */,
+				9ECA9E712782851D00848068 /* components */,
 				9EF8770226BA302500790481 /* view */,
 				9E14D3DE26CDCB5200898D19 /* firebase */,
 				9E14D3E126CDD30A00898D19 /* utilities */,
@@ -180,10 +194,7 @@
 		9EF876FE26BA302500790481 /* styles */ = {
 			isa = PBXGroup;
 			children = (
-				9EF876FF26BA302500790481 /* InputViews.swift */,
-				9EF8770026BA302500790481 /* ButtonViews.swift */,
-				9EF8770126BA302500790481 /* MiscViews.swift */,
-				9E14D3E426CDDBEC00898D19 /* SystemViews.swift */,
+				9ECA9E722782854300848068 /* TypographyStyles.swift */,
 			);
 			path = styles;
 			sourceTree = "<group>";
@@ -346,6 +357,7 @@
 				9EF8771926BA302500790481 /* WelcomeView.swift in Sources */,
 				9EB5471726D5BA7A00C52767 /* TaskListView.swift in Sources */,
 				9E14D3E026CDCB7500898D19 /* FirebaseAccount.swift in Sources */,
+				9ECA9E732782854300848068 /* TypographyStyles.swift in Sources */,
 				9EF8771726BA302500790481 /* MiscViews.swift in Sources */,
 				9EB5471526D5BA7200C52767 /* NoteListView.swift in Sources */,
 				9E14D3E526CDDBEC00898D19 /* SystemViews.swift in Sources */,

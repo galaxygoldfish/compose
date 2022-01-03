@@ -31,18 +31,18 @@ struct CreateAccountView: View {
                         .padding(.leading, 16)
                 }
                 Text("create_account_header_message")
-                    .font(.custom(InterBold, size: 35.0))
+                    .font(typographyH1) 
                     .padding(.top, 2)
                     .padding(.leading, 20)
-                Text("create_account_subtitle_text")
-                    .font(.custom(InterRegular, size: 16))
-                    .padding(.leading, 20)
-                    .padding(.top, 2)
-                    .padding(.trailing, 30)
                 ScrollView {
                     VStack(alignment: .leading) {
+                        Text("create_account_subtitle_text")
+                            .font(typographyBody1)
+                            .padding(.leading, 20)
+                            .padding(.top, 2)
+                            .padding(.trailing, 30)
                         Text("create_account_account_form_header")
-                            .font(.custom(InterBold, size: 14))
+                            .font(typographyOverline)
                             .padding(.leading, 20)
                             .padding(.top, 15)
                             .padding(.trailing, 30)
@@ -60,7 +60,7 @@ struct CreateAccountView: View {
                             )
                         }
                         Text("create_account_profile_form_header")
-                            .font(.custom(InterBold, size: 14))
+                            .font(typographyOverline)
                             .padding(.leading, 20)
                             .padding(.top, 15)
                             .padding(.trailing, 30)
@@ -80,7 +80,7 @@ struct CreateAccountView: View {
                             VStack {
                                 HStack {
                                     Text("create_account_choose_avatar_header")
-                                        .font(.custom(InterRegular, size: 16))
+                                        .font(typographyBody1)
                                         .padding(.leading, 20)
                                         .padding(.top, 20)
                                         .padding(.bottom, 10)

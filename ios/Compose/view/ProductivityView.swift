@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftUIPager
 import UIKit
+import FirebaseAuth
 
 struct ProductivityView: View {
     
@@ -79,7 +80,7 @@ struct ProductivityView: View {
                         .frame(width: 42, height: 42, alignment: .center)
                         Spacer()
                         Button(action: {
-                            
+                            try! Auth.auth().signOut()
                         }) {
                             ZStack(alignment: .center) {
                                 Color("DeepSea")
