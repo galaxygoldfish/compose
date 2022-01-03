@@ -5,7 +5,7 @@
 "welcome_button_log_in" = "LOG IN";
 "welcome_button_create_account" = "CREATE ACCOUNT";
 
-"log_in_header_message" = "Log in to your account";
+"log_in_header_message" = "Log in to your\naccount";
 "log_in_subtitle_text" = "Welcome back to Compose. To continue, enter your account details below.";
 "log_in_form_header" = "LOG IN";
 "log_in_email_field_hint" = "Email address";
@@ -18,7 +18,7 @@
 "log_in_failure_password" = "Oops! Looks like the password that you entered didn't seem to work";
 "log_in_failure_email" = "Looks like we can't find an account with that e-mail. Maybe try a different one?";
 
-"create_account_header_message" = "Create a new account";
+"create_account_header_message" = "Create a new\naccount";
 "create_account_subtitle_text" = "To continue, you'll need to create an account which will allow you to sync your notes and tasks to the cloud:";
 "create_account_account_form_header" = "ACCOUNT";
 "create_account_email_field_hint" = "Email address";

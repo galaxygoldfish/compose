@@ -16,7 +16,7 @@ struct ProductivityView: View {
     var body: some View {
         
         let preferences = getNsUserDefaults()
-        let userFirstName = preferences.string(forKey: "IDENTITY_USER_NAME_FIRST")!
+        let userFirstName = preferences.string(forKey: "IDENTITY_USER_NAME_FIRST") ?? "Error"
         
         ZStack(alignment: .topLeading) {
             FullscreenPlaceholder()

@@ -26,13 +26,22 @@ class FirebaseAccount {
         password: String,
         onCompletion: @escaping (LocalizedStringKey) -> Void
     ) {
+        print("authenticateWithEmail")
         if (email != "" && determineIfEmailIsValid(email: email)) {
             if (password != "" && password.count > 6) {
                 firebaseAuth.signIn(withEmail: email, password: password, completion: { (result, error) in
                     if (error == nil) {
-                        self.getExistingUserMetadata()
-                        self.getExistingAvatarImage()
-                        onCompletion(LocalizedStringKey("success_internal"))
+                        let dispatcher = DispatchGroup()
+                        print("authenticateWithEmail::pre")
+                        dispatcher.enter()
+                        self.getExistingUserMetadata(group: dispatcher)
+                        print("authenticateWithEmail::post1")
+                        dispatcher.enter()
+                        self.getExistingAvatarImage(group: dispatcher)
+                        print("authenticateWithEmail::post2")
+                        dispatcher.notify(queue: .main) {
+                            onCompletion(LocalizedStringKey("success_internal"))
+                        }
                     } else {
                         onCompletion(LocalizedStringKey("log_in_failure_generic"))
                     }
@@ -108,8 +117,10 @@ class FirebaseAccount {
      *  - surname: The new last name to be updated.
      */
     public func setNewUserMetadata(name: String, surname: String) {
-        let metadataRemote = firebaseFirestore.collection("metadata").document(firebaseAuth.currentUser!.uid)
-        let userdataRemote: [String : String] = ["firstName" : name, "lastName" : surname]
+        print("setNewUserMetadata")
+        let metadataRemote = firebaseFirestore.collection("METADATA").document("USERS")
+            .collection(firebaseAuth.currentUser!.uid).document("USERFILE")
+        let userdataRemote: [String : String] = ["FIRST-NAME" : name, "LAST-NAME" : surname]
         metadataRemote.setData(userdataRemote)
         syncMetadataPreferences(name: name, surname: surname)
     }
@@ -120,14 +131,21 @@ class FirebaseAccount {
      * called regularly to make sure that the user's info
      * is always up to date, like their avatar and name.
      */
-    public func getExistingUserMetadata() {
-        let metadataRemote = firebaseFirestore.collection("metadata").document(firebaseAuth.currentUser!.uid)
+    public func getExistingUserMetadata(group: DispatchGroup) {
+        print("getExistingUserMetadata")
+        let metadataRemote = firebaseFirestore.collection("METADATA").document("USERS")
+            .collection(firebaseAuth.currentUser!.uid).document("USERFILE")
         metadataRemote.getDocument { (document, error) in
-            if let document = document, document.exists {
-                self.syncMetadataPreferences(
-                    name: document.value(forKey: "firstName")! as! String,
-                    surname: document.value(forKey: "lastName")! as! String
-                )
+            if (error == nil) {
+                print("authenticateWithEmail::getDocument")
+                if let document = document, document.exists {
+                    print("authenticateWithEmail::getDocumentSuccess")
+                    self.syncMetadataPreferences(
+                        name: document.data()!["FIRST-NAME"] as! String,
+                        surname: document.data()!["LAST-NAME"] as! String
+                    )
+                    group.leave()
+                }
             }
         }
     }
@@ -141,6 +159,7 @@ class FirebaseAccount {
      *  - surname: The new last name to be updated.
      */
     private func syncMetadataPreferences(name: String, surname: String) {
+        print("syncMetadataPreferences")
         let preferences = getNsUserDefaults()
         preferences.set(name, forKey: "IDENTITY_USER_NAME_FIRST")
         preferences.set(surname, forKey: "IDENTITY_USER_NAME_LAST")
@@ -152,11 +171,14 @@ class FirebaseAccount {
      * destination, in the documents/avatar.png file, which
      * can be accessed from any screen.
      */
-    public func getExistingAvatarImage() {
+    public func getExistingAvatarImage(group: DispatchGroup) {
+        print("getExistingAvatarImage")
         let firebaseCurrentUser = firebaseAuth.currentUser!.uid
-        let avatarPathRemote = firebaseStorage.reference().child("metadata/avatars/\(firebaseCurrentUser)")
+        let avatarPathRemote = firebaseStorage.reference().child("USER-AVATARS/\(firebaseCurrentUser)")
         let avatarPathLocal = getDocumentsDirectory().appendingPathComponent("avatar.png")
-        avatarPathRemote.write(toFile: avatarPathLocal)
+        avatarPathRemote.write(toFile: avatarPathLocal) { _, _ in
+            group.leave()
+        }
     }
     
     /**
@@ -168,6 +190,7 @@ class FirebaseAccount {
      *    updated to.
      */
     private func storeNewAvatarImageToFile(avatar: UIImage) {
+        print("storeNewAvatarImageToFile")
         if let avatarData = avatar.jpegData(compressionQuality: 40) {
             let avatarPath = getDocumentsDirectory().appendingPathComponent("avatar.png")
             try? avatarData.write(to: avatarPath)
@@ -184,7 +207,7 @@ class FirebaseAccount {
     public func uploadNewAvatarImage(avatar: UIImage) {
         let firebaseCurrentUser = firebaseAuth.currentUser!.uid
         let avatarRemotePath = firebaseStorage.reference()
-            .child("metadata/avatars/\(firebaseCurrentUser)")
+            .child("USER-AVATARS/\(firebaseCurrentUser)")
         storeNewAvatarImageToFile(avatar: avatar)
         avatarRemotePath.putFile(
             from: getDocumentsDirectory().appendingPathComponent("avatar.png"),

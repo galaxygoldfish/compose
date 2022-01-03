@@ -1,8 +1,13 @@
 import SwiftUI
 import FirebaseAuth
+import Firebase
 
 @main
 struct ComposeApp: App {
+    
+    init() {
+        FirebaseApp.configure()
+    }
    
     var body: some Scene {
         WindowGroup {
