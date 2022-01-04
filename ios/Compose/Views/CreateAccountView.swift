@@ -22,7 +22,7 @@ struct CreateAccountView: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             FullscreenPlaceholder()
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 0) {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }) {
@@ -169,6 +169,7 @@ struct CreateAccountView: View {
                         .padding(.bottom, 20)
                     }
                 }
+                .padding(.top, 10)
                 .navigationBarTitle("")
                 .navigationBarHidden(true)
                 .sheet(isPresented: $photoLibraryOpen, content: {

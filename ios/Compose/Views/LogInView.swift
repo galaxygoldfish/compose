@@ -17,7 +17,7 @@ struct LogInView: View {
         ZStack(alignment: .topLeading) {
             FullscreenPlaceholder()
             ScrollView {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 0) {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }) {
@@ -32,24 +32,24 @@ struct LogInView: View {
                 Text("log_in_subtitle_text")
                     .font(typographyBody1)
                     .padding(.leading, 20)
-                    .padding(.top, 2)
+                    .padding(.top, 10)
                     .padding(.trailing, 30)
                 Text("log_in_form_header")
                     .font(typographyOverline)
                     .padding(.leading, 20)
-                    .padding(.top, 15)
+                    .padding(.top, 25)
                     .padding(.trailing, 30)
                 TextInputFieldLarge(
                     icon: "MailLetter",
                     hint: "log_in_email_field_hint",
                     inputText: $emailText
-                )
+                ).padding(.top, 10)
                 TextInputFieldLarge(
                     icon: "PasswordLock",
                     hint: "log_in_password_field_hint",
                     inputText: $passwordText,
                     secureField: true
-                )
+                ).padding(.top, 10)
                 if (snackbarOpen) {
                     withAnimation {
                         Snackbar(
@@ -96,7 +96,7 @@ struct LogInView: View {
                         .padding(.trailing, 20)
                     }
                 }
-                .padding(.top, 10)
+                .padding(.top, 15)
             }
         }
         .navigationBarTitle("")

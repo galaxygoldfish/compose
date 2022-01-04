@@ -14,6 +14,7 @@
 		9E14D3E026CDCB7500898D19 /* FirebaseAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E14D3DF26CDCB7500898D19 /* FirebaseAccount.swift */; };
 		9E14D3E326CDD31600898D19 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E14D3E226CDD31600898D19 /* Utilities.swift */; };
 		9E14D3E526CDDBEC00898D19 /* SystemViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E14D3E426CDDBEC00898D19 /* SystemViews.swift */; };
+		9E2BD4202783AD2C003FB831 /* ProductivityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2BD41F2783AD2C003FB831 /* ProductivityViewModel.swift */; };
 		9E7C337E26CC9174003BF000 /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7C337D26CC9174003BF000 /* CreateAccountView.swift */; };
 		9EB5471526D5BA7200C52767 /* NoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB5471426D5BA7200C52767 /* NoteListView.swift */; };
 		9EB5471726D5BA7A00C52767 /* TaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB5471626D5BA7A00C52767 /* TaskListView.swift */; };
@@ -48,6 +49,7 @@
 		9E14D3DF26CDCB7500898D19 /* FirebaseAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAccount.swift; sourceTree = "<group>"; };
 		9E14D3E226CDD31600898D19 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		9E14D3E426CDDBEC00898D19 /* SystemViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemViews.swift; sourceTree = "<group>"; };
+		9E2BD41F2783AD2C003FB831 /* ProductivityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductivityViewModel.swift; sourceTree = "<group>"; };
 		9E7C337D26CC9174003BF000 /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
 		9EB5471426D5BA7200C52767 /* NoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListView.swift; sourceTree = "<group>"; };
 		9EB5471626D5BA7A00C52767 /* TaskListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListView.swift; sourceTree = "<group>"; };
@@ -71,7 +73,7 @@
 		9EF8770126BA302500790481 /* MiscViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiscViews.swift; sourceTree = "<group>"; };
 		9EF8770326BA302500790481 /* LogInView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogInView.swift; sourceTree = "<group>"; };
 		9EF8770426BA302500790481 /* WelcomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
-		9EF8770526BA302500790481 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		9EF8770526BA302500790481 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = .gitignore; path = Compose/Resources/Fonts/.gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,23 +96,31 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		9E14D3DE26CDCB5200898D19 /* firebase */ = {
+		9E14D3DE26CDCB5200898D19 /* Firebase */ = {
 			isa = PBXGroup;
 			children = (
 				9E14D3DF26CDCB7500898D19 /* FirebaseAccount.swift */,
 			);
-			path = firebase;
+			path = Firebase;
 			sourceTree = "<group>";
 		};
-		9E14D3E126CDD30A00898D19 /* utilities */ = {
+		9E14D3E126CDD30A00898D19 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
 				9E14D3E226CDD31600898D19 /* Utilities.swift */,
 			);
-			path = utilities;
+			path = Utilities;
 			sourceTree = "<group>";
 		};
-		9ECA9E712782851D00848068 /* components */ = {
+		9E2BD41E2783AD1B003FB831 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				9E2BD41F2783AD2C003FB831 /* ProductivityViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		9ECA9E712782851D00848068 /* Components */ = {
 			isa = PBXGroup;
 			children = (
 				9EF876FF26BA302500790481 /* InputViews.swift */,
@@ -118,13 +128,15 @@
 				9EF8770126BA302500790481 /* MiscViews.swift */,
 				9E14D3E426CDDBEC00898D19 /* SystemViews.swift */,
 			);
-			path = components;
+			path = Components;
 			sourceTree = "<group>";
 		};
 		9EF876D426BA2E7500790481 = {
 			isa = PBXGroup;
 			children = (
 				9EF876DF26BA2E7600790481 /* Compose */,
+				9EF8770526BA302500790481 /* .gitignore */,
+				9EF876EF26BA302500790481 /* GoogleService-Info.plist */,
 				9EF876DE26BA2E7600790481 /* Products */,
 				E64759FFA2EE889472CCD749 /* Pods */,
 				504CD6375CF3369AF56BD035 /* Frameworks */,
@@ -142,30 +154,29 @@
 		9EF876DF26BA2E7600790481 /* Compose */ = {
 			isa = PBXGroup;
 			children = (
-				9EF8770526BA302500790481 /* .gitignore */,
 				9EF876E926BA2E7800790481 /* Info.plist */,
-				9EF876EF26BA302500790481 /* GoogleService-Info.plist */,
-				9EF8770626BA302500790481 /* main */,
-				9EF876FE26BA302500790481 /* styles */,
-				9ECA9E712782851D00848068 /* components */,
-				9EF8770226BA302500790481 /* view */,
-				9E14D3DE26CDCB5200898D19 /* firebase */,
-				9E14D3E126CDD30A00898D19 /* utilities */,
-				9EF876F026BA302500790481 /* resources */,
+				9E0663D526CB3B250033F79D /* ComposeApp.swift */,
+				9EF876FE26BA302500790481 /* Styles */,
+				9ECA9E712782851D00848068 /* Components */,
+				9EF8770226BA302500790481 /* Views */,
+				9E2BD41E2783AD1B003FB831 /* ViewModels */,
+				9E14D3DE26CDCB5200898D19 /* Firebase */,
+				9E14D3E126CDD30A00898D19 /* Utilities */,
+				9EF876F026BA302500790481 /* Resources */,
 			);
 			path = Compose;
 			sourceTree = "<group>";
 		};
-		9EF876F026BA302500790481 /* resources */ = {
+		9EF876F026BA302500790481 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				9EF876FC26BA302500790481 /* assets */,
-				9EF876F126BA302500790481 /* fonts */,
+				9EF876FC26BA302500790481 /* Assets */,
+				9EF876F126BA302500790481 /* Fonts */,
 			);
-			path = resources;
+			path = Resources;
 			sourceTree = "<group>";
 		};
-		9EF876F126BA302500790481 /* fonts */ = {
+		9EF876F126BA302500790481 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
 				9EF876F226BA302500790481 /* Inter-Bold.otf */,
@@ -179,27 +190,27 @@
 				9EF876FB26BA302500790481 /* Inter-BoldItalic.otf */,
 				9EF876F826BA302500790481 /* TypefaceDefinition.swift */,
 			);
-			path = fonts;
+			path = Fonts;
 			sourceTree = "<group>";
 		};
-		9EF876FC26BA302500790481 /* assets */ = {
+		9EF876FC26BA302500790481 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
 				9E0663CF26CB2A920033F79D /* Localizable.strings */,
 				9EF876FD26BA302500790481 /* Assets.xcassets */,
 			);
-			path = assets;
+			path = Assets;
 			sourceTree = "<group>";
 		};
-		9EF876FE26BA302500790481 /* styles */ = {
+		9EF876FE26BA302500790481 /* Styles */ = {
 			isa = PBXGroup;
 			children = (
 				9ECA9E722782854300848068 /* TypographyStyles.swift */,
 			);
-			path = styles;
+			path = Styles;
 			sourceTree = "<group>";
 		};
-		9EF8770226BA302500790481 /* view */ = {
+		9EF8770226BA302500790481 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				9EF8770326BA302500790481 /* LogInView.swift */,
@@ -209,15 +220,7 @@
 				9E14D3D826CDC66400898D19 /* ProductivityView.swift */,
 				9EF8770426BA302500790481 /* WelcomeView.swift */,
 			);
-			path = view;
-			sourceTree = "<group>";
-		};
-		9EF8770626BA302500790481 /* main */ = {
-			isa = PBXGroup;
-			children = (
-				9E0663D526CB3B250033F79D /* ComposeApp.swift */,
-			);
-			path = main;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		E64759FFA2EE889472CCD749 /* Pods */ = {
@@ -361,6 +364,7 @@
 				9EF8771726BA302500790481 /* MiscViews.swift in Sources */,
 				9EB5471526D5BA7200C52767 /* NoteListView.swift in Sources */,
 				9E14D3E526CDDBEC00898D19 /* SystemViews.swift in Sources */,
+				9E2BD4202783AD2C003FB831 /* ProductivityViewModel.swift in Sources */,
 				9E7C337E26CC9174003BF000 /* CreateAccountView.swift in Sources */,
 				9E14D3D926CDC66400898D19 /* ProductivityView.swift in Sources */,
 				9E14D3E326CDD31600898D19 /* Utilities.swift in Sources */,

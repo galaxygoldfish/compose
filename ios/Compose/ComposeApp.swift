@@ -14,7 +14,7 @@ struct ComposeApp: App {
             if (Auth.auth().currentUser == nil) {
                 WelcomeView()
             } else {
-                ProductivityView()
+                ProductivityView().environmentObject(ProductivityViewModel())
             }
         }
     }
