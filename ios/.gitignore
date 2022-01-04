@@ -14,3 +14,4 @@ xcuserdata/
 *.xcscmblueprint
 *.xcuserstate
 Pods/
+GoogleService-Info.plist
