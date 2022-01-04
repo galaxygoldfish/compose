@@ -135,7 +135,7 @@ class ComposeBaseActivity : ComponentActivity() {
 
         val passwordAvailable = LocalContext.current.let {
             it.getDefaultPreferences().getString("IDENTITY_USER_KEY", "") != "" &&
-                    it.getCloudPreferences().getBoolean("STATE_APP_SECURED", false)
+            it.getCloudPreferences().getBoolean("STATE_APP_SECURED", false)
         }
 
         val navigationStart = if (FirebaseAccount().determineIfUserExists()) {

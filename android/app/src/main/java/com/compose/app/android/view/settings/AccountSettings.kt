@@ -157,7 +157,7 @@ fun AccountSettings(navController: NavController) {
                         ).show()
                     }
                 },
-                paddingTop = 20.dp
+                paddingTop = 20.dp 
             ) {
                 Firebase.auth.currentUser?.let { user ->
                     Text(

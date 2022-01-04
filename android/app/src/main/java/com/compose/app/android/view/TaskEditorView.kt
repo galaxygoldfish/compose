@@ -72,8 +72,7 @@ fun TaskEditorView(
     val mainScaffoldState = rememberScaffoldState()
     val composeAsync = rememberCoroutineScope()
 
-    val bottomSheetScaffoldState =
-        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val bottomSheetScaffoldState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val systemUiController = rememberSystemUiController()
 
     if (bottomSheetScaffoldState.isVisible) {

@@ -60,7 +60,7 @@ class TaskEditorViewModel : ViewModel() {
 
     val showingStorageAlertDialog = mutableStateOf(false)
 
-    private val asynchronousScope = CoroutineScope(Dispatchers.IO + Job())
+    private val asynchronousScope = CoroutineScope(Dispatchers.Default + Job())
 
     /**
      * Update the text fields to the current note's content or if
@@ -72,8 +72,7 @@ class TaskEditorViewModel : ViewModel() {
             currentDocumentID.value?.let { id ->
                 FirebaseDocument().getDocumentByID(id, DocumentType.TASK).let { taskData ->
                     titleTextFieldValue.value = TextFieldValue(taskData["TITLE"] as String? ?: "")
-                    locationTextFieldValue.value =
-                        TextFieldValue(taskData["LOCATION"] as String? ?: "")
+                    locationTextFieldValue.value = TextFieldValue(taskData["LOCATION"] as String? ?: "")
                     taskCompletionState.value = taskData["COMPLETE"] as Boolean? ?: false
                     val dateData = taskData["DUE-DATE-HR"] as String?
                     val timeData = taskData["DUE-TIME-HR"] as String?
