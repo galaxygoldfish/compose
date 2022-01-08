@@ -14,6 +14,7 @@
 		9E14D3E026CDCB7500898D19 /* FirebaseAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E14D3DF26CDCB7500898D19 /* FirebaseAccount.swift */; };
 		9E14D3E326CDD31600898D19 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E14D3E226CDD31600898D19 /* Utilities.swift */; };
 		9E14D3E526CDDBEC00898D19 /* SystemViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E14D3E426CDDBEC00898D19 /* SystemViews.swift */; };
+		9E15976D2789428C00B5E9E6 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E15976C2789428C00B5E9E6 /* Colors.xcassets */; };
 		9E2BD4202783AD2C003FB831 /* ProductivityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2BD41F2783AD2C003FB831 /* ProductivityViewModel.swift */; };
 		9E2BD4262783D344003FB831 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E2BD4252783D344003FB831 /* GoogleService-Info.plist */; };
 		9E5B7F912783D4D000F8D9FC /* NoteDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B7F902783D4D000F8D9FC /* NoteDocument.swift */; };
@@ -32,7 +33,7 @@
 		9EF8771126BA302500790481 /* Inter-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9EF876F926BA302500790481 /* Inter-Italic.otf */; };
 		9EF8771226BA302500790481 /* Inter-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9EF876FA26BA302500790481 /* Inter-ExtraBold.otf */; };
 		9EF8771326BA302500790481 /* Inter-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9EF876FB26BA302500790481 /* Inter-BoldItalic.otf */; };
-		9EF8771426BA302500790481 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9EF876FD26BA302500790481 /* Assets.xcassets */; };
+		9EF8771426BA302500790481 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9EF876FD26BA302500790481 /* Icons.xcassets */; };
 		9EF8771526BA302500790481 /* InputViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF876FF26BA302500790481 /* InputViews.swift */; };
 		9EF8771626BA302500790481 /* ButtonViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF8770026BA302500790481 /* ButtonViews.swift */; };
 		9EF8771726BA302500790481 /* MiscViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF8770126BA302500790481 /* MiscViews.swift */; };
@@ -51,6 +52,7 @@
 		9E14D3DF26CDCB7500898D19 /* FirebaseAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAccount.swift; sourceTree = "<group>"; };
 		9E14D3E226CDD31600898D19 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		9E14D3E426CDDBEC00898D19 /* SystemViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemViews.swift; sourceTree = "<group>"; };
+		9E15976C2789428C00B5E9E6 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		9E2BD41F2783AD2C003FB831 /* ProductivityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductivityViewModel.swift; sourceTree = "<group>"; };
 		9E2BD4252783D344003FB831 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9E5B7F902783D4D000F8D9FC /* NoteDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDocument.swift; sourceTree = "<group>"; };
@@ -71,7 +73,7 @@
 		9EF876F926BA302500790481 /* Inter-Italic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Italic.otf"; sourceTree = "<group>"; };
 		9EF876FA26BA302500790481 /* Inter-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-ExtraBold.otf"; sourceTree = "<group>"; };
 		9EF876FB26BA302500790481 /* Inter-BoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-BoldItalic.otf"; sourceTree = "<group>"; };
-		9EF876FD26BA302500790481 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9EF876FD26BA302500790481 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 		9EF876FF26BA302500790481 /* InputViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputViews.swift; sourceTree = "<group>"; };
 		9EF8770026BA302500790481 /* ButtonViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonViews.swift; sourceTree = "<group>"; };
 		9EF8770126BA302500790481 /* MiscViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiscViews.swift; sourceTree = "<group>"; };
@@ -211,7 +213,8 @@
 			isa = PBXGroup;
 			children = (
 				9E0663CF26CB2A920033F79D /* Localizable.strings */,
-				9EF876FD26BA302500790481 /* Assets.xcassets */,
+				9EF876FD26BA302500790481 /* Icons.xcassets */,
+				9E15976C2789428C00B5E9E6 /* Colors.xcassets */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -308,7 +311,7 @@
 				9E2BD4262783D344003FB831 /* GoogleService-Info.plist in Resources */,
 				9EF8770D26BA302500790481 /* Inter-Light.otf in Resources */,
 				9EF8770F26BA302500790481 /* Inter-SemiBold.otf in Resources */,
-				9EF8771426BA302500790481 /* Assets.xcassets in Resources */,
+				9EF8771426BA302500790481 /* Icons.xcassets in Resources */,
 				9EF8770E26BA302500790481 /* Inter-Medium.otf in Resources */,
 				9EF8771A26BA302500790481 /* .gitignore in Resources */,
 				9EF8771126BA302500790481 /* Inter-Italic.otf in Resources */,
@@ -318,6 +321,7 @@
 				9EF8770A26BA302500790481 /* Inter-Bold.otf in Resources */,
 				9EF8770C26BA302500790481 /* Inter-Thin.otf in Resources */,
 				9EF8771326BA302500790481 /* Inter-BoldItalic.otf in Resources */,
+				9E15976D2789428C00B5E9E6 /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
