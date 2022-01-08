@@ -7,5 +7,6 @@ target 'Compose' do
   pod 'Firebase/Storage'
   
   pod 'SwiftUIPager'
+  pod 'SwiftUIRefresh'
 
 end

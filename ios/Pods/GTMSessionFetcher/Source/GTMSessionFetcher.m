@@ -91,13 +91,7 @@ NS_ASSUME_NONNULL_END
 #endif
 
 #ifndef GTM_TARGET_SUPPORTS_APP_TRANSPORT_SECURITY
-#if (TARGET_OS_TV || TARGET_OS_WATCH ||                          \
-     (!TARGET_OS_IPHONE && defined(MAC_OS_X_VERSION_10_11) &&    \
-      MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_11) || \
-     (TARGET_OS_IPHONE && defined(__IPHONE_9_0) &&               \
-      __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_9_0))
 #define GTM_TARGET_SUPPORTS_APP_TRANSPORT_SECURITY 1
-#endif
 #endif
 
 #if ((defined(TARGET_OS_MACCATALYST) && TARGET_OS_MACCATALYST) ||                                 \
@@ -452,21 +446,19 @@ static GTMSessionFetcherTestBlock _Nullable gGlobalTestBlock;
 
 - (void)beginFetchWithCompletionHandler:(nullable GTMSessionFetcherCompletionHandler)handler {
   GTMSessionCheckNotSynchronized(self);
-
   _completionHandler = [handler copy];
 
   // The user may have called setDelegate: earlier if they want to use other
   // delegate-style callbacks during the fetch; otherwise, the delegate is nil,
   // which is fine.
-  [self beginFetchMayDelay:YES mayAuthorize:YES];
+  [self beginFetchMayDelay:YES mayAuthorize:YES mayDecorate:YES];
 }
 
 // Begin fetching the URL for a retry fetch. The delegate and completion handler
 // are already provided, and do not need to be copied.
 - (void)beginFetchForRetry {
   GTMSessionCheckNotSynchronized(self);
-
-  [self beginFetchMayDelay:YES mayAuthorize:YES];
+  [self beginFetchMayDelay:YES mayAuthorize:YES mayDecorate:YES];
 }
 
 - (GTMSessionFetcherCompletionHandler)completionHandlerWithTarget:(nullable id)target
@@ -499,7 +491,8 @@ static GTMSessionFetcherTestBlock _Nullable gGlobalTestBlock;
 }
 
 - (void)beginFetchMayDelay:(BOOL)mayDelay
-              mayAuthorize:(BOOL)mayAuthorize {
+              mayAuthorize:(BOOL)mayAuthorize
+               mayDecorate:(BOOL)mayDecorate {
   // This is the internal entry point for re-starting fetches.
   GTMSessionCheckNotSynchronized(self);
 
@@ -814,6 +807,23 @@ static GTMSessionFetcherTestBlock _Nullable gGlobalTestBlock;
       // Authorizing the request will recursively call this beginFetch:mayDelay:
       // or failToBeginFetchWithError:.
       [self authorizeRequest];
+      return;
+    }
+  }
+
+  if (mayDecorate && [_service respondsToSelector:@selector(decorators)]) {
+    NSArray<id<GTMFetcherDecoratorProtocol>> *decorators = _service.decorators;
+    if (decorators.count) {
+      // If this session is held by the fetcher service, clear the session now so that we don't
+      // assume it's still valid after decoration completes.
+      //
+      // The service will still hold on to the session, so as long as decoration doesn't take more
+      // than 30 seconds since the last request, the service's session will be re-used when the
+      // fetch actually starts.
+      if (self.canShareSession) {
+        self.session = nil;
+      }
+      [self applyDecoratorsAtRequestWillStart:decorators startingAtIndex:0];
       return;
     }
   }
@@ -1619,8 +1629,10 @@ NSData *_Nullable GTMDataFromInputStream(NSInputStream *inputStream, NSError **o
                             userInfo:nil];
   }
 
-  [self invokeFetchCallbacksOnCallbackQueueWithData:nil error:error];
-  [self releaseCallbacks];
+  [self invokeFetchCallbacksOnCallbackQueueWithData:nil
+                                              error:error
+                                        mayDecorate:YES
+                             shouldReleaseCallbacks:YES];
 
   [_service fetcherDidStop:self];
 
@@ -1672,7 +1684,7 @@ NSData *_Nullable GTMDataFromInputStream(NSInputStream *inputStream, NSError **o
 
     // No authorizing possible, and authorizing happens only after any delay;
     // just begin fetching
-    [self beginFetchMayDelay:NO mayAuthorize:NO];
+    [self beginFetchMayDelay:NO mayAuthorize:NO mayDecorate:YES];
   }
 }
 
@@ -1688,8 +1700,89 @@ NSData *_Nullable GTMDataFromInputStream(NSInputStream *inputStream, NSError **o
     @synchronized(self) {
       _request = authorizedRequest;
     }
-    [self beginFetchMayDelay:NO mayAuthorize:NO];
+    [self beginFetchMayDelay:NO mayAuthorize:NO mayDecorate:YES];
   }
+}
+
+- (void)applyDecoratorsAtRequestWillStart:(NSArray<id<GTMFetcherDecoratorProtocol>> *)decorators
+                          startingAtIndex:(NSUInteger)index {
+  GTMSessionCheckNotSynchronized(self);
+  if (index >= decorators.count) {
+    GTMSESSION_LOG_DEBUG(@"GTMSessionFetcher decorate requestWillStart %zu decorators complete",
+                         decorators.count);
+    [self beginFetchMayDelay:NO mayAuthorize:NO mayDecorate:NO];
+    return;
+  }
+
+  __weak __typeof__(self) weakSelf = self;
+  id<GTMFetcherDecoratorProtocol> decorator = decorators[index];
+  GTMSESSION_LOG_DEBUG(@"GTMSessionFetcher decorate requestWillStart %zu decorators, index %zu, "
+                       @"retry count %zu, decorator %@",
+                       decorators.count, index, self.retryCount, decorator);
+  [decorator fetcherWillStart:self
+            completionHandler:^(NSURLRequest *_Nullable newRequest, NSError *_Nullable error) {
+              GTMSESSION_LOG_DEBUG(@"GTMSessionFetcher decorator requestWillStart index %zu "
+                                   @"complete, newRequest %@, error %@",
+                                   index, newRequest, error);
+              __strong __typeof__(self) strongSelf = weakSelf;
+              if (!strongSelf) {
+                GTMSESSION_LOG_DEBUG(@"GTMSessionFetcher destroyed before requestWillStart "
+                                     @"decorators completed, ignoring.");
+                return;
+              }
+              if (error) {
+                [self failToBeginFetchWithError:(NSError *_Nonnull)error];
+                return;
+              }
+              if (newRequest) {
+                // Copying `NSURLRequest` should be cheap, but in case profiling shows this
+                // operation is prohibitively expensive, this API might need to be changed to allow
+                // clients to manipulate `self.request` directly.
+                [strongSelf updateMutableRequest:[newRequest mutableCopy]];
+              }
+              [strongSelf applyDecoratorsAtRequestWillStart:decorators startingAtIndex:index + 1];
+            }];
+}
+
+- (void)applyDecoratorsAtRequestDidFinish:(NSArray<id<GTMFetcherDecoratorProtocol>> *)decorators
+                                 withData:(nullable NSData *)data
+                                    error:(nullable NSError *)error
+                          startingAtIndex:(NSUInteger)index
+                   shouldReleaseCallbacks:(BOOL)shouldReleaseCallbacks {
+  GTMSessionCheckNotSynchronized(self);
+  if (index >= decorators.count) {
+    GTMSESSION_LOG_DEBUG(@"GTMSessionFetcher decorate requestDidFinish %zu decorators complete",
+                         decorators.count);
+    [self invokeFetchCallbacksOnCallbackQueueWithData:data
+                                                error:error
+                                          mayDecorate:NO
+                               shouldReleaseCallbacks:shouldReleaseCallbacks];
+    return;
+  }
+
+  __weak __typeof__(self) weakSelf = self;
+  id<GTMFetcherDecoratorProtocol> decorator = decorators[index];
+  GTMSESSION_LOG_DEBUG(@"GTMSessionFetcher decorate requestDidFinish %zu decorators, index %zu, "
+                       @"retry count %zu, decorator %@",
+                       decorators.count, index, self.retryCount, decorator);
+  [decorator fetcherDidFinish:self
+                     withData:data
+                        error:error
+            completionHandler:^{
+              GTMSESSION_LOG_DEBUG(
+                  @"GTMSessionFetcher decorator requestDidFinish index %zu complete", index);
+              __strong __typeof__(self) strongSelf = weakSelf;
+              if (!strongSelf) {
+                GTMSESSION_LOG_DEBUG(@"GTMSessionFetcher destroyed before requestDidFinish "
+                                     @"decorators completed, ignoring.");
+                return;
+              }
+              [strongSelf applyDecoratorsAtRequestDidFinish:decorators
+                                                   withData:data
+                                                      error:error
+                                            startingAtIndex:index + 1
+                                     shouldReleaseCallbacks:shouldReleaseCallbacks];
+            }];
 }
 
 - (BOOL)canFetchWithBackgroundSession {
@@ -2498,7 +2591,24 @@ static _Nullable id<GTMUIApplicationProtocol> gSubstituteUIApp;
 }
 
 - (void)invokeFetchCallbacksOnCallbackQueueWithData:(nullable NSData *)data
-                                              error:(nullable NSError *)error {
+                                              error:(nullable NSError *)error
+                                        mayDecorate:(BOOL)mayDecorate
+                             shouldReleaseCallbacks:(BOOL)shouldReleaseCallbacks {
+  if (mayDecorate && [_service respondsToSelector:@selector(decorators)]) {
+    NSArray<id<GTMFetcherDecoratorProtocol>> *decorators = _service.decorators;
+    if (decorators.count) {
+      [self applyDecoratorsAtRequestDidFinish:decorators
+                                     withData:data
+                                        error:error
+                              startingAtIndex:0
+                       shouldReleaseCallbacks:shouldReleaseCallbacks];
+      return;
+    }
+  }
+
+  GTMSESSION_LOG_DEBUG(@"GTMSessionFetcher invoking fetch callbacks, data %@, error %@", data,
+                       error);
+
   // Callbacks will be released in the method stopFetchReleasingCallbacks:
   GTMSessionFetcherCompletionHandler handler;
   @synchronized(self) {
@@ -2528,6 +2638,10 @@ static _Nullable id<GTMUIApplicationProtocol> gSubstituteUIApp;
       }];
     }
   }  // @synchronized(self)
+
+  if (shouldReleaseCallbacks) {
+    [self releaseCallbacks];
+  }
 }
 
 - (void)postNotificationOnMainThreadWithName:(NSString *)noteName
@@ -2874,7 +2988,7 @@ static _Nullable id<GTMUIApplicationProtocol> gSubstituteUIApp;
 - (void)URLSession:(NSURLSession *)session
                           task:(NSURLSessionTask *)task
     didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics
-    API_AVAILABLE(ios(10.0), macosx(10.12), tvos(10.0), watchos(3.0)) {
+    API_AVAILABLE(ios(10.0), macosx(10.12), tvos(10.0), watchos(6.0)) {
   @synchronized(self) {
     GTMSessionMonitorSynchronized(self);
     GTMSessionFetcherMetricsCollectionBlock metricsCollectionBlock = _metricsCollectionBlock;
@@ -3046,10 +3160,13 @@ static _Nullable id<GTMUIApplicationProtocol> gSubstituteUIApp;
   [self sendStopNotificationIfNeeded];
 
   if (shouldStopFetching) {
-    [self invokeFetchCallbacksOnCallbackQueueWithData:downloadedData error:error];
     // The upload subclass doesn't want to release callbacks until upload chunks have completed.
     BOOL shouldRelease = [self shouldReleaseCallbacksUponCompletion];
-    [self stopFetchReleasingCallbacks:shouldRelease];
+    [self invokeFetchCallbacksOnCallbackQueueWithData:downloadedData
+                                                error:error
+                                          mayDecorate:YES
+                               shouldReleaseCallbacks:shouldRelease];
+    [self stopFetchReleasingCallbacks:NO];
   }
 
 #if !STRIP_GTM_FETCH_LOGGING
@@ -4426,17 +4543,6 @@ NSString *GTMFetcherSystemVersionString(void) {
 
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-  // The Xcode 8 SDKs finally cleaned up this mess by providing TARGET_OS_OSX
-  // and TARGET_OS_IOS, but to build with older SDKs, those don't exist and
-  // instead one has to rely on TARGET_OS_MAC (which is true for iOS, watchOS,
-  // and tvOS) and TARGET_OS_IPHONE (which is true for iOS, watchOS, tvOS). So
-  // one has to order these carefully so you pick off the specific things
-  // first.
-  // If the code can ever assume Xcode 8 or higher (even when building for
-  // older OSes), then
-  //   TARGET_OS_MAC -> TARGET_OS_OSX
-  //   TARGET_OS_IPHONE -> TARGET_OS_IOS
-  //   TARGET_IPHONE_SIMULATOR -> TARGET_OS_SIMULATOR
 #if TARGET_OS_WATCH
     // watchOS - WKInterfaceDevice
 
@@ -4464,7 +4570,7 @@ NSString *GTMFetcherSystemVersionString(void) {
     sSavedSystemString =
         [[NSString alloc] initWithFormat:@"%@/%@ hw/%@", model, systemVersion, hardwareModel];
     // Example:  Apple_Watch/3.0 hw/Watch1_2
-#elif TARGET_OS_TV || TARGET_OS_IPHONE
+#elif TARGET_OS_TV || TARGET_OS_IOS
     // iOS and tvOS have UIDevice, use that.
     UIDevice *currentDevice = [UIDevice currentDevice];
 
@@ -4473,7 +4579,7 @@ NSString *GTMFetcherSystemVersionString(void) {
 
     NSString *systemVersion = [currentDevice systemVersion];
 
-#if TARGET_IPHONE_SIMULATOR || TARGET_OS_SIMULATOR
+#if TARGET_OS_SIMULATOR
     NSString *hardwareModel = @"sim";
 #else
     NSString *hardwareModel;
@@ -4491,43 +4597,13 @@ NSString *GTMFetcherSystemVersionString(void) {
                           model, systemVersion, hardwareModel];
     // Example:  iPod_Touch/2.2 hw/iPod1_1
     // Example:  Apple_TV/9.2 hw/AppleTV5,3
-#elif TARGET_OS_MAC
+#elif TARGET_OS_OSX
     // Mac build
     NSProcessInfo *procInfo = [NSProcessInfo processInfo];
-#if !defined(MAC_OS_X_VERSION_10_10)
-    BOOL hasOperatingSystemVersion = NO;
-#elif MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_10
-    BOOL hasOperatingSystemVersion =
-        [procInfo respondsToSelector:@selector(operatingSystemVersion)];
-#else
-    BOOL hasOperatingSystemVersion = YES;
-#endif
     NSString *versString;
-    if (hasOperatingSystemVersion) {
-#if defined(MAC_OS_X_VERSION_10_10)
-      // A reference to NSOperatingSystemVersion requires the 10.10 SDK.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
-// Disable unguarded availability warning as we can't use the @availability macro until we require
-// all clients to build with Xcode 9 or above.
-      NSOperatingSystemVersion version = procInfo.operatingSystemVersion;
-#pragma clang diagnostic pop
-      versString = [NSString stringWithFormat:@"%ld.%ld.%ld",
-                    (long)version.majorVersion, (long)version.minorVersion,
-                    (long)version.patchVersion];
-#else
-#pragma unused(procInfo)
-#endif
-    } else {
-      // With Gestalt inexplicably deprecated in 10.8, we're reduced to reading
-      // the system plist file.
-      NSString *const kPath = @"/System/Library/CoreServices/SystemVersion.plist";
-      NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:kPath];
-      versString = [plist objectForKey:@"ProductVersion"];
-      if (versString.length == 0) {
-        versString = @"10.?.?";
-      }
-    }
+    NSOperatingSystemVersion version = procInfo.operatingSystemVersion;
+    versString = [NSString stringWithFormat:@"%ld.%ld.%ld", (long)version.majorVersion,
+                                            (long)version.minorVersion, (long)version.patchVersion];
 
     sSavedSystemString = [[NSString alloc] initWithFormat:@"MacOSX/%@", versString];
 #elif defined(_SYS_UTSNAME_H)

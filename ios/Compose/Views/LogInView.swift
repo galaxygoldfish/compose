@@ -71,7 +71,8 @@ struct LogInView: View {
                     .padding(.leading, 20)
                     Spacer()
                     NavigationLink(
-                        destination: ProductivityView(),
+                        destination: ProductivityView()
+                            .environmentObject(ProductivityViewModel()),
                         isActive: $navigateProductivity
                     ) {
                         TextOnlyButton(

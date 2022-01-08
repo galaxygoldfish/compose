@@ -16,6 +16,8 @@
 		9E14D3E526CDDBEC00898D19 /* SystemViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E14D3E426CDDBEC00898D19 /* SystemViews.swift */; };
 		9E2BD4202783AD2C003FB831 /* ProductivityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2BD41F2783AD2C003FB831 /* ProductivityViewModel.swift */; };
 		9E2BD4262783D344003FB831 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E2BD4252783D344003FB831 /* GoogleService-Info.plist */; };
+		9E5B7F912783D4D000F8D9FC /* NoteDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B7F902783D4D000F8D9FC /* NoteDocument.swift */; };
+		9E5B7F932783D4DC00F8D9FC /* FirebaseDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B7F922783D4DC00F8D9FC /* FirebaseDocument.swift */; };
 		9E7C337E26CC9174003BF000 /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7C337D26CC9174003BF000 /* CreateAccountView.swift */; };
 		9EB5471526D5BA7200C52767 /* NoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB5471426D5BA7200C52767 /* NoteListView.swift */; };
 		9EB5471726D5BA7A00C52767 /* TaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB5471626D5BA7A00C52767 /* TaskListView.swift */; };
@@ -51,6 +53,8 @@
 		9E14D3E426CDDBEC00898D19 /* SystemViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemViews.swift; sourceTree = "<group>"; };
 		9E2BD41F2783AD2C003FB831 /* ProductivityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductivityViewModel.swift; sourceTree = "<group>"; };
 		9E2BD4252783D344003FB831 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9E5B7F902783D4D000F8D9FC /* NoteDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDocument.swift; sourceTree = "<group>"; };
+		9E5B7F922783D4DC00F8D9FC /* FirebaseDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseDocument.swift; sourceTree = "<group>"; };
 		9E7C337D26CC9174003BF000 /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
 		9EB5471426D5BA7200C52767 /* NoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListView.swift; sourceTree = "<group>"; };
 		9EB5471626D5BA7A00C52767 /* TaskListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListView.swift; sourceTree = "<group>"; };
@@ -100,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				9E14D3DF26CDCB7500898D19 /* FirebaseAccount.swift */,
+				9E5B7F922783D4DC00F8D9FC /* FirebaseDocument.swift */,
 			);
 			path = Firebase;
 			sourceTree = "<group>";
@@ -118,6 +123,14 @@
 				9E2BD41F2783AD2C003FB831 /* ProductivityViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		9E2BD4272783D465003FB831 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9E5B7F902783D4D000F8D9FC /* NoteDocument.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		9ECA9E712782851D00848068 /* Components */ = {
@@ -158,6 +171,7 @@
 				9E0663D526CB3B250033F79D /* ComposeApp.swift */,
 				9EF876FE26BA302500790481 /* Styles */,
 				9ECA9E712782851D00848068 /* Components */,
+				9E2BD4272783D465003FB831 /* Models */,
 				9EF8770226BA302500790481 /* Views */,
 				9E2BD41E2783AD1B003FB831 /* ViewModels */,
 				9E14D3DE26CDCB5200898D19 /* Firebase */,
@@ -357,6 +371,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EF8771826BA302500790481 /* LogInView.swift in Sources */,
+				9E5B7F932783D4DC00F8D9FC /* FirebaseDocument.swift in Sources */,
 				9EF8771926BA302500790481 /* WelcomeView.swift in Sources */,
 				9EB5471726D5BA7A00C52767 /* TaskListView.swift in Sources */,
 				9E14D3E026CDCB7500898D19 /* FirebaseAccount.swift in Sources */,
@@ -364,6 +379,7 @@
 				9EF8771726BA302500790481 /* MiscViews.swift in Sources */,
 				9EB5471526D5BA7200C52767 /* NoteListView.swift in Sources */,
 				9E14D3E526CDDBEC00898D19 /* SystemViews.swift in Sources */,
+				9E5B7F912783D4D000F8D9FC /* NoteDocument.swift in Sources */,
 				9E2BD4202783AD2C003FB831 /* ProductivityViewModel.swift in Sources */,
 				9E7C337E26CC9174003BF000 /* CreateAccountView.swift in Sources */,
 				9E14D3D926CDC66400898D19 /* ProductivityView.swift in Sources */,

@@ -20,3 +20,4 @@ func determineIfEmailIsValid(email: String) -> Bool {
 func getNsUserDefaults() -> UserDefaults {
     return UserDefaults.standard
 }
+
