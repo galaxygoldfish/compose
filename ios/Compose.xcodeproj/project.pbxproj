@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,7 @@
 		9E14D3E326CDD31600898D19 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E14D3E226CDD31600898D19 /* Utilities.swift */; };
 		9E14D3E526CDDBEC00898D19 /* SystemViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E14D3E426CDDBEC00898D19 /* SystemViews.swift */; };
 		9E15976D2789428C00B5E9E6 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E15976C2789428C00B5E9E6 /* Colors.xcassets */; };
+		9E223F41278A692C007B89EF /* SwiftUIPullToRefresh in Frameworks */ = {isa = PBXBuildFile; productRef = 9E223F40278A692C007B89EF /* SwiftUIPullToRefresh */; };
 		9E2BD4202783AD2C003FB831 /* ProductivityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2BD41F2783AD2C003FB831 /* ProductivityViewModel.swift */; };
 		9E2BD4262783D344003FB831 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E2BD4252783D344003FB831 /* GoogleService-Info.plist */; };
 		9E5B7F912783D4D000F8D9FC /* NoteDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B7F902783D4D000F8D9FC /* NoteDocument.swift */; };
@@ -87,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E223F41278A692C007B89EF /* SwiftUIPullToRefresh in Frameworks */,
 				7170BC3EB14B834F3B63E0CC /* Pods_Compose.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -267,6 +269,9 @@
 			dependencies = (
 			);
 			name = Compose;
+			packageProductDependencies = (
+				9E223F40278A692C007B89EF /* SwiftUIPullToRefresh */,
+			);
 			productName = Compose;
 			productReference = 9EF876DD26BA2E7600790481 /* Compose.app */;
 			productType = "com.apple.product-type.application";
@@ -294,6 +299,9 @@
 				Base,
 			);
 			mainGroup = 9EF876D426BA2E7500790481;
+			packageReferences = (
+				9E223F3F278A692C007B89EF /* XCRemoteSwiftPackageReference "swiftui-pull-to-refresh" */,
+			);
 			productRefGroup = 9EF876DE26BA2E7600790481 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -580,6 +588,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9E223F3F278A692C007B89EF /* XCRemoteSwiftPackageReference "swiftui-pull-to-refresh" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/globulus/swiftui-pull-to-refresh";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9E223F40278A692C007B89EF /* SwiftUIPullToRefresh */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9E223F3F278A692C007B89EF /* XCRemoteSwiftPackageReference "swiftui-pull-to-refresh" */;
+			productName = SwiftUIPullToRefresh;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9EF876D526BA2E7500790481 /* Project object */;
 }

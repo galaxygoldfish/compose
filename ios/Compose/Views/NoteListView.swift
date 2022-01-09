@@ -1,14 +1,18 @@
 import SwiftUI
-import SwiftUIRefresh
+import SwiftUIPullToRefresh
 
 struct NoteListView: View {
     
     @EnvironmentObject private var viewModel: ProductivityViewModel
     
-    @State var refreshing = true
-    
     var body: some View {
-        ScrollView {
+        RefreshableScrollView(
+            onRefresh: { done in
+                viewModel.updateNoteList {
+                    done()
+                }
+            }
+        ) {
             HStack(alignment: .top, spacing: 1) {
                 Spacer()
                 LazyVStack {

@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SwiftUIPullToRefresh",
+        "repositoryURL": "https://github.com/globulus/swiftui-pull-to-refresh",
+        "state": {
+          "branch": null,
+          "revision": "c0dea26161afb46d1160eb81eed6f85fbd5aba2b",
+          "version": "1.1.4"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
