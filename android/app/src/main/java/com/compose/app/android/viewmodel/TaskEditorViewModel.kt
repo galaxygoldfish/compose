@@ -50,7 +50,7 @@ class TaskEditorViewModel : ViewModel() {
     private val calendarMinute = calendar[Calendar.MINUTE]
     private val editedMinute = if (calendarMinute.toString().length == 1) "0$calendarMinute" else calendarMinute.toString()
 
-    var monthIndex = mutableStateOf(calendar[Calendar.MONTH])
+    var monthIndex = mutableStateOf(calendar[Calendar.MONTH] + 1)
     val currentMonth = mutableStateOf("")
     val currentYear = mutableStateOf("2021")
     val selectedDayIndex = mutableStateOf(0)

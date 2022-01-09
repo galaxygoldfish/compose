@@ -81,9 +81,6 @@ dependencies {
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.21.0-beta"
     implementation "com.google.accompanist:accompanist-insets-ui:0.21.0-beta"
 
-    implementation "com.chargemap.compose:numberpicker:0.0.10"
-
     implementation "com.godaddy.android.colorpicker:compose-color-picker-android:0.2.1"
 
 }
-

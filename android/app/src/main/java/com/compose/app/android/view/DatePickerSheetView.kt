@@ -17,6 +17,7 @@
 package com.compose.app.android.view
 
 import android.os.Build
+import android.widget.NumberPicker
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -33,13 +34,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.chargemap.compose.numberpicker.NumberPicker
+import androidx.compose.ui.viewinterop.AndroidView
 import com.compose.app.android.R
 import com.compose.app.android.components.SheetHandle
 import com.compose.app.android.theme.IconLeftArrowSmall
@@ -215,7 +215,7 @@ fun CalendarDayPicker(
                             items(
                                 YearMonth.of(
                                     viewModel.currentYear.value.replace(" ", "").toInt(),
-                                    viewModel.monthIndex.value
+                                    (viewModel.monthIndex.value).let { if (it == 0) 1 else it }
                                 ).lengthOfMonth()
                             ) { index ->
                                 Box(
@@ -268,36 +268,61 @@ fun TimeHourPicker(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            NumberPicker(
-                value = viewModel.selectedHour.value.toInt(),
-                onValueChange = {
-                    viewModel.apply {
-                        selectedHour.value = it.toString()
-                        interactionMonitor.value = true
+            AndroidView(
+                modifier = Modifier.padding(end = 20.dp),
+                factory = { context ->
+                    NumberPicker(context).apply {
+                        setOnValueChangedListener { _, _, value ->
+                            viewModel.apply {
+                                selectedHour.value = value.toString()
+                                interactionMonitor.value = true
+                            }
+                        }
+                        minValue = 1
+                        maxValue = 12
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            selectionDividerHeight = 0
+                        }
                     }
                 },
-                range = 1..12,
-                dividersColor = Color.Transparent,
-                textStyle = colorFixedTextStyle,
-                modifier = Modifier.padding(end = 20.dp)
+                update = { view ->
+                    view.apply {
+                        value = viewModel.selectedHour.value.toInt()
+                    }
+                }
             )
             Text(
                 text = ":",
                 style = colorFixedTextStyle,
                 modifier = Modifier.padding(end = 20.dp)
             )
-            NumberPicker(
-                value = viewModel.selectedMinute.value.toInt(),
-                onValueChange = {
-                    viewModel.apply {
-                        selectedMinute.value = it.toString()
-                        interactionMonitor.value = true
+            AndroidView(
+                modifier = Modifier.padding(end = 20.dp),
+                factory = { context ->
+                    NumberPicker(context).apply {
+                        setOnValueChangedListener { _, _, value ->
+                            viewModel.apply {
+                                selectedMinute.value = value.toString().let {
+                                    if (it.length == 1) "0$it" else it
+                                }
+                                interactionMonitor.value = true
+                            }
+                        }
+                        minValue = 0
+                        maxValue = 59
+                        val time = arrayListOf("00", "01", "02", "03", "04", "05", "06", "07", "08", "09")
+                        repeat(50) { index -> time.add((index + 10).toString()) }
+                        displayedValues = time.toArray(arrayOf())
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            selectionDividerHeight = 0
+                        }
                     }
                 },
-                range = 0..59,
-                dividersColor = Color.Transparent,
-                textStyle = colorFixedTextStyle,
-                modifier = Modifier.padding(end = 20.dp)
+                update = { view ->
+                    view.apply {
+                        value = viewModel.selectedMinute.value.toInt()
+                    }
+                }
             )
             Column(modifier = Modifier.padding(start = 10.dp)) {
                 val textColorMain = MaterialTheme.colors.onBackground
