@@ -65,6 +65,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 object NavigationDestination {
+    const val LaunchScreenView = "launch"
     const val WelcomeView = "welcome"
     const val LogInView = "login"
     const val CreateAccountView = "createAccount"
@@ -133,21 +134,6 @@ class ComposeBaseActivity : ComponentActivity() {
 
         navigationController = rememberAnimatedNavController()
 
-        val passwordAvailable = LocalContext.current.let {
-            it.getDefaultPreferences().getString("IDENTITY_USER_KEY", "") != "" &&
-            it.getCloudPreferences().getBoolean("STATE_APP_SECURED", false)
-        }
-
-        val navigationStart = if (FirebaseAccount().determineIfUserExists()) {
-            if (passwordAvailable) {
-                NavigationDestination.SecurityLockView
-            } else {
-                NavigationDestination.ProductivityView
-            }
-        } else {
-            NavigationDestination.WelcomeView
-        }
-
         val animatedEnterZoom: (
             AnimatedContentScope<String>.(NavBackStackEntry, NavBackStackEntry) -> EnterTransition
         ) = { _: NavBackStackEntry, _: NavBackStackEntry ->
@@ -185,8 +171,11 @@ class ComposeBaseActivity : ComponentActivity() {
 
         AnimatedNavHost(
             navController = navigationController,
-            startDestination = navigationStart,
+            startDestination = NavigationDestination.LaunchScreenView,
             builder = {
+                composable(NavigationDestination.LaunchScreenView) {
+                    LaunchScreenView(navController = navigationController)
+                }
                 composable(NavigationDestination.WelcomeView) {
                     keyboardPop(false)
                     WelcomeView(navController = navigationController)
