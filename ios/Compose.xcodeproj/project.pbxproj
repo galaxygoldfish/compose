@@ -16,8 +16,10 @@
 		9E14D3E526CDDBEC00898D19 /* SystemViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E14D3E426CDDBEC00898D19 /* SystemViews.swift */; };
 		9E15976D2789428C00B5E9E6 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E15976C2789428C00B5E9E6 /* Colors.xcassets */; };
 		9E223F41278A692C007B89EF /* SwiftUIPullToRefresh in Frameworks */ = {isa = PBXBuildFile; productRef = 9E223F40278A692C007B89EF /* SwiftUIPullToRefresh */; };
+		9E223F44278A91D3007B89EF /* SwiftUIGenericDialog in Frameworks */ = {isa = PBXBuildFile; productRef = 9E223F43278A91D3007B89EF /* SwiftUIGenericDialog */; };
 		9E2BD4202783AD2C003FB831 /* ProductivityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2BD41F2783AD2C003FB831 /* ProductivityViewModel.swift */; };
 		9E2BD4262783D344003FB831 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E2BD4252783D344003FB831 /* GoogleService-Info.plist */; };
+		9E3FD069278BBBDB007BCC95 /* ColorStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3FD068278BBBDB007BCC95 /* ColorStyles.swift */; };
 		9E5B7F912783D4D000F8D9FC /* NoteDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B7F902783D4D000F8D9FC /* NoteDocument.swift */; };
 		9E5B7F932783D4DC00F8D9FC /* FirebaseDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5B7F922783D4DC00F8D9FC /* FirebaseDocument.swift */; };
 		9E7C337E26CC9174003BF000 /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E7C337D26CC9174003BF000 /* CreateAccountView.swift */; };
@@ -56,6 +58,7 @@
 		9E15976C2789428C00B5E9E6 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		9E2BD41F2783AD2C003FB831 /* ProductivityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductivityViewModel.swift; sourceTree = "<group>"; };
 		9E2BD4252783D344003FB831 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9E3FD068278BBBDB007BCC95 /* ColorStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorStyles.swift; sourceTree = "<group>"; };
 		9E5B7F902783D4D000F8D9FC /* NoteDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDocument.swift; sourceTree = "<group>"; };
 		9E5B7F922783D4DC00F8D9FC /* FirebaseDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseDocument.swift; sourceTree = "<group>"; };
 		9E7C337D26CC9174003BF000 /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
@@ -89,6 +92,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E223F41278A692C007B89EF /* SwiftUIPullToRefresh in Frameworks */,
+				9E223F44278A91D3007B89EF /* SwiftUIGenericDialog in Frameworks */,
 				7170BC3EB14B834F3B63E0CC /* Pods_Compose.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -225,6 +229,7 @@
 			isa = PBXGroup;
 			children = (
 				9ECA9E722782854300848068 /* TypographyStyles.swift */,
+				9E3FD068278BBBDB007BCC95 /* ColorStyles.swift */,
 			);
 			path = Styles;
 			sourceTree = "<group>";
@@ -271,6 +276,7 @@
 			name = Compose;
 			packageProductDependencies = (
 				9E223F40278A692C007B89EF /* SwiftUIPullToRefresh */,
+				9E223F43278A91D3007B89EF /* SwiftUIGenericDialog */,
 			);
 			productName = Compose;
 			productReference = 9EF876DD26BA2E7600790481 /* Compose.app */;
@@ -301,6 +307,7 @@
 			mainGroup = 9EF876D426BA2E7500790481;
 			packageReferences = (
 				9E223F3F278A692C007B89EF /* XCRemoteSwiftPackageReference "swiftui-pull-to-refresh" */,
+				9E223F42278A91D3007B89EF /* XCRemoteSwiftPackageReference "swiftui-generic-dialog" */,
 			);
 			productRefGroup = 9EF876DE26BA2E7600790481 /* Products */;
 			projectDirPath = "";
@@ -388,6 +395,7 @@
 				9EB5471726D5BA7A00C52767 /* TaskListView.swift in Sources */,
 				9E14D3E026CDCB7500898D19 /* FirebaseAccount.swift in Sources */,
 				9ECA9E732782854300848068 /* TypographyStyles.swift in Sources */,
+				9E3FD069278BBBDB007BCC95 /* ColorStyles.swift in Sources */,
 				9EF8771726BA302500790481 /* MiscViews.swift in Sources */,
 				9EB5471526D5BA7200C52767 /* NoteListView.swift in Sources */,
 				9E14D3E526CDDBEC00898D19 /* SystemViews.swift in Sources */,
@@ -600,6 +608,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		9E223F42278A91D3007B89EF /* XCRemoteSwiftPackageReference "swiftui-generic-dialog" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/globulus/swiftui-generic-dialog/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -607,6 +623,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9E223F3F278A692C007B89EF /* XCRemoteSwiftPackageReference "swiftui-pull-to-refresh" */;
 			productName = SwiftUIPullToRefresh;
+		};
+		9E223F43278A91D3007B89EF /* SwiftUIGenericDialog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9E223F42278A91D3007B89EF /* XCRemoteSwiftPackageReference "swiftui-generic-dialog" */;
+			productName = SwiftUIGenericDialog;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -127,7 +127,7 @@ struct CreateAccountView: View {
                         HStack {
                             TextOnlyButton(
                                 text: "create_account_button_cancel",
-                                color: Color("NeutralGray"),
+                                color: colorSecondaryVariant,
                                 onAction: {
                                     presentationMode.wrappedValue.dismiss()
                                 }
@@ -141,7 +141,7 @@ struct CreateAccountView: View {
                             ) {
                                 TextOnlyButton(
                                     text: "create_account_button_continue",
-                                    color: Color("DeepSea"),
+                                    color: colorPrimary,
                                     onAction: {
                                         snackbarMessage = LocalizedStringKey("create_account_progress_message")
                                         snackbarOpen = true

@@ -8,6 +8,7 @@ class ProductivityViewModel: ObservableObject {
     @Published var searchQueryText: String = ""
     @Published var selectedTab: Int = 0
     @Published var currentPage: Page = .first()
+    @Published var showingProfileDialog = false
     
     @Published var noteList1: Array<NoteDocument> = []
     @Published var noteList2: Array<NoteDocument> = []

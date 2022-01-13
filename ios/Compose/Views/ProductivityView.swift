@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftUIPager
 import UIKit
 import FirebaseAuth
+import SwiftUIGenericDialog
 
 struct ProductivityView: View {
     
@@ -25,12 +26,21 @@ struct ProductivityView: View {
                         }
                     }
                 ).animation(.linear)
+            }
+            VStack {
+                Spacer()
                 NoteTaskPager()
             }
         }
         .navigationBarTitle("")
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
+        .genericDialog(
+            isShowing: $viewModel.showingProfileDialog,
+            dialogContent: {
+                ProfileContextMenu()
+            }
+        )
     }
 }
 
@@ -49,19 +59,25 @@ struct TopAppBar : View {
                     .padding(.leading, 18)
                     .padding(.top, 15)
                 Text("productivity_temp_message")
-                    .font(.custom(InterRegular, size: 16.5))
+                    .font(typographyBody1)
                     .padding(.leading, 19)
             }
             Spacer()
+            Button(
+                action: {
+                    viewModel.showingProfileDialog = true
+                }
+            ) {
             Image(uiImage: getAvatarImage())
                 .resizable()
                 .clipShape(Circle())
                 .frame(width: 48, height: 48, alignment: .trailing)
                 .padding(.trailing, 17)
                 .padding(.top, 15)
+            }
         }
         ZStack(alignment: Alignment.leading) {
-            Color("NeutralGray")
+            colorPrimaryVariant
                 .cornerRadius(10)
             HStack {
                 Image("SearchMagnifier")
@@ -95,7 +111,7 @@ struct NoteTaskPager: View {
     
     var body: some View {
         ZStack {
-            Color("NeutralGray")
+            colorPrimaryVariant
                 .cornerRadius(10)
             HStack(alignment: .center) {
                 Spacer()
@@ -107,7 +123,7 @@ struct NoteTaskPager: View {
                     Image("EditPen")
                         .resizable()
                         .colorMultiply(
-                            viewModel.currentPage.index == 0 ? Color("ColorOnBackground") : Color("NeutralGrayDisabled")
+                            viewModel.currentPage.index == 0 ? colorOnBackground : colorOnBackground.opacity(0.5)
                         )
                         .frame(width: 30, height: 30)
                 }
@@ -120,7 +136,7 @@ struct NoteTaskPager: View {
                     }
                 ) {
                     ZStack(alignment: .center) {
-                        Color("DeepSea")
+                        colorPrimary
                             .cornerRadius(8)
                         Image("NewItem")
                             .colorMultiply(.black)
@@ -136,7 +152,7 @@ struct NoteTaskPager: View {
                     Image("TaskCheck")
                         .resizable()
                         .colorMultiply(
-                            viewModel.currentPage.index == 1 ? Color("ColorOnBackground") : Color("NeutralGrayDisabled")
+                            viewModel.currentPage.index == 1 ? colorOnBackground : colorOnBackground.opacity(0.5)
                         )
                         .frame(width: 30, height: 30)
                 }
@@ -148,5 +164,67 @@ struct NoteTaskPager: View {
         .padding(.leading, 18)
         .padding(.trailing, 17)
         .padding(.bottom, 10)
+    }
+}
+
+struct ProfileContextMenu: View {
+    
+    private let preferences = getNsUserDefaults()
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Spacer()
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(preferences.string(forKey: "IDENTITY_USER_NAME_FIRST") ?? "Error")
+                        .font(typographyH5)
+                    Text(preferences.string(forKey: "IDENTITY_USER_NAME_LAST") ?? "Error")
+                        .font(typographyH5)
+                        .padding(.top, 2)
+                }
+                Spacer()
+                Spacer()
+                Image(uiImage: getAvatarImage())
+                    .resizable()
+                    .clipShape(Circle())
+                    .frame(width: 90, height: 90, alignment: .trailing)
+                    .padding(.top, 20)
+                Spacer()
+            }
+            VStack(alignment: .leading) {
+                OptionListItem(
+                    text: LocalizedStringKey("profile_context_menu_preferences"),
+                    icon: "Preferences",
+                    onClick: {
+                        // navigate settings
+                    }
+                )
+                OptionListItem(
+                    text: LocalizedStringKey("profile_context_menu_account"),
+                    icon: "UserGroup",
+                    onClick: {
+                        // navigate account page
+                    }
+                )
+                OptionListItem(
+                    text: LocalizedStringKey("profile_context_menu_theme"),
+                    icon: "ThemeShirt",
+                    onClick: {
+                        // switch dark/light mode and save
+                    }
+                )
+                OptionListItem(
+                    text: LocalizedStringKey("profile_context_menu_logout"),
+                    icon: "LogInArrow",
+                    onClick: {
+                        // log out and navigate welcome
+                    }
+                )
+            }
+            .padding(.bottom, 20)
+            .padding(.leading, 20)
+        }
+        .frame(width: UIScreen.main.bounds.width * 0.8)
+        .background(colorPrimaryVariant.cornerRadius(7.9))
     }
 }

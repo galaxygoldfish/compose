@@ -125,7 +125,7 @@ class TaskNotificationManager {
                     .setLargeIcon(
                         BitmapFactory.decodeResource(
                             context.resources,
-                            R.drawable.ic_round_add_task_24
+                            R.drawable.ic_icon_transparent
                         )
                     )
                     .setContentTitle(title)

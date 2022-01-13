@@ -38,7 +38,7 @@ struct WelcomeView : View {
                         FullWidthButton (
                             text: "welcome_button_log_in",
                             icon: "LogInArrow",
-                            color: Color("DeepSea"),
+                            color: colorPrimary,
                             onAction: {
                                 navigationChoice = "logIn"
                             }
@@ -54,7 +54,7 @@ struct WelcomeView : View {
                         FullWidthButton (
                             text: "welcome_button_create_account",
                             icon: "AddUser",
-                            color: Color("NeutralGray"),
+                            color: colorSecondaryVariant,
                             onAction: {
                                 navigationChoice = "createAccount"
                             }

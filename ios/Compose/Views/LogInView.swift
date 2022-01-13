@@ -63,7 +63,7 @@ struct LogInView: View {
                 HStack(alignment: .center) {
                     TextOnlyButton(
                         text: "log_in_button_cancel_text",
-                        color: Color("NeutralGray"),
+                        color: colorSecondaryVariant,
                         onAction: {
                             presentationMode.wrappedValue.dismiss()
                         }
@@ -77,7 +77,7 @@ struct LogInView: View {
                     ) {
                         TextOnlyButton(
                             text: "log_in_button_continue_text",
-                            color: Color("DeepSea"),
+                            color: colorPrimary,
                             onAction: {
                                 FirebaseAccount().authenticateWithEmail(
                                     email: emailText,

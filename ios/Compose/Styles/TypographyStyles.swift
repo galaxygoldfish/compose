@@ -5,6 +5,7 @@ let typographyH1 = Font.custom(InterBold, size: 40)
 let typographyH2 = Font.custom(InterBold, size: 36)
 let typographyH3 = Font.custom(InterBold, size: 33)
 let typographyH4 = Font.custom(InterBold, size: 26)
+let typographyH5 = Font.custom(InterRegular, size: 26)
 let typographyH6 = Font.custom(InterSemiBold, size: 19)
 
 let typographyBody1 = Font.custom(InterRegular, size: 16)

@@ -37,3 +37,7 @@
 
 "productivity_temp_message" = "One today is worth two tomorrows.";
 "productivity_search_hint" = "Search notes & tasks";
+"profile_context_menu_preferences" = "Preferences";
+"profile_context_menu_account" = "Account settings";
+"profile_context_menu_theme" = "Switch theme";
+"profile_context_menu_logout" = "Log out";
