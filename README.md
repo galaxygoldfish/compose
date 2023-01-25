@@ -1,6 +1,6 @@
-# Compose
-A simplistic android app to organize your notes, tasks and lists, which saved them to the cloud using Firebase
-
+<img src="feature-graphic.png" href="https://play.google.com/store/apps/details?id=com.compose.app.android" />
+A simplistic android app to organize your notes, tasks and lists, which saves them to the cloud using Firebase and syncs across multiple devices through your Compose account. <a href="https://play.google.com/store/apps/details?id=com.compose.app.android">Get it on Google Play</a>
+<br><br>
 <img src="compose-preview.png" />
 
 ## License
